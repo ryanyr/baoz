@@ -4,6 +4,7 @@ import Audit from "./audit";
 import Repayments from "./repayments";
 import Settle from "./settle";
 import {browserHistory} from "react-router";
+import store from "../../../store/store";
 export default React.createClass({
     getInitialState(){
         return {
@@ -12,7 +13,17 @@ export default React.createClass({
     },
 
     componentWillMount(){
-
+        if(store.getState().infopage){
+            this.setState({
+                page:store.getState().infopage
+            })
+        }
+    },
+    componentWillUnmount(){
+        store.dispatch({
+            type:"INFO",
+            data:this.state.page
+        })
     },
     render(){
         var imgurlleft=this.state.page==1?"url(images/images/audit_2.png) 0% 0% /100%":"url(images/images/audit_1.png) 0% 0% /100%";

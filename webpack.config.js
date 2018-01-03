@@ -6,8 +6,8 @@ module.exports = {
         path : __dirname + "/dist/",
         filename : "app.js"
     },
-    // devtool : "false",
-    devtool : "source-map",
+    devtool : "false",
+    // devtool : "source-map",
     devServer : {
         contentBase : __dirname + "/dist/",
         port : 3000,
@@ -25,12 +25,12 @@ module.exports = {
             React : "react",
             $:"jquery",
         }),
-        /* new webpack.optimize.UglifyJsPlugin({
+          new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
             },
             sourceMap: true,
             mangle: true
-        })  */
+        })   
     ],  
 }

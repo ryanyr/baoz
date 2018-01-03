@@ -84,7 +84,7 @@ export default React.createClass({
                         <i
                             style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>优惠减免：.00元</span>
+                        <span>优惠减免：{this.state.remitAmount}.00元</span>
                     </div>
                     <div className="yellow">
                         <i

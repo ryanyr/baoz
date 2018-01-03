@@ -4,15 +4,17 @@ import Step1 from "../../components/info/step1";
 import Step2 from "../../components/info/step2";
 import Step3 from "../../components/info/step3";
 import "./style.less";
+import store from "../../../store/store";
 export default React.createClass({
     getInitialState(){
         return {
-            page:2
+            page:1
         }
     },
     submit(){
         console.log(this.refs.step_1.state)
     },
+   
     btn(w,rrr){
         console.log(w)
         console.log(rrr)

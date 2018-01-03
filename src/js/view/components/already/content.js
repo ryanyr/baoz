@@ -1,4 +1,38 @@
+import url from "../../config/config";
+import {InputItem,ImagePicker,Toast } from "antd-mobile";
 export default React.createClass({
+    getInitialState(){
+        return {
+
+        }
+    },
+  componentWillMount(){
+    // console.log(this.props.id)
+        var orderNo=this.props.id;
+        console.log(orderNo)
+        var that=this;
+        var data=new FormData();
+        data.append("userId",localStorage.userId);
+      
+        data.append("orderNo",orderNo);
+
+        fetch(url.url+"/api/act/mine/borrow/orderInfo.htm",{
+            headers:{
+                token:localStorage.Token
+            },
+            method:"POST",body:data})
+            .then(r=>r.json())
+            .then((data)=>{
+            console.log(data)
+            if(data.code=="200"){
+                that.setState(data.data)
+            }else{
+                Toast.info("服务器错误", 2);
+            }    
+            
+                
+            })
+  },
   render() {
     return (
       <div className="con_box">
@@ -8,13 +42,13 @@ export default React.createClass({
                         <i
                             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>借款金额：2000.00元</span>
+                        <span>借款金额：{}.00元</span>
                     </div>
                     <div>
                         <i
                             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>实际到账：2000.00元</span>
+                        <span>实际到账：{}.00元</span>
                     </div>
                     <div>
                         <i

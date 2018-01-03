@@ -22,12 +22,13 @@ export default React.createClass({
     btn(){
       //保存身份接口
       console.log(1)
-        if((!this.state.name||!this.state.phone||!this.state.idcard||!this.state.upimg1||!this.state.upimg2||!this.state.upimg3)){
-            Toast.info("请完善信息", 2);
+        if(!this.state.name){
+            Toast.info("请输入用户名", 2);
+        }else if(!this.state.idcard){
+            Toast.info("请输入身份证", 2);
+        }else if(!this.state.upimg1||!this.state.upimg2||!this.state.upimg3){
+            Toast.info("请长传完成身份证照片", 2);
         }else{
-
-        
-
         var that=this;
         var data=new FormData();
         data.append("backImg",this.state.upimg2);
@@ -37,9 +38,6 @@ export default React.createClass({
         data.append("phone",this.state.phone);
         data.append("realName",this.state.name);
         data.append("userId",localStorage.userId);
-        
-      
-
         fetch(url.url+"/api/act/mine/userInfo/save.htm",{
         headers:{
             token:localStorage.Token
@@ -64,13 +62,14 @@ export default React.createClass({
     },
     upimg(files){
         var that=this;
+        return new Promise(function(suc,err){ 
         var data=new FormData();
         //此处图片进行压缩,写入image异步onload中
         var img = new Image();
         img.onload = ()=>{
             var compressImg = compress(img);
             data.append("img",compressImg);     
-            var p=new Promise(function(suc,err){        
+                   
             fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
                 headers:{
                     token:localStorage.Token
@@ -79,23 +78,27 @@ export default React.createClass({
                 .then(r=>r.json())
                 .then((data)=>{
                     console.log(data);
-                    if(data.data[0].errorMsg){
-                        Toast.info(data.data[0].errorMsg, 2);
+                    if(!data.data){
+                        Toast.info("图片上传错误", 2);
                     }                    
                     suc(data)
-                })
+                
             })
-            return p;
+            
         } 
-        img.src = files[0].url;     
+        img.src = files[0].url;
+        // return p;
+    })
+        
+        // console.log(img)     
         //图片压缩结束        
     },
     onChange(files, type, index){
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl:data.data[0].resPath,
-                upimg1:data.data[0].resPath
+                imgurl:files[0].url,
+                upimg1:data.data
             })
         })
                     
@@ -104,8 +107,8 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl2:data.data[0].resPath,
-                upimg2:data.data[0].resPath
+                imgurl2:files[0].url,
+                upimg2:data.data
             })
         })
       },
@@ -113,8 +116,8 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl3:data.data[0].resPath,
-                upimg3:data.data[0].resPath
+                imgurl3:files[0].url,
+                upimg3:data.data
             })
         })
       },   

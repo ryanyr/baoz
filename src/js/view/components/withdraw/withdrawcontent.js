@@ -20,7 +20,7 @@ export default React.createClass({
         }
     },
     componentWillMount(){
-        var that=this;
+      var that=this;
       var data1=new FormData();
       data1.append("couponType",1);
       data1.append("page",1);
@@ -153,7 +153,7 @@ export default React.createClass({
                         .then((data)=>{
                             console.log(data)
                             that.setState({
-                                img:data.data[0].resPath
+                                img:data.data
                             })
                         })
             } 

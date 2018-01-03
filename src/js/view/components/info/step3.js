@@ -16,9 +16,15 @@ export default React.createClass({
         }
     },
     btn(){
-        if(!(this.state.imgup||this.state.certificateNo||this.state.companyName)){
-            Toast.info("请完善信息", 2);
-        }else{
+        if(!this.state.certificateNo){
+            Toast.info("请填写保险从业编号", 2);
+        }else if(!this.state.companyName){
+            Toast.info("请填写所属公司", 2);
+        }else if(!this.state.imgup){
+            Toast.info("请上传行销系统职位截图", 2);
+        }
+        
+        else{
         console.log(this.state)
         var data=new FormData();
         data.append("certificateNo",this.state.certificateNo);
@@ -46,10 +52,7 @@ export default React.createClass({
                    
                 }
                 localStorage.couponinfo=JSON.stringify(data.data)
-                // store.dispatch({
-                //     type:"Credit",
-                //     data:data.data
-                // })
+                
             }else if(data.code=="400"){
                 Toast.info(data.msg, 2);
 
@@ -74,8 +77,8 @@ export default React.createClass({
             .then((data)=>{
                 console.log(data)
                 that.setState({
-                    imgurl:data.data[0].resPath,
-                    imgup:data.data[0].resPath
+                    imgurl:files[0].url,
+                    imgup:data.data
                     });
             })
         } 

@@ -43,10 +43,25 @@ export default React.createClass({
        
     },
     btn(){
-        if(!(this.state.bank||this.state.bankcard||this.state.credit||this.state.creditcard
-        ||this.state.imgup1||this.state.imgup2||this.state.imgup3||this.state.imgup4)){
-            Toast.info("请完善信息", 2);
-        }else{
+        if(!this.state.bankcard){
+            Toast.info("请填写银行卡号", 2);
+            
+        }else if(!this.state.imgup1){
+            Toast.info("请上传银行卡正面", 2);
+        }else if(!this.state.imgup2){
+            Toast.info("请上传银行卡背面", 2);
+        }else if(!this.state.creditcard){
+            Toast.info("请填写信用卡", 2);
+            
+        }else if(!this.state.imgup3){
+            Toast.info("请上传信用卡正面", 2);            
+        }else if(!this.state.imgup4){
+            Toast.info("请上传信用卡背面", 2);
+            
+        }
+        
+        
+        else{
 
         
         console.log(this.state);
@@ -82,13 +97,14 @@ export default React.createClass({
     },
     upimg(files){
         var that=this;
+        return new Promise(function(suc,err){
         var data=new FormData();
         //此处图片进行压缩,写入image异步onload中
         var img = new Image();
         img.onload = ()=>{
             var compressImg = compress(img);
             data.append("img",compressImg);     
-            var p=new Promise(function(suc,err){        
+                    
             fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
                 headers:{
                     token:localStorage.Token
@@ -99,10 +115,11 @@ export default React.createClass({
                     console.log(data)
                     suc(data)
                 })
-            })
-            return p;
+            
+            // return p;
         } 
-        img.src = files[0].url;     
+        img.src = files[0].url;
+    })     
         //图片压缩结束        
     },
     onChange(files, type, index){
@@ -110,8 +127,8 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl:data.data[0].resPath,
-                imgup1:data.data[0].resPath
+                imgurl:files[0].url,
+                imgup1:data.data
             })
         })
       },
@@ -120,8 +137,8 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl2:data.data[0].resPath,
-                imgup2:data.data[0].resPath
+                imgurl2:files[0].url,
+                imgup2:data.data
             })
         })
       },
@@ -129,8 +146,8 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl3:data.data[0].resPath,
-                imgup3:data.data[0].resPath
+                imgurl3:files[0].url,
+                imgup3:data.data
             })
         })
       },
@@ -138,8 +155,8 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl4:data.data[0].resPath,
-                imgup4:data.data[0].resPath
+                imgurl4:files[0].url,
+                imgup4:data.data
             })
         })
     },
@@ -164,7 +181,7 @@ export default React.createClass({
                                 <span>银行名称</span>
                                 <select value="中国工商银行"
                                 value={this.state.bank} 
-                                style={{marginLeft:"0.25rem"}}
+                                style={{marginLeft:"0.25rem",height:"0.5rem",lineHeiht:"0.5rem"}}
                                 onChange={(e)=>{
                                     console.log(e.target.value);
                                     this.setState({
@@ -177,15 +194,6 @@ export default React.createClass({
                                         })
                                     }
                                 </select>
-                                {/* <InputItem
-                                value={this.state.bank}
-                                onChange={(e)=>{
-                                    this.setState({
-                                        bank:e
-                                    })
-                                }} 
-                                style={{height:"0.52rem",fontSize:"0.28rem"}}
-                                placeholder="请输入开户银行" /> */}
                             </div>
                             <div className="top">
                                 <span>银行卡号</span><InputItem
@@ -195,7 +203,7 @@ export default React.createClass({
                                         bankcard:e
                                     })
                                 }} 
-                                style={{height:"0.52rem",fontSize:"0.28rem"}}
+                                style={{height:"0.52rem",fontSize:"0.28rem",width:"4rem"}}
                                 placeholder="请输入银行卡号" />
                             </div>
                             <div className="upimg">
@@ -248,7 +256,7 @@ export default React.createClass({
                             <div className="top">
                                 <span>发卡行</span>
                                 <select value={this.state.credit}
-                                style={{marginLeft:"0.25rem"}}
+                                style={{marginLeft:"0.25rem",height:"0.5rem",lineHeiht:"0.5rem"}}
                                 onChange={(e)=>{
                                     this.setState({
                                         credit:e.target.value
@@ -281,7 +289,7 @@ export default React.createClass({
                                         creditcard:e
                                     })
                                 }} 
-                                style={{height:"0.52rem",fontSize:"0.28rem"}}
+                                style={{height:"0.52rem",fontSize:"0.28rem",width:"4rem"}}
                                 placeholder="请输入信用卡号" />
                             </div>
                             <div className="upimg">

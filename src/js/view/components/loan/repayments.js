@@ -1,10 +1,13 @@
 import {  Checkbox } from 'antd-mobile';
 import {Link} from "react-router";
 import url from "../../config/config";
+import {Pagination,Icon} from 'antd-mobile';
 export default React.createClass({
     getInitialState(){
         return {
-          list:[]
+          list:[],
+          page:1,
+          total:""
         }
     },
     componentWillMount(){
@@ -12,9 +15,9 @@ export default React.createClass({
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
-        data.append("stateList",[31,52,55,60]);
-        data.append("page",1);
-        data.append("pageSize",10);
+        data.append("stateList",[40,51,52,55,60]);
+        data.append("page",this.state.page);
+        data.append("pageSize",5);
         fetch(url.url+"/api/act/mine/borrow/list.htm",{
             headers:{
                 token:localStorage.Token
@@ -26,17 +29,27 @@ export default React.createClass({
                 var info=[];
                 for(var i=0;i<data.data.list.length;i++){
                     if(data.data.list[i].state=="31"||data.data.list[i].state=="52"||data.data.list[i].state=="60"||data.data.list[i].state=="55"){
-                        data.data.list[i]["info"]="待还款"
-                        // if(data.data.list[i].state=="31"){
-                        //     data.data.list[i]["info"]="审核中"
-                        //     console.log(data.data.list[i])
-                        // }else if(data.data.list[i].state=="20"){
-                        //     data.data.list[i]["info"]="审核通过"
-                        // }
+                        // data.data.list[i]["info"]="待还款"
+                        if(data.data.list[i].state=="40"){
+                            data.data.list[i]["info"]="待还款"
+                            console.log(data.data.list[i])
+                        }
+                        else if(data.data.list[i].state=="51"){
+                            data.data.list[i]["info"]="减免还款"
+                        }
+                        else if(data.data.list[i].state=="52"){
+                            data.data.list[i]["info"]="还款中"
+                        }
+                        else if(data.data.list[i].state=="55"){
+                            data.data.list[i]["info"]="已延期"
+                        }
+                        else if(data.data.list[i].state=="60"){
+                            data.data.list[i]["info"]="已逾期"
+                        }
                         info.push(data.data.list[i]);
                     }
                 }
-                that.setState({list:info})
+                that.setState({list:info,total:data.data.pageInfo.total})
                 
             })
     },
@@ -86,7 +99,25 @@ export default React.createClass({
                         批量还款
                     </div>
                 </div>
-                {list}
+                <div
+                    style={{height:"7rem"}}
+                >
+                    {list}
+                </div>
+                
+                <Pagination total={Math.ceil(this.state.total/5)}
+                 className="custom-pagination-with-icon"
+                current={this.state.page}
+                onChange={(e)=>{
+                    this.change(e)
+                }}
+                locale={{
+                prevText: (<span className="arrow-align" onClick={()=>{
+                    
+                }}>上一页</span>),
+                 nextText: (<span className="arrow-align">下一页</span>),
+                }}
+                /> 
             </div>
         )
     }

@@ -13,16 +13,7 @@ export default React.createClass({
         })
         return (
             <div className="banner">           
-                {/* <Carousel  */}
-                {/* dots={false}
-                //  autoplay={true}
-                //  infinite={true}
-                 selectedIndex={0}
-                //  beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
-                //  afterChange={index => console.log('slide to', index)} 
-                > */}
                 {imglist}
-                {/* </Carousel> */}
             </div>
         )
     }

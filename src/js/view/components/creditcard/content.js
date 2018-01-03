@@ -77,7 +77,11 @@ export default React.createClass({
         var that=this;
         if(this.state.money<100||this.state.money>5000){
             Toast.info('代还金额请填写100-5000之间', 2);
-        }else{
+        }else if(this.state.money>this.state.unuse){
+            Toast.info('代还金额不得大于可用额度', 2);
+        }
+        
+        else{
             if(this.state.check){
 
             
