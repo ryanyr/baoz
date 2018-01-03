@@ -1,0 +1,132 @@
+.card{
+    .modal{
+        position: fixed;
+        width: 100%;
+        z-index: 1000;
+        height: 100%;
+        top:0;
+        left:0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        .con{
+            width: 5rem;
+            position: absolute;
+            left:50%;
+            margin-left: -2.5rem;
+            background: #fff;
+            border-radius: 0.15rem;
+            padding: 0.3rem;
+            top:50%;
+            transform: translateY(-50%);
+            .btn{
+                display: flex;
+                justify-content: space-between;
+                div{
+                    height: 0.8rem;
+                    width: 2rem;
+                    text-align: center;
+                    line-height: 0.8rem;
+                    border-radius: 0.15rem;
+                    color:#fff;
+                    &:nth-child(1){
+                        border: 0.01rem solid #000;
+                        height: 0.78rem;
+                        width: 1.98rem;
+                        color:#000;
+                    }
+                    &:nth-child(2){
+                        background: #565656;
+                    }
+                }
+            }
+        }
+    }
+    .footer a.homebtn div{
+        background: url(/images/images/home_1.png);
+        background-size: 100%;
+    }
+    .footer a.homebtn p{
+        color:#f99b47;
+    }
+    .card_con{
+        padding:0.88rem 0.3rem 1.3rem;
+        font-size: 0.3rem;
+        color:#555;
+        .tip{
+            height: 1.1rem;
+            display: flex;
+            align-items: center;
+            i{
+                display: block;
+                width: 0.12rem;
+                height: 0.36rem;
+            }
+            span{
+                margin-left: 0.1rem;
+            }
+        }
+        .title{
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 0.15rem;
+            box-shadow: 0.04rem 0.04rem 0.1rem 0.05rem #e6dfd7;
+            i{
+                display: block;
+                width: 0.31rem;
+                height: 0.32rem;
+                margin-left: 0.22rem;
+            }
+            span:nth-child(2){
+                margin-left: 0.22rem;
+            }
+            span:nth-child(3){
+                color:#f99b47;
+                margin-left:0.22rem
+            }
+        }
+        .server{
+            height: 0.78rem;
+            display: flex;
+            align-items: center;
+            span{
+                margin-left: 0.36rem;
+            }
+        }
+        .submit{
+            padding: 0.66rem 0.46rem 0;
+            button{
+                display: block;
+                height: 0.86rem;
+                line-height: 0.86rem;
+                font-size: 0.32rem;
+                color:#fff;
+                width: 100%;
+                border: 0;
+                background: #f99b47;
+                border-radius: 0.15rem;
+            }
+            div{
+                height: 0.58rem;
+                display: flex;
+                label{
+                    display: flex;
+                    align-items: center;
+                }
+                input{
+                    width: 0.26rem;
+                    height: 0.26rem;
+                    margin-right: 0.12rem;
+                }
+                a{
+                    display: flex;
+                    align-items: center;
+                    font-size: 0.3rem;
+                    color:#f99b47;
+                }
+            }
+        }
+    }
+}
