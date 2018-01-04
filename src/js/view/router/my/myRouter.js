@@ -25,11 +25,11 @@ export default React.createClass({
                 path:"about",
                 img:"images/images/my_03 (4).gif"
             },
-            {
-                title:"退出",
-                path:"login",
-                img:"images/images/my_03 (5).gif"
-            }
+            // {
+            //     title:"退出",
+            //     path:"login",
+            //     img:"images/images/my_03 (5).gif"
+            // }
         ]
         }
     },

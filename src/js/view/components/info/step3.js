@@ -16,10 +16,11 @@ export default React.createClass({
         }
     },
     btn(){
-        if(!this.state.certificateNo){
-            Toast.info("请填写保险从业编号", 2);
-        }else if(!this.state.companyName){
-            Toast.info("请填写所属公司", 2);
+        var reg=/^[0-9a-z]{4,20}$/ig;
+        if(!reg.test(this.state.certificateNo)){
+            Toast.info("请填写正确保险从业编号", 2);
+        }else if(!/^[\u4e00-\u9fa5]{2,8}/g.test(this.state.companyName)){
+            Toast.info("请填写正确的所属公司", 2);
         }else if(!this.state.imgup){
             Toast.info("请上传行销系统职位截图", 2);
         }
@@ -42,6 +43,7 @@ export default React.createClass({
             console.log(data);
             if(data.code=="200"){
                 localStorage.credit=true;
+                localStorage.couponinfo=JSON.stringify(data.data)
                 console.log(localStorage.getCoupon)
                 if(localStorage.getCoupon=="true"){//判断信息是否获取过登陆优惠券
                     hashHistory.push("my");
@@ -51,7 +53,7 @@ export default React.createClass({
                     hashHistory.push("waitcoupon");
                    
                 }
-                localStorage.couponinfo=JSON.stringify(data.data)
+                
                 
             }else if(data.code=="400"){
                 Toast.info(data.msg, 2);
@@ -77,7 +79,7 @@ export default React.createClass({
             .then((data)=>{
                 console.log(data)
                 that.setState({
-                    imgurl:files[0].url,
+                    imgurl:data.data,
                     imgup:data.data
                     });
             })
@@ -106,14 +108,14 @@ export default React.createClass({
                                 <span>保险从业编号</span><InputItem
                                 onChange={(e)=>{this.setState({
                                     certificateNo:e})}} 
-                                style={{height:"0.42rem",fontSize:"0.28rem"}}
+                                style={{height:"0.52rem",fontSize:"0.28rem"}}
                                 placeholder="请输入从业编号" />
                             </div>
                             <div className="top">
                                 <span>所属公司</span><InputItem
                                  onChange={(e)=>{this.setState({
                                     companyName:e})}} 
-                                style={{height:"0.42rem",fontSize:"0.28rem"}}
+                                style={{height:"0.52rem",fontSize:"0.28rem"}}
                                 placeholder="请输入公司名称" />
                             </div>
                             <div className="top"

@@ -55,9 +55,16 @@ export default React.createClass({
         }
     },
     submit(e){
-
-        // console.log(this.state.check)
         e.preventDefault();
+        if(!this.state.phone){
+            Toast.info('请输入手机号码', 1); 
+        }else if(!this.state.pwd){
+            Toast.info('请输入验证码', 1);
+        }else{
+
+        
+        // console.log(this.state.check)
+        
         if(this.state.check){
         var data=new FormData();//登录
         data.append("loginName",this.state.phone);
@@ -78,22 +85,21 @@ export default React.createClass({
                     localStorage.Phone=this.state.phone;
                     Toast.info('登录成功', 1);
                     if(data.state==2){
-                        hashHistory.push("loginsuccess");
-                        if(localStorage.credit){
-                            hashHistory.push("home")
-                        }
-                    }if(data.state==1){
                         hashHistory.push("home");
+                        
+                    }if(data.state==1){
+                        
+                        hashHistory.push("loginsuccess");
                         localStorage.write=false;//第一次登陆,信息没有完善,没有获取到优惠券
                     }
                 }else{
-                    Toast.info('请输入正确的参数', 1);
+                    Toast.info('验证码不正确', 1);
                 }
             }
         })     
     }else{
         Toast.info('请勾选注册协议', 1);
-    }
+    }}
     },
     pwd(e){
         this.setState({

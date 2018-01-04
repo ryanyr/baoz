@@ -64,7 +64,7 @@ export default React.createClass({
                         <i
                         style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
                         ></i>
-                        <span>实际到账：{this.state.realAmount}.00</span>
+                        <span>实际到账：{this.state.realAmount}.00元</span>
                     </div>
                     <div className="info_list">
                         <i

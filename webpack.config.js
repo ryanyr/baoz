@@ -24,13 +24,14 @@ module.exports = {
         new webpack.ProvidePlugin({
             React : "react",
             $:"jquery",
+            Qr:"qrcode"
         }),
-          new webpack.optimize.UglifyJsPlugin({
+        new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
             },
             sourceMap: true,
             mangle: true
-        })   
+        })
     ],  
 }

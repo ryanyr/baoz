@@ -17,6 +17,9 @@ export default React.createClass({
     btn(){
         // console.log(this.props.his)
     },
+    btt(){
+        hashHistory.push("usecoupon");
+    },
     render(){
         var goback=null;
         var show=null;
@@ -48,7 +51,7 @@ export default React.createClass({
         }
         if(this.props.tip){
             tip=(
-                <div className="tip">
+                <div className="tip" onClick={this.btt}>
                     <img src="images/images/tip.png" />
                 </div>
             )

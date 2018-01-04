@@ -14,6 +14,7 @@ import About from "./view/router/about/aboutRouter";//关于我们
 import Card from "./view/router/creditcard/creditcard";//信用卡代还
 import Withdraw from "./view/router/withdraw/withdrawRouter";//立即提现
 import Coupon from "./view/router/coupon/couponRouter";//优惠券
+import Usecoupon from "./view/router/usecoupon/usecouponRouter";//如何使用优惠券
 import Meloan from "./view/router/meloan/merchantsRouter";//我要贷款
 import Memoney from "./view/router/memoney/somewordRouter";//我要赚钱
 import Gvrp from "./view/router/gvrp/gvrpRouter";//注册协议
@@ -72,7 +73,8 @@ export default React.createClass({
                     <Route path="pmh" component={Pmh} />
                     <Route path="loanlist" component={Loanlist} />
                     <Route path="makemoney" component={Makemoney} />                   
-                    <Route path="ddd" component={Ddd} />                   
+                    <Route path="ddd" component={Ddd} />
+                    <Route path="usecoupon" component={Usecoupon} />                     
                 </Route>
             </Router>
         )

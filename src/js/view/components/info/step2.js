@@ -127,7 +127,7 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl:files[0].url,
+                imgurl:data.data,
                 imgup1:data.data
             })
         })
@@ -137,7 +137,7 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl2:files[0].url,
+                imgurl2:data.data,
                 imgup2:data.data
             })
         })
@@ -146,7 +146,7 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl3:files[0].url,
+                imgurl3:data.data,
                 imgup3:data.data
             })
         })
@@ -155,7 +155,7 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl4:files[0].url,
+                imgurl4:data.data,
                 imgup4:data.data
             })
         })

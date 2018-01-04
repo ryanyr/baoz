@@ -22,8 +22,8 @@ export default React.createClass({
     btn(){
       //保存身份接口
       console.log(1)
-        if(!this.state.name){
-            Toast.info("请输入用户名", 2);
+        if(!/^[\u4e00-\u9fa5]{2,4}/g.test(this.state.name)){
+            Toast.info("请输入正确的用户名", 2);
         }else if(!this.state.idcard){
             Toast.info("请输入身份证", 2);
         }else if(!this.state.upimg1||!this.state.upimg2||!this.state.upimg3){
@@ -97,7 +97,7 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl:files[0].url,
+                imgurl:data.data,
                 upimg1:data.data
             })
         })
@@ -107,7 +107,7 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl2:files[0].url,
+                imgurl2:data.data,
                 upimg2:data.data
             })
         })
@@ -116,7 +116,7 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl3:files[0].url,
+                imgurl3:data.data,
                 upimg3:data.data
             })
         })

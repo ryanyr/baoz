@@ -15,23 +15,23 @@ export default React.createClass({
     },
     componentWillMount(){
         var that=this;
-        var data1=new FormData();
-        data1.append("couponType",1);
-        data1.append("page",1);
-        data1.append("pageSize",5);
-        data1.append("userId",localStorage.userId);
-        fetch(url.url+"/api/act/coupon/query.htm",{
-          headers:{
-              token:localStorage.Token
-          },
-          method:"POST",body:data1})
-          .then(r=>r.json())
-          .then((data)=>{
-            console.log(data)    
-              that.setState({
-                  couponNo:data.data.list[0].couponNo
-              })
-          })
+        // var data1=new FormData();
+        // data1.append("couponType",1);
+        // data1.append("page",1);
+        // data1.append("pageSize",5);
+        // data1.append("userId",localStorage.userId);
+        // fetch(url.url+"/api/act/coupon/query.htm",{
+        //   headers:{
+        //       token:localStorage.Token
+        //   },
+        //   method:"POST",body:data1})
+        //   .then(r=>r.json())
+        //   .then((data)=>{
+        //     console.log(data)    
+        //       that.setState({
+        //           couponNo:data.data.list[0].couponNo
+        //       })
+        //   })
         // var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);

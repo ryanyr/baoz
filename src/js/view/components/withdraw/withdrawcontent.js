@@ -15,29 +15,31 @@ export default React.createClass({
             insuranceCompany:"",
             img:"",
             fee:0,
+            list:[],
             check2:true,
-            couponNo:""
+            couponNo:"",
+            listCoupon:[]
         }
     },
     componentWillMount(){
       var that=this;
       var data1=new FormData();
-      data1.append("couponType",1);
-      data1.append("page",1);
-      data1.append("pageSize",5);
-      data1.append("userId",localStorage.userId);
-      fetch(url.url+"/api/act/coupon/query.htm",{
-        headers:{
-            token:localStorage.Token
-        },
-        method:"POST",body:data1})
-        .then(r=>r.json())
-        .then((data)=>{
-          console.log(data)    
-            that.setState({
-                couponNo:data.data.list[0].couponNo
-            })
-        })
+    //   data1.append("couponType",1);
+    //   data1.append("page",1);
+    //   data1.append("pageSize",5);
+    //   data1.append("userId",localStorage.userId);
+    //   fetch(url.url+"/api/act/coupon/query.htm",{
+    //     headers:{
+    //         token:localStorage.Token
+    //     },
+    //     method:"POST",body:data1})
+    //     .then(r=>r.json())
+    //     .then((data)=>{
+    //       console.log(data)    
+    //         that.setState({
+    //             couponNo:data.data.list[0].couponNo
+    //         })
+    //     })
         // var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
@@ -54,29 +56,47 @@ export default React.createClass({
           })       
     },  
     submit(){
+        console.log(this.state)
         var reg = new RegExp("^[0-9]*$");
-        if(!reg.test(this.state.policyAmount)){
+        console.log(!reg.test(this.state.policyAmount))
+        if(!/^[0-9]{1,6}$/g.test(this.state.policyAmount)){
             Toast.info("请输入正确的保单金额", 2)
-        }else if(!reg.test(this.state.money)){
+        }
+        else if(!/^[0-9]{3,6}$/g.test(this.state.money)){
             Toast.info("请输入正确的提现金额", 2)
-        }else if(!this.state.money||!this.state.policyAmount||!this.state.insuranceCompany||!this.state.img){
+        }else if(!/^[\u4e00-\u9fa5]{2,10}$/g.test(this.state.insuranceCompany)){
+            Toast.info("请输入正确的承保公司", 2)
+        }
+        else if(!this.state.money||!this.state.policyAmount||!this.state.insuranceCompany||!this.state.img){
             Toast.info("请填写完整参数", 2)
-        }else{
+        }
+        else{
 
    
-        if(this.state.money>5000||this.state.money<100){//提交申请
+        if
+        (this.state.money>5000||this.state.money<100){//提交申请
             Toast.info("提现金额100-5000", 2)
-        }else{
+        }else if(this.state.list.length<3){
+            Toast.info("最少上传3张保单图片", 2)
+        }else if(this.state.money-this.state.policyAmount>0){
+            console.log(this.state.money);
+            console.log(this.state.policyAmount)
+            Toast.info("提现金额不得大于保单金额", 2)
+        }else if(this.state.money>this.state.unuser){
+            Toast.info("提现金额不得大于剩余额度", 2)
+        }
+        else{
         if(this.state.check){      
         
-        console.log(this.state)
+        // console.log(this.state)
+        
         var that=this;    
    
         var data=new FormData();
         data.append("userId",localStorage.userId);
         data.append("amount",this.state.money);
         data.append("policyAmount",this.state.policyAmount);
-        data.append("couponNo",this.state.couponNo);
+        // data.append("couponNo",this.state.couponNo);
         fetch(url.url+"/api/act/borrow/apply.htm",{
         headers:{
             token:localStorage.Token
@@ -100,8 +120,13 @@ export default React.createClass({
     },
     confirm(){//确认申请
     
-        console.log(this.state)
+        var img1=this.state.list[0];
+        var img2=this.state.list[1];
+        var img3=this.state.list[2];
+        var img4=this.state.list[3];
         var that=this;
+        var listid=this.state.check2?this.state.listCoupon[0].couponNo:"";//优惠券号
+        console.log(listid);
       var data=new FormData();
       data.append("userId",localStorage.userId);
       data.append("amount",this.state.money);
@@ -109,12 +134,16 @@ export default React.createClass({
       data.append("channelId","1");
       data.append("client","h5");
       data.append("insuranceCompany",this.state.insuranceCompany);
-      data.append("listCouponNo",this.state.listCoupon);
+      data.append("couponNo",listid);
       data.append("policyAmount",this.state.money);
-      data.append("policyImg",this.state.img);
+      data.append("policyImg",img1);
+      data.append("policyImg1",img2);
+      data.append("policyImg2",img3);
+      data.append("policyImg3",img4);
       data.append("serviceFee",this.state.serviceFee);
       data.append("timeLimit","7");
-
+        console.log(this.state.check2);
+        console.log(this.state.listCoupon[0].couponNo)
       fetch(url.url+"/api/act/borrow/save.htm",{
         headers:{
             token:localStorage.Token
@@ -122,7 +151,7 @@ export default React.createClass({
         method:"POST",body:data})
         .then(r=>r.json())
         .then((data)=>{
-        //   console.log(data)    
+          console.log(data)    
         if(data.code=="200"){
             that.setState({
                 show:false
@@ -136,7 +165,7 @@ export default React.createClass({
     onChange(files, type, index){
         // console.log(files)
         if(type=="add"){
-            // console.log(files[0].url);
+            console.log("add")
             var that=this;
             var data=new FormData();
             //此处图片进行压缩,写入image异步onload中
@@ -151,7 +180,9 @@ export default React.createClass({
                         method:"POST",body:data})
                         .then(r=>r.json())
                         .then((data)=>{
-                            console.log(data)
+                            that.state.list.push(data.data)
+                            console.log(that.state.list);
+                            
                             that.setState({
                                 img:data.data
                             })
@@ -160,9 +191,8 @@ export default React.createClass({
             img.src = files[0].url;     
             //图片压缩结束
         }else{
-            this.setState({
-                img:""
-            })
+            this.state.list.splice(index,1)
+            console.log(index)
         }
         this.setState({
             files,
@@ -170,7 +200,20 @@ export default React.createClass({
       },
      change2(){
         // console.log(1)
-        this.setState({check2:!this.state.check2})
+        console.log(this.state.list)
+        this.setState({check2:!this.state.check2});
+        // console.log(this.state.check2)
+        if(this.state.check2){
+            this.setState({
+                actualAmount:this.state.actualAmount+40,
+                // amount
+            })
+        }else{
+            this.setState({
+                actualAmount:this.state.actualAmount-40,
+                // amount
+            })
+        }
      },
     render(){
         const {files}=this.state;
@@ -187,7 +230,7 @@ export default React.createClass({
                     {/* <p>申请时间:</p> */}
                     <p>手续费:{this.state.serviceFee}</p>
                     <p
-                        style={{display:this.state.couponNo?"":"none"}}
+                        style={{display:this.state.listCoupon.length>0?"":"none"}}
                     ><input type="checkbox" defaultChecked={this.state.check2} onChange={this.change2}/>是否使用优惠券</p>
                     <p>待还金额:{this.state.totalMoney}</p>
                     <p>应还金额:{this.state.actualAmount}</p>
@@ -205,9 +248,9 @@ export default React.createClass({
                 </div>
                 <div className="title">
                     <div className="title_con">
-                        <i
-                            style={{background:"url(images/images/10475463301731984.png)",backgroundSize:"100%"}} 
-                        ></i><span>剩余可用提现额度：</span><span>{this.state.unuse}元</span>
+                        <div className="ti"
+                            style={{background:"url(images/images/10475463301731984.png)",backgroundSize:"100% 100%"}} 
+                        ></div><span>剩余可用提现额度：</span><span>{this.state.unuse}元</span>
                     </div>
                 </div>
                 <div className="tip">
@@ -228,7 +271,7 @@ export default React.createClass({
                         placeholder="请输入保单金额" />
                     </div>
                     <div className="top">
-                        <span style={{width:"1.52rem"}}>提现金额</span><InputItem 
+                        <span style={{width:"1.52rem"}}>提现金额</span><InputItem
                         value={this.state.money}
                         onChange={(e)=>{
                             // console.log(e==1)

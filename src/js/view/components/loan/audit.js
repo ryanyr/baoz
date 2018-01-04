@@ -8,7 +8,8 @@ export default React.createClass({
             list:[],
             list1:[],
             total:"",
-            page:1
+            page:1,
+            showpage:false
         }
     },
     componentWillMount(){
@@ -57,6 +58,11 @@ export default React.createClass({
             .then(r=>r.json())
             .then((data)=>{
                 console.log(data);
+                if(data.data.list.length>0){
+                    that.setState({
+                        showpage:true
+                    })
+                }
                 // if(data.state.)
                 var info=[];
                 for(var i=0;i<data.data.list.length;i++){
@@ -75,7 +81,7 @@ export default React.createClass({
                             data.data.list[i]["info"]="待放款审核"
                         }
                         else if(data.data.list[i].state=="31"){
-                            data.data.list[i]["info"]="放款审核审核通过"
+                            data.data.list[i]["info"]="放款审核通过"
                         }
                         else if(data.data.list[i].state=="32"){
                             data.data.list[i]["info"]="放款审核未通过"
@@ -121,6 +127,7 @@ export default React.createClass({
                 
                 <Pagination total={Math.ceil(this.state.total/5)}
                  className="custom-pagination-with-icon"
+                 style={{display:this.state.showpage?"":"none"}}
                 current={this.state.page}
                 onChange={(e)=>{
                     this.change(e)

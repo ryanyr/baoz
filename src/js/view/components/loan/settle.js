@@ -1,12 +1,15 @@
 import {Link} from "react-router";
 import url from "../../config/config";
-
+import {Pagination,Icon} from 'antd-mobile';
 
 export default React.createClass({
     getInitialState(){
         return {
             list:[],
-            createTime:""
+            createTime:"",
+            showpage:false,
+            page:1,
+            total:"",
         }
     },
     componentWillMount(){
@@ -23,11 +26,17 @@ export default React.createClass({
             method:"POST",body:data})
             .then(r=>r.json())
             .then((data)=>{
+                if(data.data.list.length>0){
+                    that.setState({
+                        showpage:true
+                    })
+                }
                 console.log(data);
                 var info=[];
                 // for(var i=0;i<;i++)
                 that.setState({
-                    list:data.data.list
+                    list:data.data.list,
+                    total:data.data.pageInfo.total
                 })
                 
             })
@@ -46,7 +55,7 @@ export default React.createClass({
                     </div>
                     <span></span>
                     <i
-                        style={{background:"url(images/images/right.png)",backgroundSize:"100%",marginLeft:"1.2rem"}}
+                        style={{background:"url(images/images/right.png)",backgroundSize:"100%",marginLeft:"0.3rem"}}
                     ></i>
                 </Link>
                 )
@@ -56,9 +65,26 @@ export default React.createClass({
             <div className="audit"
                 style={{display:show}}
             >   
-                
+                <div 
+                    style={{height:"7rem"}}
+                >
                 {list}
+                </div>
                 
+                <Pagination total={Math.ceil(this.state.total/5)}
+                 className="custom-pagination-with-icon"
+                 style={{display:this.state.showpage?"":"none"}}
+                current={this.state.page}
+                onChange={(e)=>{
+                    this.change(e)
+                }}
+                locale={{
+                prevText: (<span className="arrow-align" onClick={()=>{
+                    
+                }}>上一页</span>),
+                 nextText: (<span className="arrow-align">下一页</span>),
+                }}
+                /> 
             </div>
         )
     }

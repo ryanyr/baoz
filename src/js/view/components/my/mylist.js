@@ -59,6 +59,7 @@ export default React.createClass({
     },
     btn(){
         console.log(1);
+        window.location.reload()
         hashHistory.push("home");
         localStorage.Login="";
         localStorage.Token="";
@@ -178,10 +179,10 @@ export default React.createClass({
                     >{this.state.invitationCode}</span>
                     </div>
                     
-                 <div className="op_d"><img src="images/images/daikuan_08.gif" /></div>
+                 {/* <div className="op_d"><img src="images/images/daikuan_08.gif" /></div> */}
                 </Link>
             </div>
-            <div className="operationlist">
+            {/* <div className="operationlist">
                 <Link onClick={this.btn}>
                     <div className="op_left">
                       <img src="images/images/my_03 (5).gif" />
@@ -192,9 +193,14 @@ export default React.createClass({
                     </div>
                  <div className="op_d"><img src="images/images/daikuan_08.gif" /></div>
                 </Link>
-            </div>
+            </div> */}
+                  
                 </div>
-                
+                <div onClick={this.btn} style={{width:"90%",height:"1rem",background:"#f99b47",margin:"auto",marginTop:"0.4rem",
+                borderRadius:"0.1rem",textAlign:"center",lineHeight:"1rem",color:"#fff",fontSize:"0.32rem"
+            }}>
+                     退出
+                  </div>
             </div>
         )
     }

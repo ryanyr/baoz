@@ -7,7 +7,8 @@ export default React.createClass({
         return {
           list:[],
           page:1,
-          total:""
+          total:"",
+          showpage:false
         }
     },
     componentWillMount(){
@@ -25,6 +26,11 @@ export default React.createClass({
             method:"POST",body:data})
             .then(r=>r.json())
             .then((data)=>{
+                if(data.data.list.length>0){
+                    that.setState({
+                        showpage:true
+                    })
+                }
                 console.log(data);
                 var info=[];
                 for(var i=0;i<data.data.list.length;i++){
@@ -94,7 +100,7 @@ export default React.createClass({
                         onChange={this.checkchange} 
                         style={{marginRight:"0.2rem"}}
                     />全选</label>
-                    <span className="allmoney">总计：<span>10000元</span></span>
+                    <span className="allmoney">总计：<span>0元</span></span>
                     <div className="click">
                         批量还款
                     </div>
@@ -107,6 +113,7 @@ export default React.createClass({
                 
                 <Pagination total={Math.ceil(this.state.total/5)}
                  className="custom-pagination-with-icon"
+                 style={{display:this.state.showpage?"":"none"}}
                 current={this.state.page}
                 onChange={(e)=>{
                     this.change(e)
