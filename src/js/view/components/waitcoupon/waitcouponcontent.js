@@ -9,7 +9,7 @@ export default React.createClass({
         }
     },
     componentDidMount(){
-        // console.log(localStorage.couponinfo)
+        console.log(localStorage.couponinfo)
         // if()
         this.setState(JSON.parse(localStorage.couponinfo))
         

@@ -9,11 +9,9 @@ export default React.createClass({
     componentWillMount(){
         var orderNo=this.props.qu.orderId;
         var state=this.props.qu.state;
-        // console.log(this.props)
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
-        console.log(localStorage.userId)
         data.append("orderNo",orderNo);
         data.append("state",state);
 
@@ -29,7 +27,10 @@ export default React.createClass({
                 that.setState(data.data)
             }
                 
-            })
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
 
     },
     render(){

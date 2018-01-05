@@ -1,9 +1,8 @@
-import {InputItem,ImagePicker,Toast} from "antd-mobile";
+import {InputItem,ImagePicker,Toast,Picker,List} from "antd-mobile";
 import url from "../../config/config";
 import store from "../../../store/store";
 import {hashHistory,browserHistory} from "react-router";
 import {compress} from "../../../utils/imgCompress";
-
 export default React.createClass({
     getInitialState(){
         return {
@@ -11,26 +10,83 @@ export default React.createClass({
             imgurl:"images/images/icon_11.jpg",
             imgup:"",
             certificateNo:"",
-            companyName:"",
-            title:"代理人"
+            companyName:[],
+            title:"代理人",
+            list:[],
+            info:false,
+            value:[],//保险公司列表
+            value2:[]//职位列表
         }
     },
+    componentWillMount(){
+        var that=this;
+        fetch(url.url+"/api/act/mine/userInfo/insuranceList.htm",{
+           headers:{
+               token:localStorage.Token
+           },
+           method:"get"})
+           .then(r=>r.json())
+           .then((data)=>{
+               console.log(data)
+               var newlist=data.data.map((con)=>{
+                    return {label:con.companyName,value:con.companyName}
+                    // console.log(con.bankName)
+               })
+               console.log(newlist)
+               that.setState({
+                companyName:newlist
+               })
+               
+           }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+            });
+
+
+           var that=this;//查询信息是否完善
+			var data=new FormData();
+			data.append("userId",localStorage.userId);
+	  
+			fetch(url.url+"/api/act/mine/userInfo/getMyMessage.htm",{
+			  headers:{
+				  token:localStorage.Token
+			  },
+			  method:"POST",body:data})
+			  .then(r=>r.json())
+			  .then((data)=>{			
+                  if(data.data.userInfo=="未完善"){                       
+                  }else{
+                    that.setState({
+                        info:true
+                    })
+                  }
+               
+			  }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
+    },
     btn(){
+        console.log(this.state)
+        var that=this
         var reg=/^[0-9a-z]{4,20}$/ig;
         if(!reg.test(this.state.certificateNo)){
             Toast.info("请填写正确保险从业编号", 2);
-        }else if(!/^[\u4e00-\u9fa5]{2,8}/g.test(this.state.companyName)){
-            Toast.info("请填写正确的所属公司", 2);
-        }else if(!this.state.imgup){
-            Toast.info("请上传行销系统职位截图", 2);
         }
-        
+        else if(!this.state.value[0]){
+            Toast.info("请选择所属公司", 2);
+        }
+        else if(!this.state.value2[0]){
+            Toast.info("请选择职务", 2);
+        }
+        else if(!this.state.imgup){
+            Toast.info("请上传行销系统职位截图", 2);
+        }        
         else{
-        console.log(this.state)
         var data=new FormData();
         data.append("certificateNo",this.state.certificateNo);
-        data.append("companyName",this.state.companyName);
-        data.append("title",this.state.title);
+        data.append("companyName",this.state.value[0]);
+        data.append("title",this.state.value2[0]);
         data.append("titleImg",this.state.imgup);       
         data.append("userId",localStorage.userId);
         fetch(url.url+"/api/act/mine/userInfo/saveWorkInfo.htm",{
@@ -42,13 +98,11 @@ export default React.createClass({
         .then((data)=>{
             console.log(data);
             if(data.code=="200"){
-                localStorage.credit=true;
-                localStorage.couponinfo=JSON.stringify(data.data)
-                console.log(localStorage.getCoupon)
-                if(localStorage.getCoupon=="true"){//判断信息是否获取过登陆优惠券
-                    hashHistory.push("my");
-                    // localStorage.writed=false;
-                    
+                localStorage.couponinfo=JSON.stringify(data.data);
+                console.log(localStorage.couponinfo)
+                // console.log(that.stateinfo)               
+                if(that.state.info){//判断信息是否获取过登陆优惠券
+                    hashHistory.push("my");                    
                 }else{
                     hashHistory.push("waitcoupon");
                    
@@ -59,7 +113,10 @@ export default React.createClass({
                 Toast.info(data.msg, 2);
 
             }
-        })
+        }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     }
     },
     onChange(files, type, index){
@@ -82,7 +139,10 @@ export default React.createClass({
                     imgurl:data.data,
                     imgup:data.data
                     });
-            })
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
         } 
         img.src = files[0].url;     
         //图片压缩结束 
@@ -92,6 +152,7 @@ export default React.createClass({
         var showbox=this.props.page==3?"":"none";
         return (
             <div className="step_3" style={{display:showbox}}>
+           
                 <div className="title">
                     <img src="images/images/title_3.jpg" />
                 </div>
@@ -112,17 +173,56 @@ export default React.createClass({
                                 placeholder="请输入从业编号" />
                             </div>
                             <div className="top">
-                                <span>所属公司</span><InputItem
-                                 onChange={(e)=>{this.setState({
-                                    companyName:e})}} 
-                                style={{height:"0.52rem",fontSize:"0.28rem"}}
-                                placeholder="请输入公司名称" />
+                                <span>所属公司</span>
+                                <Picker extra="请选择所属公司"
+                                    
+                                    data={this.state.companyName}
+                                    cols="1" 
+                                    value={this.state.value}                                  
+                                    onOk={e => {this.setState({value:e})}}
+                                    onDismiss={e => console.log('dismiss', e)}
+                                    >
+                                    <List.Item
+                                        style={{width:"4rem"}}
+                                    ></List.Item>
+                                    </Picker>
+                                {/* <select
+                                value={this.state.companyName}
+                                onChange={(e)=>{
+                                    // console.log
+                                    this.setState({
+                                        companyName:e.target.value
+                                    })
+                                }}
+                                    style={{height:"0.5rem",lineHeight:"0.5rem"}}
+                                >
+                                    {
+                                        this.state.list.map((ind,index)=>{
+                                            return (
+                                                <option key={index} value={ind.companyName}>{ind.companyName}</option>
+                                            )
+                                        })
+                                    }
+                                </select> */}
+                               
                             </div>
                             <div className="top"
                                 style={{borderTop:"0.02rem solid #f89c47"}}
                             >
-                                <span>代理人</span>
-                                <div
+                                <span>职务</span>
+                                <Picker extra="请选择职务"
+                                    
+                                    data={[{label:"代理人",value:"代理人"},{label:"主任",value:"主任"},{label:"经理",value:"经理"},{label:"总监",value:"总监"},]}
+                                    cols="1" 
+                                    value={this.state.value2}                                  
+                                    onOk={e => {this.setState({value2:e})}}
+                                    onDismiss={e => console.log('dismiss', e)}
+                                    >
+                                    <List.Item
+                                        style={{width:"4rem"}}
+                                    ></List.Item>
+                                    </Picker>
+                                {/* <div
                                     style={{paddingLeft:"15px"}}
                                 >
                                 <select
@@ -139,7 +239,7 @@ export default React.createClass({
                                     <option value="代理人2">经理</option>
                                     <option value="代理人2">总监</option>
                                 </select>
-                                </div>
+                                </div> */}
                                
                             </div>
                             <div className="upimg">

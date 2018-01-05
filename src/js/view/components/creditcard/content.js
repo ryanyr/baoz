@@ -10,29 +10,12 @@ export default React.createClass({
             show:false,
             serviceFee:0,
             couponNo:"",
-            check2:true
+            check2:true,
+            listCoupon:[]
         }
     },
     componentWillMount(){
         var that=this;
-        // var data1=new FormData();
-        // data1.append("couponType",1);
-        // data1.append("page",1);
-        // data1.append("pageSize",5);
-        // data1.append("userId",localStorage.userId);
-        // fetch(url.url+"/api/act/coupon/query.htm",{
-        //   headers:{
-        //       token:localStorage.Token
-        //   },
-        //   method:"POST",body:data1})
-        //   .then(r=>r.json())
-        //   .then((data)=>{
-        //     console.log(data)    
-        //       that.setState({
-        //           couponNo:data.data.list[0].couponNo
-        //       })
-        //   })
-        // var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
   
@@ -45,7 +28,10 @@ export default React.createClass({
           .then((data)=>{
             console.log(data)    
               that.setState(data.data);
-          })
+          }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     },
     change(e){
         // console.log(e)
@@ -83,11 +69,8 @@ export default React.createClass({
         
         else{
             if(this.state.check){
-
-            
             var data=new FormData();
         data.append("amount",this.state.money);
-        data.append("couponNo","");
         data.append("userId",localStorage.userId)
         fetch(url.url+"/api/act/pay/repayment/apply.htm",{
             headers:{
@@ -99,11 +82,19 @@ export default React.createClass({
                 console.log(data)
                 if(data.code=="200"){
                     that.setState(data.data);
+                    if(data.data.listCoupon.length==0){//如果没有优惠券,把选择默认按钮去掉
+                        that.setState({
+                            check2:false
+                        })
+                    }
                     that.setState({show:true})
-
+                    
                 }
                 
-            })
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+            });
         }else{
             Toast.info('请同意代还协议', 2);
         }
@@ -111,14 +102,19 @@ export default React.createClass({
         
     },
     confirm(){
-        console.log(this.state)
+        console.log(this.state.check2)
         var that=this;
         var data=new FormData();
+        var listid="";
+        if(this.state.check2){
+            listid=this.state.listCoupon[0].couponNo
+        }
+        console.log(listid)
         data.append("amount",this.state.money);
         data.append("borrowType","10");
         data.append("channelId","1");
         data.append("client","h5");
-        data.append("listCouponNo",this.state.listCoupon);
+        data.append("couponNo",listid);
         data.append("serviceFee",this.state.serviceFee);
         data.append("timeLimit","7");
         data.append("userId",localStorage.userId)
@@ -137,11 +133,23 @@ export default React.createClass({
                     hashHistory.push("loan")
                 }
                 
-            })
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     },
     change2(){
         // console.log(1)
         this.setState({check2:!this.state.check2})
+        if(this.state.check2){
+            this.setState({
+                actualAmount:this.state.actualAmount+40,
+            })
+        }else{
+            this.setState({
+                actualAmount:this.state.actualAmount-40,
+            })
+        }
      },
     render(){
         return (
@@ -150,21 +158,30 @@ export default React.createClass({
                     style={{display:this.state.show?"block":"none"}}
                 >
                     <div className="con">
-                    <p>确认提交</p>
-                    <p>您的保单体现申请信息如下:</p>
-                    <p>提现金额:{this.state.amount}</p>
-                    <p>时间期限:7天</p>
-                    {/* <p>申请时间:</p> */}
-                    <p>手续费:{this.state.serviceFee}</p>
-                    <p
-                        style={{display:this.state.couponNo?"":"none"}}
-                    ><input type="checkbox" defaultChecked={this.state.check2} onChange={this.change2}/>是否使用优惠券</p>
-                    <p>待还金额:{this.state.totalMoney}</p>
-                    <p>应还金额:{this.state.actualAmount}</p>
+                    <div className="top"
+                        style={{background:"url(images/images/850855399924466698.png) 0% 0%/100%" }}
+                    >
+                        <p>您的保单体现申请信息如下</p>
+                        <p>提现金额:{this.state.amount}</p>
+                        <p>时间期限:7天</p>
+                        <p>手续费:{this.state.serviceFee}</p>
+                        <p>待还金额:{this.state.totalMoney}</p>
+                        <p>应还金额:{this.state.actualAmount}</p>
+                    </div>
+                    <div className="bottom">
+                    <div
+                        style={{height:"0.6rem"}}
+                    >
+                        <p
+                            style={{display:this.state.listCoupon.length>0?"":"none"}}
+                        ><input type="checkbox" defaultChecked={this.state.check2} onChange={this.change2}/>是否使用优惠券</p>
+                    </div>
                     <div className="btn">
                         <div onClick={()=>{this.setState({show:false})}}>取消</div>
                         <div onClick={this.confirm}>确认</div>
                     </div>
+                    </div>
+                    
                     </div>
                 </div>
                 <div className="tip">

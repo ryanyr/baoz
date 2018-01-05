@@ -13,13 +13,12 @@ export default React.createClass({
         }
     },
     componentWillMount(){
-        // if(store.getState().)
-        console.log(store.getState().LIST_1.page)
+
+
         if(store.getState().LIST_1.total){
-            console.log("有")
             this.setState(store.getState().LIST_1);
             this.change(store.getState().LIST_1.page)
-            // console.log(this.state.page)
+
         }else{
             this.change(this.state.page)
         }
@@ -28,7 +27,6 @@ export default React.createClass({
         
     },
     componentWillUnmount(){
-        console.log(1)
         var that=this;
         store.dispatch({
             type:"LIST_1",
@@ -45,9 +43,7 @@ export default React.createClass({
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
-        data.append("stateList",[10,20,30,21,31,32,41]);
-       
-       
+        data.append("stateList",[10,20,30,21,32,41]);
         data.append("page",e);
         data.append("pageSize",5);
         fetch(url.url+"/api/act/mine/borrow/list.htm",{
@@ -57,20 +53,17 @@ export default React.createClass({
             method:"POST",body:data})
             .then(r=>r.json())
             .then((data)=>{
-                console.log(data);
                 if(data.data.list.length>0){
                     that.setState({
                         showpage:true
                     })
                 }
-                // if(data.state.)
                 var info=[];
                 for(var i=0;i<data.data.list.length;i++){
                     if(data.data.list[i].state=="10"||data.data.list[i].state=="20"||data.data.list[i].state=="21"||data.data.list[i].state=="30"||data.data.list[i].state=="31"||data.data.list[i].state=="32"){
                         
                         if(data.data.list[i].state=="10"){
                             data.data.list[i]["info"]="审核中"
-                            console.log(data.data.list[i])
                         }else if(data.data.list[i].state=="20"){
                             data.data.list[i]["info"]="人工审核通过"
                         }
@@ -94,8 +87,10 @@ export default React.createClass({
                 }
                 that.setState({list:info,total:data.data.pageInfo.total
                 })
-                console.log(info)
-            })
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     },
     render(){
         var list=null;

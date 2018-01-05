@@ -1,4 +1,4 @@
-import {InputItem,ImagePicker,Toast} from "antd-mobile";
+import {InputItem,ImagePicker,Toast,Picker,List} from "antd-mobile";
 import url from "../../config/config";
 import {compress} from "../../../utils/imgCompress";
 
@@ -7,9 +7,7 @@ export default React.createClass({
     getInitialState(){
         return {
             files:[],
-            bank:"中国工商银行",
             bankcard:"",
-            credit:"中国工商银行",
             creditcard:"",
             imgurl:"images/images/icon_09.jpg",
             imgurl2:"images/images/icon_10.jpg",
@@ -19,8 +17,9 @@ export default React.createClass({
             imgup2:"",
             imgup3:"",
             imgup4:"",
+            value:["中国工商银行"],//银行名称
+            value2:["中国工商银行"],//信用卡名称
             banklist:[],
-            creditcardlist:[]
         }
     },
     componentWillMount(){
@@ -33,16 +32,26 @@ export default React.createClass({
             .then(r=>r.json())
             .then((data)=>{
                 console.log(data);
+                var newlist=data.data.map((con)=>{
+                    return {
+                        label:con.bankName,
+                        value:con.bankName
+                    }
+                })
                 that.setState({
-                    banklist:data.data,
+                    banklist:newlist,
                     creditcardlist:data.data
                 })
                 
-            })
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
             
        
     },
     btn(){
+        console.log(this.state)
         if(!this.state.bankcard){
             Toast.info("请填写银行卡号", 2);
             
@@ -69,9 +78,9 @@ export default React.createClass({
         var that=this;//保存银行卡信用卡接口
         var data=new FormData();
         data.append("backImg",this.state.imgup2);
-        data.append("bank",this.state.bank);
+        data.append("bank",this.state.value[0]);
         data.append("cardNo",this.state.bankcard);
-        data.append("creditBank",this.state.credit);
+        data.append("creditBank",this.state.value2[0]);
         data.append("creditNo",this.state.creditcard);
         data.append("creditbackImg",this.state.imgup3);
         data.append("creditfrontImg",this.state.imgup4);
@@ -92,7 +101,10 @@ export default React.createClass({
             }else if(data.code=="400"){
                 Toast.info(data.msg, 2);
             }
-        })
+        }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     }
     },
     upimg(files){
@@ -114,7 +126,10 @@ export default React.createClass({
                 .then((data)=>{
                     console.log(data)
                     suc(data)
-                })
+                }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
             
             // return p;
         } 
@@ -179,24 +194,22 @@ export default React.createClass({
                         <div className="price">
                             <div className="top">
                                 <span>银行名称</span>
-                                <select value="中国工商银行"
-                                value={this.state.bank} 
-                                style={{marginLeft:"0.25rem",height:"0.5rem",lineHeiht:"0.5rem"}}
-                                onChange={(e)=>{
-                                    console.log(e.target.value);
-                                    this.setState({
-                                        bank:e.target.value
-                                    })
-                                }}>
-                                    {
-                                        this.state.banklist.map((ind,index)=>{
-                                            return <option key={index} value={ind.bankName}>{ind.bankName}</option>
-                                        })
-                                    }
-                                </select>
+                                <Picker extra="请选择银行"
+                                    
+                                    data={this.state.banklist}
+                                    cols="1" 
+                                    value={this.state.value}                                  
+                                    onOk={e => {this.setState({value:e})}}
+                                    onDismiss={e => console.log('dismiss', e)}
+                                    >
+                                    <List.Item
+                                        style={{width:"4rem"}}
+                                    ></List.Item>
+                                    </Picker>
                             </div>
                             <div className="top">
                                 <span>银行卡号</span><InputItem
+                                style={{color: "#888"}}
                                 value={this.state.bankcard}
                                 onChange={(e)=>{
                                     this.setState({
@@ -255,31 +268,19 @@ export default React.createClass({
                         <div className="price">
                             <div className="top">
                                 <span>发卡行</span>
-                                <select value={this.state.credit}
-                                style={{marginLeft:"0.25rem",height:"0.5rem",lineHeiht:"0.5rem"}}
-                                onChange={(e)=>{
-                                    this.setState({
-                                        credit:e.target.value
-                                    })
-                                }}
-                                >
-                                    {
-                                        
-                                            this.state.creditcardlist.map((ind,index)=>{
-                                                return <option key={index} value={ind.bankName}>{ind.bankName}</option>
-                                            })
-                                        
-                                    }
-                                </select>
-                                {/* <InputItem
-                                value={this.state.credit}
-                                onChange={(e)=>{
-                                    this.setState({
-                                        credit:e
-                                    })
-                                }} 
-                                style={{height:"0.52rem",fontSize:"0.28rem"}}
-                                placeholder="请输入发卡行" /> */}
+                                <Picker extra="请选择发卡行"
+                                    
+                                    data={this.state.banklist}
+                                    cols="1" 
+                                    value={this.state.value2}                                  
+                                    onOk={e => {this.setState({value2:e})}}
+                                    onDismiss={e => console.log('dismiss', e)}
+                                    >
+                                    <List.Item
+                                        style={{width:"4rem"}}
+                                    ></List.Item>
+                                    </Picker>
+    
                             </div>
                             <div className="top">
                                 <span>信用卡号</span><InputItem

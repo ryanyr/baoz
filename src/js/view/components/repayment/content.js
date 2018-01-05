@@ -10,6 +10,24 @@ export default React.createClass({
             createTime:""
         }
     },
+    btn(){
+        console.log(1)
+        var data=new FormData();//还款
+        data.append("orderId",this.state.orderId);
+        data.append("repayAmount",this.state.repayAmount);
+        data.append("userId",localStorage.userId);
+        fetch(url.url+"/api/act/pay/repayment/repay.htm",{
+            headers:{
+                token:localStorage.Token
+            },
+            method:"POST",body:data})
+            .then(r=>r.json())
+            .then((data)=>{
+              console.log(data); 
+            //   var data = data.data;
+                                
+            })
+    },
     componentWillMount(){
         console.log(1)
         var orderNo=this.props.orderNo;
@@ -29,7 +47,10 @@ export default React.createClass({
             console.log(data)    
             that.setState(data.data)
                 
-            })
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     },
     render(){
         return (
@@ -101,7 +122,7 @@ export default React.createClass({
                     
                 </div>
                 <div className="btn_box">
-                        <button>还款</button>
+                        <button onClick={this.btn}>还款</button>
                 </div>
             </div>
         )

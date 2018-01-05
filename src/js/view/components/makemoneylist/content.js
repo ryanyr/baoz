@@ -44,7 +44,10 @@ export default React.createClass({
                 }else if(data.code=="400"){
                     Toast.info(data.msg, 2);
                 }
-            })
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     },
     render(){
         return (

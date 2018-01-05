@@ -26,7 +26,10 @@ export default React.createClass({
           var invicode = data.substr(data.indexOf("&")+1);   
           // console.log(invicode);
           that.setState({invicode:invicode});                      
-        })
+        }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     },
     render() {
       var invicode = this.state.invicode;

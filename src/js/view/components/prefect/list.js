@@ -32,7 +32,7 @@ export default React.createClass({
                     <i
                         style={{background:"url(images/images/icon_05.png)",backgroundSize:"100%"}}
                     ></i>
-                    职业信息
+                    基本信息
                 </div>
                 <div className="list_item">
                         <div>

@@ -1,30 +1,33 @@
 import {hashHistory,browserHistory} from "react-router";
 export default React.createClass({
+  getInitialState(){
+    return {
+
+    }
+  },
+  componentWillReceiveProps(newtprops){
+		this.setState(newtprops)
+	},
   btn1(){
-    // console.log(1)
     if(localStorage.Login){
-      if(localStorage.userInfo=="未完善"){//判断是否授信成功
-				hashHistory.push("information")	
-				
-			}else{
-				hashHistory.push("meloan")			
-			}
+      if(this.state.info=="已完善"){
+        hashHistory.push("meloan")
+      }else{
+        hashHistory.push("information")
+      }
     }else{
       hashHistory.push("login");
-      localStorage.leaveHome="meloan"
     }
   },
   btn2(){
     if(localStorage.Login){
-      if(localStorage.userInfo=="未完善"){//判断是否授信成功
-				hashHistory.push("information")	
-				
-			}else{
-				hashHistory.push("memoney")			
-			}
+      if(this.state.info=="已完善"){
+        hashHistory.push("memoney")
+      }else{
+        hashHistory.push("information")
+      }
     }else{
       hashHistory.push("login");
-      localStorage.leaveHome="memoney"
     }
   },
     render(){
@@ -46,11 +49,10 @@ export default React.createClass({
             </div>
             <div className="other_a" onClick={()=>{
                 if(localStorage.Login){
-                  if(localStorage.userInfo=="未完善"){//判断是否授信成功
-                    hashHistory.push("information")	
-                    
+                  if(this.state.info=="已完善"){
+                    hashHistory.push("qr")
                   }else{
-                    hashHistory.push("qr")			
+                    hashHistory.push("information")
                   }
                 }else{
                   hashHistory.push("login")

@@ -5,16 +5,19 @@ import url from "../../config/config";
 const alert = Modal.alert;
 export default React.createClass({
 	componentWillMount(){
-	
+		
+	},
+	componentWillReceiveProps(newtprops){
+		
+		this.setState(newtprops)
 	},
 	btn(){
-		// console.log(1)
-		if(localStorage.Login){
-			if(localStorage.userInfo=="未完善"){//判断是否授信成功
-				hashHistory.push("information")	
-				
+		
+		if(localStorage.Login){//判断是否登录
+			if(this.state.info=="已完善"){//根据父组件传过来的信息是否完善
+				hashHistory.push("withdraw")
 			}else{
-				hashHistory.push("withdraw")			
+				hashHistory.push("information")
 			}
 		}else{
 			hashHistory.push("login")
@@ -33,16 +36,14 @@ export default React.createClass({
 		</div>
 		<div className="anser" onClick={() => {
 			if(localStorage.Login){
-				if(localStorage.userInfo=="未完善"){//判断是否授信成功
-					hashHistory.push("information")	
-					
+				if(this.state.info=="已完善"){
+					hashHistory.push("pmh")
 				}else{
-					hashHistory.push("pmh")			
+					hashHistory.push("information")
 				}
 				
 			}else{
 				hashHistory.push("login");
-				localStorage.leaveHome="pmh"
 			}
 			
 		}}>

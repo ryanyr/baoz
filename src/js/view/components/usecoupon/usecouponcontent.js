@@ -4,9 +4,9 @@ export default React.createClass({
             <div className="ucpboss">
                 <div className="ucptop">
                     <div className="ucptopa"><img src="images/images/icon_05.png" /></div>
-                    <div>包赚优惠券使用说明</div>
+                    <div>保赚优惠券使用说明</div>
                 </div>
-                <div className="ucpbg" style={{background:"url(images/images/usecoupon2.png)",backgroundSize:"100% 100%"}}>
+                <div className="ucpbg" style={{background:"url(images/images/kopl.png)",backgroundSize:"100% 100%"}}>
                     <div className="ucpbga" style={{background:"url(images/images/ucpw.png)",backgroundSize:"100% 100%"}}>优惠券说明</div>
                     <div className="ucpbgb">
                         <p>1、优惠券仅在保赚平台使用，按面值额度减免支付。</p>

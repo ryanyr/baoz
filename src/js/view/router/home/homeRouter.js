@@ -11,43 +11,40 @@ import {add,reduce} from "../../../actions/actions";
 import store from "../../../store/store";
 import url from "../../config/config";
 export default React.createClass({
+    getInitialState(){
+      return {
+        userInfo:"1",
+      }
+    },
     getDefaultProps(){
         return {
-            title:"首页"
+            title:"首页",
+            
         } 
     },
     componentWillMount(){
-               // console.log(1)
-            //    console.log(this.props)
+        // var code=this.props.location.query.
+        // var code
+        if(this.props.location.query){
+            localStorage.code=this.props.location.query.invicode
+        }
 		if(localStorage.Login){
-			// console.log(1)
 			var that=this;
 			var data=new FormData();
 			data.append("userId",localStorage.userId);
 	  
-			fetch(url.url+"/api/act/mine/userInfo/getMyMessage.htm",{
+			fetch(url.url+"/api/act/mine/userInfo/getMyMessage.htm",{//获取用户的登录信息是否完善
 			  headers:{
 				  token:localStorage.Token
 			  },
 			  method:"POST",body:data})
 			  .then(r=>r.json())
-			  .then((data)=>{
-				console.log(data)    
+			  .then((data)=>{    
 				  that.setState(data.data);
 				store.dispatch({
 					type:"HOME",
 					data:data.data
 				})
-                  // console.log(data.data.userInfo)
-                //   localStrage.userphone=data.data.
-                  localStorage.userInfo=data.data.userInfo;
-                  if(data.data.userInfo=="未完善"){
-                    console.log("未完善home")
-                    localStorage.getCoupon=false;//如果信息未完善,当填写信息的时候,会跳转到优惠券
-                  }else{
-                    localStorage.getCoupon=true; 
-                  }
-                //   console.log(localStorage.userInfo)
 			  })
 
       
@@ -61,9 +58,9 @@ export default React.createClass({
                 <Top title={this.props.title} ref="nu" back={false} history={this.props.history}/>
                 <Banner />
                 <Kk />
-                <Begin />
+                <Begin info={this.state.userInfo}/>
                 
-                <Develop />
+                <Develop info={this.state.userInfo} />
                
                 <Footer home="true"/>
             </div>

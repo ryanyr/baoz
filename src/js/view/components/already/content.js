@@ -3,6 +3,8 @@ import {InputItem,ImagePicker,Toast } from "antd-mobile";
 export default React.createClass({
     getInitialState(){
         return {
+            repayTime:"",
+            createTime:""
 
         }
     },
@@ -27,11 +29,13 @@ export default React.createClass({
             if(data.code=="200"){
                 that.setState(data.data)
             }else{
-                Toast.info("服务器错误", 2);
-            }    
-            
+                Toast.info("服务器响应超时", 2);
+            }            
                 
-            })
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+            });
   },
   render() {
     return (
@@ -42,25 +46,25 @@ export default React.createClass({
                         <i
                             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>借款金额：{}.00元</span>
+                        <span>借款金额：{this.state.amount}.00元</span>
                     </div>
                     <div>
                         <i
                             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>实际到账：{}.00元</span>
+                        <span>实际到账：{this.state.realAmount}.00元</span>
                     </div>
                     <div>
                         <i
                             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>服务费用：100.00元</span>
+                        <span>服务费用：{this.state.serviceFee}.00元</span>
                     </div>
                     <div>
                         <i
                             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>利息费用：100.00元</span>
+                        <span>利息费用：{this.state.interest}.00元</span>
                     </div>
                     <div>
                         <i
@@ -72,25 +76,25 @@ export default React.createClass({
                         <i
                             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>申请时间：2017-10-10</span>
+                        <span>申请时间：{this.state.createTime.split(" ")[0]}</span>
                     </div>
                     <div>
                         <i
                             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>收款卡号：17188171718</span>
+                        <span>收款卡号：{this.state.cardNo}</span>
                     </div>
                     <div>
                         <i
                             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>应还金额：17188171718</span>
+                        <span>应还金额：{this.state.repayAmount}</span>
                     </div>
                     <div>
                         <i
                             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>应还日期：2017-9-8</span>
+                        <span>应还日期：{this.state.repayTime.split(" ")[0]}</span>
                     </div>
                     <div className="yellow"
                         style={{marginTop:"0.4rem"}}
@@ -98,19 +102,19 @@ export default React.createClass({
                         <i
                             style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>优惠减免：40.00元</span>
+                        <span>优惠减免：{this.state.remitAmount}.00元</span>
                     </div>
                     <div className="yellow">
                         <i
                             style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>应还金额：2200.00元</span>
+                        <span>应还金额：{this.state.repayAmount}.00元</span>
                     </div>
                     <div className="yellow">
                         <i
                             style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>应还日期：2222-2-22</span>
+                        <span>应还日期：{this.state.repayTime.split(" ")[0]}</span>
                     </div>                   
                 </div>
       </div>

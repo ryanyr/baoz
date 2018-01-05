@@ -4,7 +4,7 @@ import {hashHistory,browserHistory} from "react-router";
 
 export default React.createClass({
     componentWillMount(){
-        console.log(this.props.history)
+        
     },
     btn(){
         hashHistory.push("qr");

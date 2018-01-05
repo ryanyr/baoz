@@ -22,12 +22,14 @@ export default React.createClass({
         },
         method:"POST",body:data})
         .then(r=>r.json())
-        .then((data)=>{
-          console.log(data)    
+        .then((data)=>{  
             that.setState({
               coupon:data.data.list
             })
-        })
+        }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
         var newdata=new FormData();
         newdata.append("couponType",2);
         newdata.append("page",1);
@@ -39,12 +41,14 @@ export default React.createClass({
           },
           method:"POST",body:newdata})
           .then(r=>r.json())
-          .then((data)=>{
-            console.log(data)    
+          .then((data)=>{   
               that.setState({
                 usedcoupon:data.data.list
               })
-          })
+          }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     },
     render(){
         const showuse=this.state.page==1?"":"none";
@@ -73,7 +77,7 @@ export default React.createClass({
                   key={ind}
                   style={{display:showuse}}
                   onClick={
-                    ()=>{hashHistory.push({path:"getcoupon",query:{couponid:ind.amount}
+                    ()=>{hashHistory.push({pathname:"getcoupon",query:{couponid:ind.id}
                   })
                   }
                   }
@@ -101,7 +105,8 @@ export default React.createClass({
                   key={ind}
                   style={{display:showused}}
                 >
-                  <img src="images/images/used.png" />
+                {/* "images/images/used.png" */}
+                  <img src={ind.state==20?"images/images/646095611030435475.png":"images/images/used.png"} />
                   <div className="use_con"
                   style={{background:"url(images/images/coupon_2.png)",backgroundSize:"100%"}}
                   >

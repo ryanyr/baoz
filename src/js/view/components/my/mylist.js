@@ -58,16 +58,12 @@ export default React.createClass({
         }
     },
     btn(){
-        console.log(1);
         window.location.reload()
         hashHistory.push("home");
         localStorage.Login="";
         localStorage.Token="";
-        //在用户注销退出时，不必要对用户授信状态改为false，不然下次登录会强制进入授信过程
-        // localStorage.credit=false;
     },
     componentWillMount(){
-        // this.setState(store.getState().My)
             var that=this;
 			var data=new FormData();
 			data.append("userId",localStorage.userId);
@@ -79,14 +75,13 @@ export default React.createClass({
 			  method:"POST",body:data})
 			  .then(r=>r.json())
 			  .then((data)=>{
-				console.log(data)    
+                  console.log(data)   
 				  that.setState(data.data);
 		
-			  })
-
-      
-      
-     
+			  }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     },
     render(){
         const info=this.props.info.map((con,index)=>{
@@ -197,7 +192,7 @@ export default React.createClass({
                   
                 </div>
                 <div onClick={this.btn} style={{width:"90%",height:"1rem",background:"#f99b47",margin:"auto",marginTop:"0.4rem",
-                borderRadius:"0.1rem",textAlign:"center",lineHeight:"1rem",color:"#fff",fontSize:"0.32rem"
+                borderRadius:"0.1rem",textAlign:"center",lineHeight:"1rem",color:"#fff",fontSize:"0.32rem",cursor:"pointer"
             }}>
                      退出
                   </div>

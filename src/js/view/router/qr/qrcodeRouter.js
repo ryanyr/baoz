@@ -6,7 +6,7 @@ export default React.createClass({
     render:function(){
         return (
             <div className="qr">
-                <Top title="商户二维码" back="true"/>
+                <Top title="推广二维码" back="true"/>
                 <Counte />
                 <Footer />
             </div>

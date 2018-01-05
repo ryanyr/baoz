@@ -3,7 +3,7 @@ import {hashHistory} from "react-router";
 // const alert = Modal.alert;
 import url from "../../config/config";
 import {compress} from "../../../utils/imgCompress";
-
+import $ from "jquery";
 export default React.createClass({
     getInitialState(){
         return {
@@ -22,28 +22,25 @@ export default React.createClass({
         }
     },
     componentWillMount(){
-      var that=this;
-      var data1=new FormData();
-    //   data1.append("couponType",1);
-    //   data1.append("page",1);
-    //   data1.append("pageSize",5);
-    //   data1.append("userId",localStorage.userId);
-    //   fetch(url.url+"/api/act/coupon/query.htm",{
-    //     headers:{
-    //         token:localStorage.Token
-    //     },
-    //     method:"POST",body:data1})
-    //     .then(r=>r.json())
-    //     .then((data)=>{
-    //       console.log(data)    
-    //         that.setState({
-    //             couponNo:data.data.list[0].couponNo
-    //         })
-    //     })
-        // var that=this;
+        var that=this;
+        $.ajax({
+            type: "get",
+            url: url.url+"/api/act/mine/userInfo/getUserInfo.htm",
+            data: {userId:localStorage.userId},
+            dataType: "json",
+            headers:{"Content-Type":"text/plain;charset=UTF-8",token:localStorage.Token},
+            success: function (r) {
+                console.log(r)
+                if(r.code=="200"){
+                    that.setState({
+                        insuranceCompany:r.data.companyName
+                    })
+                }
+            }
+        });
+        var that=this;
         var data=new FormData();
-        data.append("userId",localStorage.userId);
-  
+        data.append("userId",localStorage.userId);  
         fetch(url.url+"/api/act/mine/userInfo/getMyMessage.htm",{
           headers:{
               token:localStorage.Token
@@ -53,23 +50,27 @@ export default React.createClass({
           .then((data)=>{
             console.log(data)    
               that.setState(data.data);
-          })       
+          }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });       
     },  
     submit(){
         console.log(this.state)
         var reg = new RegExp("^[0-9]*$");
         console.log(!reg.test(this.state.policyAmount))
-        if(!/^[0-9]{1,6}$/g.test(this.state.policyAmount)){
+        if(!/^[0-9]{1,7}$/g.test(this.state.policyAmount)){
             Toast.info("请输入正确的保单金额", 2)
         }
         else if(!/^[0-9]{3,6}$/g.test(this.state.money)){
             Toast.info("请输入正确的提现金额", 2)
-        }else if(!/^[\u4e00-\u9fa5]{2,10}$/g.test(this.state.insuranceCompany)){
-            Toast.info("请输入正确的承保公司", 2)
         }
-        else if(!this.state.money||!this.state.policyAmount||!this.state.insuranceCompany||!this.state.img){
-            Toast.info("请填写完整参数", 2)
-        }
+        // else if(!/^[\u4e00-\u9fa5]{2,15}$/g.test(this.state.insuranceCompany)){
+        //     Toast.info("请输入正确的承保公司", 2)
+        // }
+        // else if(!this.state.money||!this.state.policyAmount||!this.state.insuranceCompany||!this.state.img){
+        //     Toast.info("请填写完整参数", 2)
+        // }
         else{
 
    
@@ -87,11 +88,7 @@ export default React.createClass({
         }
         else{
         if(this.state.check){      
-        
-        // console.log(this.state)
-        
-        var that=this;    
-   
+        var that=this;      
         var data=new FormData();
         data.append("userId",localStorage.userId);
         data.append("amount",this.state.money);
@@ -106,12 +103,20 @@ export default React.createClass({
         .then((data)=>{
           console.log(data)    
            if(data.code=="200"){
-               that.setState(data.data);
+            that.setState(data.data);
+               if(data.data.listCoupon.length==0){//如果没有优惠券,吧选择优惠券的钩去掉
+                   that.setState({
+                       check2:false,                     
+                   })
+               }
                that.setState({
                 show:true
                })
            }
-        })
+        }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     }else{
         // console.log(1)
         Toast.info("请同意提现协议", 2)
@@ -119,13 +124,19 @@ export default React.createClass({
      }}   
     },
     confirm(){//确认申请
-    
+        console.log(this.state.check2);
+
+        
         var img1=this.state.list[0];
         var img2=this.state.list[1];
         var img3=this.state.list[2];
         var img4=this.state.list[3];
         var that=this;
-        var listid=this.state.check2?this.state.listCoupon[0].couponNo:"";//优惠券号
+        var listid="";
+        if(this.state.check2){
+            listid=this.state.listCoupon[0].couponNo
+        }
+        // var listid=this.state.check2?this.state.listCoupon[0].couponNo:"";//优惠券号
         console.log(listid);
       var data=new FormData();
       data.append("userId",localStorage.userId);
@@ -142,8 +153,8 @@ export default React.createClass({
       data.append("policyImg3",img4);
       data.append("serviceFee",this.state.serviceFee);
       data.append("timeLimit","7");
-        console.log(this.state.check2);
-        console.log(this.state.listCoupon[0].couponNo)
+        // console.log(this.state.check2);
+        // console.log(this.state.listCoupon[0].couponNo)
       fetch(url.url+"/api/act/borrow/save.htm",{
         headers:{
             token:localStorage.Token
@@ -160,7 +171,10 @@ export default React.createClass({
             hashHistory.push("loan")
         }
            
-        })
+        }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     },
     onChange(files, type, index){
         // console.log(files)
@@ -186,7 +200,10 @@ export default React.createClass({
                             that.setState({
                                 img:data.data
                             })
-                        })
+                        }).catch(function(e) {
+                                console.log("Oops, error");
+                                Toast.info("服务器响应超时", 2);
+                        });
             } 
             img.src = files[0].url;     
             //图片压缩结束
@@ -199,19 +216,14 @@ export default React.createClass({
           });
       },
      change2(){
-        // console.log(1)
-        console.log(this.state.list)
         this.setState({check2:!this.state.check2});
-        // console.log(this.state.check2)
         if(this.state.check2){
             this.setState({
                 actualAmount:this.state.actualAmount+40,
-                // amount
             })
         }else{
             this.setState({
                 actualAmount:this.state.actualAmount-40,
-                // amount
             })
         }
      },
@@ -223,21 +235,32 @@ export default React.createClass({
                     style={{display:this.state.show?"block":"none"}}
                 >
                     <div className="con">
-                    <p>确认提交</p>
-                    <p>您的保单体现申请信息如下:</p>
-                    <p>提现金额:{this.state.amount}</p>
-                    <p>时间期限:7天</p>
-                    {/* <p>申请时间:</p> */}
-                    <p>手续费:{this.state.serviceFee}</p>
-                    <p
-                        style={{display:this.state.listCoupon.length>0?"":"none"}}
-                    ><input type="checkbox" defaultChecked={this.state.check2} onChange={this.change2}/>是否使用优惠券</p>
-                    <p>待还金额:{this.state.totalMoney}</p>
-                    <p>应还金额:{this.state.actualAmount}</p>
-                    <div className="btn">
-                        <div onClick={()=>{this.setState({show:false})}}>取消</div>
-                        <div onClick={this.confirm}>确认</div>
+                    <div className="top"
+                        style={{background:"url(images/images/850855399924466698.png) 0% 0%/100%" }}
+                    >
+                        <p>您的保单提现申请信息如下</p>
+                        <p>提现金额:{this.state.amount}</p>
+                        <p>时间期限:7天</p>
+                        <p>手续费:{this.state.serviceFee}</p>
+                        <p>待还金额:{this.state.totalMoney}</p>
+                        <p>应还金额:{this.state.actualAmount}</p>
                     </div>
+                    <div className="bottom">
+                        <div
+                            style={{height:"0.6rem"}}
+                        >
+                        <p
+                            style={{display:this.state.listCoupon.length>0?"":"none"}}
+                        ><input type="checkbox" defaultChecked={this.state.check2} onChange={this.change2}/>使用优惠券(可使用优惠额度40元)</p>
+                        </div>
+                        
+                        
+                        <div className="btn">
+                            <div onClick={()=>{this.setState({show:false})}}>取消</div>
+                            <div onClick={this.confirm}>确认</div>
+                        </div>
+                    </div>
+                    
                     </div>
                 </div>
                 <div className="tip">
@@ -264,6 +287,9 @@ export default React.createClass({
                         <span style={{width:"1.52rem"}}>保单金额</span><InputItem
                         value={this.state.policyAmount}
                         onChange={(e)=>{
+                            if(e>9999999){
+                                e=9999999
+                            }
                             this.setState({policyAmount:e});
                         }
                         } 
@@ -310,7 +336,7 @@ export default React.createClass({
                 
                 <span style={{width:"1.52rem"}}>承保公司</span><InputItem
                         value={this.state.insuranceCompany}
-                        onChange={(e)=>{this.setState({insuranceCompany:e})}} 
+                        // onChange={(e)=>{this.setState({insuranceCompany:e})}} 
                         
                         style={{height:"0.52rem",fontSize:"0.28rem"}}
                         placeholder="请输入承保公司" />

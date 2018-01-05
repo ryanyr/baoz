@@ -10,19 +10,23 @@ export default React.createClass({
             check:true,
             pwd:"",
             code:"",
-            time:"发送验证码"
+            time:"发送验证码",
+            timer:null,//设定全局定时器
+        }
+    },
+    componentWillMount(){
+        if(/^[0-9a-z]{3,6}$/ig.test(localStorage.code)){
+            this.setState({
+                code:localStorage.code
+            })
         }
     },
     send(){
         if(this.state.time=="发送验证码"){
-
         var that=this;
         var data=new FormData();//发送验证码
         data.append("phone",this.state.phone);
         fetch(url.url+"/api/user/sendVcode.htm",{
-        // headers:{
-        //     token:"50a8cb13556b48038081dd735372ee70"
-        // },
         method:"POST",body:data})
         .then(r=>r.json())
         .then((data)=>{
@@ -33,14 +37,13 @@ export default React.createClass({
                 if(data.data.success){
                     Toast.info('发送成功', 1);
                     var i=60;
-            // var that=this;
-            var timer=setInterval(function(){
+            that.state.timer=setInterval(function(){
                 i--;
                 that.setState({
                     time:i+"秒后再次发送"
                 })
                 if(i==0){
-                    clearInterval(timer);
+                    clearInterval(that.state.timer);//60秒计时完成清除定时器
                     that.setState({
                         time:"发送验证码"
                     })
@@ -50,21 +53,22 @@ export default React.createClass({
                     Toast.info('发送失败', 1);
                 }
             }  
-        })}else{
+        }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
+        }else{
             
         }
     },
     submit(e){
         e.preventDefault();
+        var that=this;
         if(!this.state.phone){
             Toast.info('请输入手机号码', 1); 
         }else if(!this.state.pwd){
             Toast.info('请输入验证码', 1);
         }else{
-
-        
-        // console.log(this.state.check)
-        
         if(this.state.check){
         var data=new FormData();//登录
         data.append("loginName",this.state.phone);
@@ -74,11 +78,11 @@ export default React.createClass({
         method:"POST",body:data})
         .then(r=>r.json())
         .then((data)=>{
-            console.log(data);
             if(data.msg=="请输入正确的手机号"){
                 Toast.info('请输入正确的手机号', 1);
             }else{
                 if(data.state==1||data.state==2){
+                    clearInterval(that.state.timer);//登录成功,清除定时器
                     localStorage.Login=true;
                     localStorage.userId=data.data.userId;
                     localStorage.Token=data.data.token;
@@ -93,10 +97,13 @@ export default React.createClass({
                         localStorage.write=false;//第一次登陆,信息没有完善,没有获取到优惠券
                     }
                 }else{
-                    Toast.info('验证码不正确', 1);
+                    Toast.info(data.msg, 1);
                 }
             }
-        })     
+        }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });     
     }else{
         Toast.info('请勾选注册协议', 1);
     }}
@@ -134,7 +141,7 @@ export default React.createClass({
                 <div className="form_qr">
                     <i 
                     style={{background:"url(images/images/icon_03.png)",width:"0.37rem",height:"0.37rem",backgroundSize:"100%"}}
-                    ></i><input placeholder="请输入推广码" type="text" onChange={(e)=>{
+                    ></i><input placeholder="请输入推广码" type="text" value={this.state.code} onChange={(e)=>{
                         this.setState({
                             code:e.target.value
                         })

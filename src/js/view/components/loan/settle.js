@@ -1,7 +1,7 @@
 import {Link} from "react-router";
 import url from "../../config/config";
 import {Pagination,Icon} from 'antd-mobile';
-
+import store from "../../../store/store";
 export default React.createClass({
     getInitialState(){
         return {
@@ -13,11 +13,33 @@ export default React.createClass({
         }
     },
     componentWillMount(){
+        if(store.getState().LIST_3.total){
+            this.setState(store.getState().LIST_3);
+            this.change(store.getState().LIST_3.page)
+
+        }else{
+            this.change(this.state.page)
+        }
+    },
+    componentWillUnmount(){
+        var that=this;
+        store.dispatch({
+            type:"LIST_3",
+            data:{
+                total:that.state.total,
+                page:that.state.page
+            }
+        })
+    },
+    change(e){
+        this.setState({//改变页数的时候们也要设置对应状态,卸载时保存进reduce
+            page:e
+        })
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
         data.append("stateList",[50]);
-        data.append("page",1);
+        data.append("page",e);
         data.append("pageSize",5);
         fetch(url.url+"/api/act/mine/borrow/list.htm",{
             headers:{
@@ -31,7 +53,6 @@ export default React.createClass({
                         showpage:true
                     })
                 }
-                console.log(data);
                 var info=[];
                 // for(var i=0;i<;i++)
                 that.setState({
@@ -39,18 +60,20 @@ export default React.createClass({
                     total:data.data.pageInfo.total
                 })
                 
-            })
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     },
     render(){
         var show=this.props.page==3?"":"none";
         var list=null;
-        console.log(this.state.list)
         if(this.state.list.length>0){
             list=this.state.list.map((ind,index)=>{
                 return (
                 <Link className="audit_list" to={{pathname:"already",query:{id:ind.orderNo}}} key={index}>
                     <div className="price">
-                        <p>保险提款{ind.amount}</p>
+                        <p>{ind.amount}</p>
                         <p>{ind.createTime.split(" ")[0]}</p>
                     </div>
                     <span></span>

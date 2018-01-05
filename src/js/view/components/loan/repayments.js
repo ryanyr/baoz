@@ -2,22 +2,47 @@ import {  Checkbox } from 'antd-mobile';
 import {Link} from "react-router";
 import url from "../../config/config";
 import {Pagination,Icon} from 'antd-mobile';
+import store from "../../../store/store";
 export default React.createClass({
     getInitialState(){
         return {
           list:[],
           page:1,
           total:"",
-          showpage:false
+          showpage:false,
+          allcheck:0
+        //   checklist:[true]
         }
     },
     componentWillMount(){
-        console.log("re");
+        if(store.getState().LIST_2.total){
+            this.setState(store.getState().LIST_2);
+            this.change(store.getState().LIST_2.page)
+
+        }else{
+            this.change(this.state.page)
+        }
+        
+    },
+    componentWillUnmount(){
+        var that=this;
+        store.dispatch({
+            type:"LIST_2",
+            data:{
+                total:that.state.total,
+                page:that.state.page
+            }
+        })
+    },
+    change(e){
+        this.setState({
+            page:e
+        })
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
-        data.append("stateList",[40,51,52,55,60]);
-        data.append("page",this.state.page);
+        data.append("stateList",[40,31,52,55,60]);
+        data.append("page",e);
         data.append("pageSize",5);
         fetch(url.url+"/api/act/mine/borrow/list.htm",{
             headers:{
@@ -31,7 +56,7 @@ export default React.createClass({
                         showpage:true
                     })
                 }
-                console.log(data);
+
                 var info=[];
                 for(var i=0;i<data.data.list.length;i++){
                     if(data.data.list[i].state=="31"||data.data.list[i].state=="52"||data.data.list[i].state=="60"||data.data.list[i].state=="55"){
@@ -40,8 +65,8 @@ export default React.createClass({
                             data.data.list[i]["info"]="待还款"
                             console.log(data.data.list[i])
                         }
-                        else if(data.data.list[i].state=="51"){
-                            data.data.list[i]["info"]="减免还款"
+                        else if(data.data.list[i].state=="31"){
+                            data.data.list[i]["info"]="待还款"
                         }
                         else if(data.data.list[i].state=="52"){
                             data.data.list[i]["info"]="还款中"
@@ -57,20 +82,40 @@ export default React.createClass({
                 }
                 that.setState({list:info,total:data.data.pageInfo.total})
                 
-            })
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     },
     checkchange(e){
         this.setState({
             checkall:!this.state.checkall
         })
     },
+    btn(){
+        console.log(this.refs.nu)
+    },
     render(){
-        var list=this.state.list.map((ind)=>{
-            // console.log(ind)
+        var list=this.state.list.map((ind,index)=>{
             return (
-                <div className="repayments_list" to="repayment" key={ind}>
+                <div className="repayments_list" to="repayment" key={index} ref="nu">
                     <Checkbox 
                         style={{marginLeft:"0.2rem"}}
+                        
+                        // defaultChecked={this.state.checklist[index]}
+                        onChange={(e)=>{
+                            // console.log(e.target.checked)
+                            if(e.target.checked){
+                                this.setState({
+                                    allcheck:this.state.allcheck++
+                                })
+                            }else{
+                                this.setState({
+                                    allcheck:this.state.allcheck--
+                                }) 
+                            }
+                            console.log(this.state.allcheck)
+                        }}
                     />
                     <div className="info_left">
                         <p>{ind.createTime.split(" ")[0]}</p>
@@ -95,8 +140,9 @@ export default React.createClass({
             <div className="repayments"
                 style={{display:show}}
             >
-                <div className="checkall">
+                <div className="checkall" onClick={this.btn}>
                     <label><Checkbox
+                        
                         onChange={this.checkchange} 
                         style={{marginRight:"0.2rem"}}
                     />全选</label>

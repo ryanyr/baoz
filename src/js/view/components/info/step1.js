@@ -27,7 +27,7 @@ export default React.createClass({
         }else if(!this.state.idcard){
             Toast.info("请输入身份证", 2);
         }else if(!this.state.upimg1||!this.state.upimg2||!this.state.upimg3){
-            Toast.info("请长传完成身份证照片", 2);
+            Toast.info("请上传完成身份证照片", 2);
         }else{
         var that=this;
         var data=new FormData();
@@ -51,7 +51,10 @@ export default React.createClass({
             }else if(data.code=="400"){
                 Toast.info(data.msg, 2);
             }
-        })
+        }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     }
     },
     step(e){
@@ -83,7 +86,10 @@ export default React.createClass({
                     }                    
                     suc(data)
                 
-            })
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+            });
             
         } 
         img.src = files[0].url;
