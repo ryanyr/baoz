@@ -15,7 +15,8 @@ export default React.createClass({
 		
 		if(localStorage.Login){//判断是否登录
 			if(this.state.info=="已完善"){//根据父组件传过来的信息是否完善
-				hashHistory.push("withdraw")
+				hashHistory.push("withdraw");
+				sessionStorage.withdraw="";
 			}else{
 				hashHistory.push("information")
 			}
@@ -37,7 +38,9 @@ export default React.createClass({
 		<div className="anser" onClick={() => {
 			if(localStorage.Login){
 				if(this.state.info=="已完善"){
-					hashHistory.push("pmh")
+					hashHistory.push("pmh");
+					sessionStorage.card="";
+
 				}else{
 					hashHistory.push("information")
 				}

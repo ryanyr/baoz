@@ -1,4 +1,4 @@
-import {InputItem,Toast} from "antd-mobile";
+import {InputItem,Toast,Picker,List} from "antd-mobile";
 import {hashHistory} from "react-router";
 import url from "../../config/config";
 export default React.createClass({
@@ -12,7 +12,7 @@ export default React.createClass({
             ti5:1,
             ti6:1,
             ti7:1,
-            ti8:"0-3000元/每月"
+            ti8:["0-3000元/月"]
         }
     },
     btn(e){
@@ -26,7 +26,7 @@ export default React.createClass({
         data.append("houseOwnership",this.state.ti1);
         data.append("insuranceInfo",this.state.ti7);
         data.append("loanAmount",this.state.num);
-        data.append("salary",this.state.ti8);
+        data.append("salary",this.state.ti8[0]);
         data.append("socialSecurity",this.state.ti6);
         data.append("userId",localStorage.userId);
         fetch(url.url+"/api/act/mine/userExtraInfo/saveWantMakeMoney.htm",{
@@ -190,14 +190,18 @@ export default React.createClass({
                 <div className="list_info">
                     <div>
                         <span>工资流水：</span>
-                        <select value={this.state.ti8} onChange={(e)=>{
-                            this.setState({
-                                ti8:e.target.value
-                            })
-                        }}>
-                            <option value="0-3000元/每月">0-3000元/每月</option>
-                            <option value="3001-6000元/每月">3001-6000元/每月</option>
-                        </select>
+                        <Picker extra=""
+                                    
+                                    data={[{label:"0-3000元/月",value:"0-3000元/月"},{label:"3001-6000元/月",value:"3001-6000元/月"},{label:"6001-9000元/月",value:"6001-9000元/月"},{label:"9001-12000元/月",value:"9001-12000元/月"},]}
+                                    cols="1" 
+                                    value={this.state.ti8}                                  
+                                    onOk={e => {this.setState({ti8:e})}}
+                                    onDismiss={e => console.log('dismiss', e)}
+                                    >
+                                    <List.Item
+                                        style={{width:"4rem"}}
+                                    ></List.Item>
+                        </Picker>
                     </div>
                 </div>
                 <div className="tips">

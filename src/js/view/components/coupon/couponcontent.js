@@ -41,10 +41,25 @@ export default React.createClass({
           },
           method:"POST",body:newdata})
           .then(r=>r.json())
-          .then((data)=>{   
-              that.setState({
-                usedcoupon:data.data.list
-              })
+          .then((data)=>{
+              if(data.code=="200"){
+                that.setState({
+                  usedcoupon:data.data.list
+                })
+              }else if(data.code=="411"){
+                Toast.info("登录已失效,请重新登录", 2);
+                setTimeout(function(){
+                    hashHistory.push("login")
+                },2000) 
+              }else if(data.code=="408"){
+                Toast.info("系统响应超时", 2);
+              }else if(data.code=="500"){
+                Toast.info("系统错误", 2);
+              }
+              else{
+                that.setState(data.data);
+              }   
+              
           }).catch(function(e) {
                 console.log("Oops, error");
                 Toast.info("服务器响应超时", 2);

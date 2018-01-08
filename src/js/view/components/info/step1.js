@@ -21,13 +21,12 @@ export default React.createClass({
     },
     btn(){
       //保存身份接口
-      console.log(1)
         if(!/^[\u4e00-\u9fa5]{2,4}/g.test(this.state.name)){
             Toast.info("请输入正确的用户名", 2);
         }else if(!this.state.idcard){
             Toast.info("请输入身份证", 2);
         }else if(!this.state.upimg1||!this.state.upimg2||!this.state.upimg3){
-            Toast.info("请上传完成身份证照片", 2);
+            Toast.info("请上传身份证照片", 2);
         }else{
         var that=this;
         var data=new FormData();
@@ -45,7 +44,7 @@ export default React.createClass({
         method:"POST",body:data})
         .then(r=>r.json())
         .then((data)=>{
-            console.log(data)
+            
             if(data.code=="200"){
                 that.props.step(2)
             }else if(data.code=="400"){
@@ -61,7 +60,15 @@ export default React.createClass({
         e.nativeEvent.preventDefault();
     },
     componentWillMount(){
+        // console.log(Boolean(sessionStorage.step))
+        if(sessionStorage.step){
+            
+            this.setState(JSON.parse(sessionStorage.step))
+        }
         
+    },
+    componentWillUnmount(){
+        sessionStorage.step=JSON.stringify(this.state);
     },
     upimg(files){
         var that=this;

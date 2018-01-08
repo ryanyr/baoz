@@ -14,7 +14,37 @@ export default React.createClass({
             timer:null,//设定全局定时器
         }
     },
+    componentWillUnmount(){
+        clearInterval(this.state.timer);
+        sessionStorage.login=JSON.stringify(this.state);
+        console.log(JSON.stringify(this.state))
+    },
     componentWillMount(){
+        var that=this;
+        if(sessionStorage.login){//查询login的session
+            console.log(1)
+            this.setState(JSON.parse(sessionStorage.login));
+            console.log(JSON.parse(sessionStorage.login))
+            if(JSON.parse(sessionStorage.login).time!="发送验证码"){
+                // console
+                var i=JSON.parse(sessionStorage.login).time.split("秒")[0];
+                that.setState({
+                    timer:setInterval(function(){
+                        i--;
+                        that.setState({
+                            time:i+"秒后再次发送"
+                        })
+                        if(i==0){
+                            clearInterval(that.state.timer);//60秒计时完成清除定时器
+                            that.setState({
+                                time:"发送验证码"
+                            })
+                        }
+                    },1000)
+                })
+
+            }
+        }
         if(/^[0-9a-z]{3,6}$/ig.test(localStorage.code)){
             this.setState({
                 code:localStorage.code
@@ -22,6 +52,9 @@ export default React.createClass({
         }
     },
     send(){
+        if(!this.state.phone){
+            Toast.info('请填入手机号', 1); 
+        }
         if(this.state.time=="发送验证码"){
         var that=this;
         var data=new FormData();//发送验证码
@@ -30,44 +63,60 @@ export default React.createClass({
         method:"POST",body:data})
         .then(r=>r.json())
         .then((data)=>{
-            console.log(data)
-            if(data.msg=="请输入正确的手机号"){
-                Toast.info('请输入正确的手机号', 1);
-            }else{
-                if(data.data.success){
-                    Toast.info('发送成功', 1);
-                    var i=60;
-            that.state.timer=setInterval(function(){
-                i--;
-                that.setState({
-                    time:i+"秒后再次发送"
-                })
-                if(i==0){
-                    clearInterval(that.state.timer);//60秒计时完成清除定时器
-                    that.setState({
-                        time:"发送验证码"
-                    })
-                }
-            },1000)
-                }else{
-                    Toast.info('发送失败', 1);
-                }
-            }  
+            console.log(data);
+        
+            switch(data.data.code){
+                case 100001:    Toast.info('手机号格式错误', 1);
+                                break;
+                case 100002:    Toast.info('验证码发送成功，请注意查收', 1);
+                                that.sendAgain();
+                                break;
+                case 100003:    Toast.info('验证码发送失败，请稍后再次发送', 1);
+                                that.sendAgain();
+                                break;
+                case 100004:    Toast.info('请填入手机号', 1);
+                                break;
+                case 100005:    Toast.info('请填入验证码', 1);
+                                break;
+                case 100006:    Toast.info('请填入正确的验证码', 1);
+                                break;
+                case 100007:    Toast.info('服务器响应超时', 1);
+                                break;
+                case 100008:    Toast.info('请勾选注册协议', 1);
+                                break;
+                default:        break;
+            }
         }).catch(function(e) {
                 console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
+                // Toast.info("服务器响应超时", 2);
         });
         }else{
             
         }
     },
+    sendAgain(){
+         var that = this;
+         var i=60;
+         var timer=setInterval(function(){
+            i--;
+            that.setState({
+                time:i+"秒后再次发送"
+            })
+            if(i==0){
+                clearInterval(timer);//60秒计时完成清除定时器
+                that.setState({
+                    time:"发送验证码"
+                })
+            }
+        },1000);
+    },
     submit(e){
         e.preventDefault();
         var that=this;
         if(!this.state.phone){
-            Toast.info('请输入手机号码', 1); 
+            Toast.info('请填入手机号', 1); 
         }else if(!this.state.pwd){
-            Toast.info('请输入验证码', 1);
+            Toast.info('请填入验证码', 1);
         }else{
         if(this.state.check){
         var data=new FormData();//登录
@@ -78,8 +127,8 @@ export default React.createClass({
         method:"POST",body:data})
         .then(r=>r.json())
         .then((data)=>{
-            if(data.msg=="请输入正确的手机号"){
-                Toast.info('请输入正确的手机号', 1);
+            if(data.code==100001){
+                Toast.info('手机号格式错误', 1);
             }else{
                 if(data.state==1||data.state==2){
                     clearInterval(that.state.timer);//登录成功,清除定时器
@@ -102,7 +151,7 @@ export default React.createClass({
             }
         }).catch(function(e) {
                 console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
+                // Toast.info("服务器响应超时", 2);
         });     
     }else{
         Toast.info('请勾选注册协议', 1);

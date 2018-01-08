@@ -1,5 +1,5 @@
 import url from "../../config/config";
-
+import {Toast} from "antd-mobile";
 
 
 export default React.createClass({
@@ -24,6 +24,25 @@ export default React.createClass({
             .then(r=>r.json())
             .then((data)=>{
               console.log(data); 
+              switch(data.code){
+                case 408:    Toast.info('系统响应超时', 1);
+                                break;
+                case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                                hashHistory.push("login");
+                                break;
+                case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                hashHistory.push("login");
+                                break;
+                case 500:    Toast.info('服务器错误', 1);
+                                break;
+                case 150004:    Toast.info('您已还款成功', 1);
+                                break;
+                case 150005:    Toast.info('还款失败，请稍后再次尝试', 1);
+                                break;
+                case 150006:    Toast.info('还款服务超时，请稍后再次尝试', 1);
+                                break;
+                default:        break;
+                }   
             //   var data = data.data;
                                 
             })
@@ -44,12 +63,29 @@ export default React.createClass({
             method:"POST",body:data})
             .then(r=>r.json())
             .then((data)=>{
-            console.log(data)    
+            console.log(data)   
+             switch(data.code){
+                case 408:    Toast.info('系统响应超时', 1);
+                                break;
+                case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                                hashHistory.push("login");
+                                break;
+                case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                hashHistory.push("login");
+                                break;
+                case 500:    Toast.info('服务器错误', 1);
+                                break;
+                case 150001:    Toast.info('获取订单详情服务超时', 1);
+                                break;
+                case 150003:    Toast.info('获取订单详情服务失败，请稍后再次尝试', 1);
+                                break;
+                default:        break;
+                }     
             that.setState(data.data)
                 
             }).catch(function(e) {
                 console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
+                // Toast.info("服务器响应超时", 2);
         });
     },
     render(){

@@ -28,9 +28,19 @@ export default React.createClass({
             console.log(data)
             if(data.code=="200"){
                 that.setState(data.data)
+            }else if(data.code=="410"){
+                Toast.info("您的账号已在其他设备登录", 2);
+                setTimeout(function(){
+                    hashHistory.push("login")
+                },2000)
+            }else if(data.code=="411"){
+                Toast.info("登录已失效,请重新登录", 2);
+                setTimeout(function(){
+                    hashHistory.push("login")
+                },2000)
             }else{
-                Toast.info("服务器响应超时", 2);
-            }            
+                Toast.info(data.msg, 2);
+            }           
                 
             }).catch(function(e) {
                 console.log("Oops, error");

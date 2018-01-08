@@ -1,4 +1,5 @@
 import {Link,hashHistory,browserHistory} from "react-router";
+import { Modal, Button, WhiteSpace, WingBlank, Toast } from 'antd-mobile';
 import url from "../../config/config";
 import store from "../../../store/store";
 const Out=React.createClass({
@@ -53,16 +54,18 @@ const List=React.createClass({
 
 export default React.createClass({
     getInitialState(){
-        return {
-
-        }
+        return {liked: true};
     },
     btn(){
         window.location.reload()
         hashHistory.push("home");
-        localStorage.Login="";
-        localStorage.Token="";
+        localStorage.clear();
+        sessionStorage.clear();
     },
+    handleClickk: function(event) {
+        // sessionStorage.show=true
+        this.setState({liked: !this.state.liked});
+      },
     componentWillMount(){
             var that=this;
 			var data=new FormData();
@@ -75,15 +78,33 @@ export default React.createClass({
 			  method:"POST",body:data})
 			  .then(r=>r.json())
 			  .then((data)=>{
-                  console.log(data)   
+                  console.log(data);
+                  switch(data.code){
+                    case 408:    Toast.info('系统响应超时', 1);
+                                    break;
+                    case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                                    hashHistory.push("login");
+                                    break;
+                    case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                    hashHistory.push("login");
+                                    break;
+                    case 500:    Toast.info('服务器错误', 1);
+                                    break;
+                    case 160001:    Toast.info('获取信息超时，请稍后再次尝试', 1);
+                                    break;
+                    case 160002:    Toast.info('获取信息失败，请稍后再次尝试', 1);
+                                    break;
+                    default:        break;
+                    }      
 				  that.setState(data.data);
 		
 			  }).catch(function(e) {
                 console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
+                // Toast.info("服务器响应超时", 2);
         });
     },
     render(){
+        var texts = this.state.liked ? 'none' : 'block';
         const info=this.props.info.map((con,index)=>{
             return <List key={index} info={con} />
         })
@@ -191,11 +212,22 @@ export default React.createClass({
             </div> */}
                   
                 </div>
-                <div onClick={this.btn} style={{width:"90%",height:"1rem",background:"#f99b47",margin:"auto",marginTop:"0.4rem",
+                <Link onClick={this.handleClickk} >
+                    <div style={{width:"90%",height:"1rem",background:"#f99b47",margin:"auto",marginTop:"0.4rem",
                 borderRadius:"0.1rem",textAlign:"center",lineHeight:"1rem",color:"#fff",fontSize:"0.32rem",cursor:"pointer"
-            }}>
-                     退出
-                  </div>
+                 }}>
+                          退出
+                    </div>   
+                </Link>
+                <div className="tx_tc" style={{display:texts}}>
+                     <div onClick={this.handleClickk} className="tx_tc1">
+                        <div className="tx_tca">确定退出？</div>
+                        <div className="tx_tcb">
+                            <Link className="tx_tcc" onClick={this.btn}>是</Link>
+                            <div className="tx_tcd">否</div>
+                        </div>
+                     </div>
+                </div>
             </div>
         )
     }

@@ -33,7 +33,7 @@ import Pmh from "./view/router/pmh/pmhRouter";//信用卡还款
 import Ddd from "./view/router/ddd/dd"
 export default React.createClass({
     enterMy(){
-  
+        // window.scrollTo(0,0)
     },
     render:function(){
         return (

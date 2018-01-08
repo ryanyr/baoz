@@ -21,7 +21,14 @@ export default React.createClass({
             listCoupon:[]
         }
     },
+    componentWillUnmount(){
+        // localStorage.withdraw=JSON.stringify(this.state);
+        sessionStorage.withdraw1=JSON.stringify(this.state);
+    },
     componentWillMount(){
+        if(sessionStorage.withdraw1){
+            this.setState(JSON.parse(sessionStorage.withdraw1))
+        }
         var that=this;
         $.ajax({
             type: "get",
@@ -48,11 +55,24 @@ export default React.createClass({
           method:"POST",body:data})
           .then(r=>r.json())
           .then((data)=>{
-            console.log(data)    
+            console.log(data);
+            switch(data.code){
+                case 408:    Toast.info('系统响应超时', 1);
+                                break;
+                case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                                hashHistory.push("login");
+                                break;
+                case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                hashHistory.push("login");
+                                break;
+                case 500:    Toast.info('系统错误', 1);
+                                break;
+                default:        break;
+            }        
               that.setState(data.data);
           }).catch(function(e) {
                 console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
+                // Toast.info("服务器响应超时", 2);
         });       
     },  
     submit(){
@@ -65,24 +85,18 @@ export default React.createClass({
         else if(!/^[0-9]{3,6}$/g.test(this.state.money)){
             Toast.info("请输入正确的提现金额", 2)
         }
-        // else if(!/^[\u4e00-\u9fa5]{2,15}$/g.test(this.state.insuranceCompany)){
-        //     Toast.info("请输入正确的承保公司", 2)
-        // }
-        // else if(!this.state.money||!this.state.policyAmount||!this.state.insuranceCompany||!this.state.img){
-        //     Toast.info("请填写完整参数", 2)
-        // }
         else{
 
-   
-        if
-        (this.state.money>5000||this.state.money<100){//提交申请
-            Toast.info("提现金额100-5000", 2)
+        if(this.state.money==""){//提交申请
+            Toast.info("请输入提现金额", 2)
+        }else if(this.state.money>5000||this.state.money<100){//提交申请
+            Toast.info("提现金额请输入100-5000以内额度", 2)
         }else if(this.state.list.length<3){
-            Toast.info("最少上传3张保单图片", 2)
+            Toast.info("请上传3-4张保单图片", 2)
         }else if(this.state.money-this.state.policyAmount>0){
             console.log(this.state.money);
             console.log(this.state.policyAmount)
-            Toast.info("提现金额不得大于保单金额", 2)
+            Toast.info("提现金额不得超过保单金额", 2)
         }else if(this.state.money>this.state.unuser){
             Toast.info("提现金额不得大于剩余额度", 2)
         }
@@ -100,8 +114,8 @@ export default React.createClass({
         },
         method:"POST",body:data})
         .then(r=>r.json())
-        .then((data)=>{
-          console.log(data)    
+        .then((data)=>{  
+          console.log(data);
            if(data.code=="200"){
             that.setState(data.data);
                if(data.data.listCoupon.length==0){//如果没有优惠券,吧选择优惠券的钩去掉
@@ -115,7 +129,7 @@ export default React.createClass({
            }
         }).catch(function(e) {
                 console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
+                // Toast.info("服务器响应超时", 2);
         });
     }else{
         // console.log(1)
@@ -161,19 +175,68 @@ export default React.createClass({
         },
         method:"POST",body:data})
         .then(r=>r.json())
-        .then((data)=>{
-          console.log(data)    
+        .then((data)=>{ 
+          console.log(data) 
+          switch(data.code){
+                case 408:    Toast.info('系统响应超时', 1);
+                                break;
+                case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                                hashHistory.push("login");
+                                break;
+                case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                hashHistory.push("login");
+                                break;
+                case 500:    Toast.info('系统错误', 1);
+                                break;
+                case 120001:    Toast.info('服务器响应超时', 1);
+                                break;
+                case 120002:    Toast.info('请输入保单金额', 1);
+                                break;
+                case 120003:    Toast.info('保单金额请输入100万以内数字', 1);
+                                break;
+                case 120004:    Toast.info('请输入提现金额', 1);
+                                break;
+                case 120005:    Toast.info('提现金额请输入100-5000以内额度', 1);
+                                break;
+                case 120006:    Toast.info('提现金额不得超过保单金额', 1);
+                                break;
+                case 120007:    Toast.info('请上传保单图片', 1);
+                                break;
+                case 120008:    Toast.info('上传保单图片失败，请稍后再次上传', 1);
+                                break;
+                case 120009:    Toast.info('上传保单图片失败，请稍后再次上传', 1);
+                                break;
+                case 120010:    Toast.info('请上传3-4张保单图片', 1);
+                                break;
+                case 120011:    Toast.info('请勾选提现协议', 1);
+                                break;
+                case 120012:    Toast.info('请选择保险公司', 1);
+                                break;
+                case 120013:    Toast.info('申请提现服务超时', 1);
+                                break;
+                case 120015:    Toast.info('服务器错误，请稍后再次申请', 1);
+                                break;
+                case 120016:    Toast.info('恭喜您，已申请成功，请稍后查看订单信息', 1);
+                                break;
+                case 120017:    Toast.info('申请失败，请稍后再次申请', 1);
+                                break;
+                case 120018:    Toast.info('120018	申请提现服务超时', 1);
+                                break;
+                default:        break;
+            }      
         if(data.code=="200"){
             that.setState({
                 show:false
             })
             Toast.info(data.msg, 2);
-            hashHistory.push("loan")
+            
+            hashHistory.push("loan");
+            sessionStorage.withdraw="";
         }
            
         }).catch(function(e) {
                 console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
+                // Toast.info("服务器响应超时", 2);
         });
     },
     onChange(files, type, index){
@@ -194,6 +257,9 @@ export default React.createClass({
                         method:"POST",body:data})
                         .then(r=>r.json())
                         .then((data)=>{
+                            if(data.code==120008||data.code==120009){
+                                Toast.info("上传保单图片失败，请稍后再次上传", 2);
+                            }
                             that.state.list.push(data.data)
                             console.log(that.state.list);
                             
@@ -202,7 +268,7 @@ export default React.createClass({
                             })
                         }).catch(function(e) {
                                 console.log("Oops, error");
-                                Toast.info("服务器响应超时", 2);
+                                // Toast.info("服务器响应超时", 2);
                         });
             } 
             img.src = files[0].url;     
@@ -215,22 +281,31 @@ export default React.createClass({
             files,
           });
       },
-     change2(){
+    change2(e){
+         console.log(e.target.checked);
+        //  console.log(this.state)
+        var that=this;
         this.setState({check2:!this.state.check2});
-        if(this.state.check2){
+        if(e.target.checked){
             this.setState({
-                actualAmount:this.state.actualAmount+40,
+                actualAmount:this.state.actualAmount-40,
             })
         }else{
             this.setState({
-                actualAmount:this.state.actualAmount-40,
+                actualAmount:this.state.actualAmount+40,
             })
         }
      },
     render(){
         const {files}=this.state;
         return (
+            <div>
+            <div className="wd_top" style={{background:"url(images/images/txtop.png)",backgroundSize:"100% 100%"}}>
+                <p>{this.state.unuse}</p>
+                <div className="wd_topw">剩余可用额度</div>
+            </div>
             <div className="withdrawcontent">
+                
                 <div className="modal" 
                     style={{display:this.state.show?"block":"none"}}
                 >
@@ -251,7 +326,7 @@ export default React.createClass({
                         >
                         <p
                             style={{display:this.state.listCoupon.length>0?"":"none"}}
-                        ><input type="checkbox" defaultChecked={this.state.check2} onChange={this.change2}/>使用优惠券(可使用优惠额度40元)</p>
+                        ><input type="checkbox" checked={this.state.check2} onChange={this.change2}/>使用优惠券(可使用优惠额度40元)</p>
                         </div>
                         
                         
@@ -261,19 +336,6 @@ export default React.createClass({
                         </div>
                     </div>
                     
-                    </div>
-                </div>
-                <div className="tip">
-                    <i
-                        style={{background:"url(images/images/icon_05.png)",backgroundSize:"100%"}}
-                    ></i>
-                    剩余可用额度
-                </div>
-                <div className="title">
-                    <div className="title_con">
-                        <div className="ti"
-                            style={{background:"url(images/images/10475463301731984.png)",backgroundSize:"100% 100%"}} 
-                        ></div><span>剩余可用提现额度：</span><span>{this.state.unuse}元</span>
                     </div>
                 </div>
                 <div className="tip">
@@ -370,6 +432,7 @@ export default React.createClass({
                         <p>同意<a>《提现协议》</a></p>
                     </div>
                 </div>
+            </div>
             </div>
         )
     }

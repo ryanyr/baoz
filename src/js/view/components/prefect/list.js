@@ -1,4 +1,4 @@
-import {List} from "antd-mobile";
+import {List,Toast} from "antd-mobile";
 const Item=List.Item;
 const Brief = Item.Brief;
 import $ from "jquery";
@@ -17,8 +17,25 @@ export default React.createClass({
             data: {userId:localStorage.userId},
             dataType: "json",
             headers:{"Content-Type":"text/plain;charset=UTF-8",token:localStorage.Token},
-            success: function (r) {
-                console.log(r)
+            success: function (data) {
+                console.log(data)
+                switch(data.code){
+                    case 408:    Toast.info('系统响应超时', 1);
+                                    break;
+                    case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                                    hashHistory.push("login");
+                                    break;
+                    case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                    hashHistory.push("login");
+                                    break;
+                    case 500:    Toast.info('服务器错误', 1);
+                                    break;
+                    case 170002:    Toast.info('获取用户信息失败，请稍后再次尝试', 1);
+                                    break;
+                    case 170003:    Toast.info('获取用户信息超时，请稍后再次尝试', 1);
+                                    break;
+                    default:        break;
+                }     
                 if(r.code=="200"){
                     that.setState(r.data)
                 }

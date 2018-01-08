@@ -14,7 +14,14 @@ export default React.createClass({
             listCoupon:[]
         }
     },
+    componentWillUnmount(){
+        sessionStorage.width=JSON.stringify(this.state)
+    },
     componentWillMount(){
+        console.log(Boolean(sessionStorage.width))
+        if(sessionStorage.width){
+            this.setState(JSON.parse(sessionStorage.width))
+        }
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
@@ -26,8 +33,24 @@ export default React.createClass({
           method:"POST",body:data})
           .then(r=>r.json())
           .then((data)=>{
-            console.log(data)    
-              that.setState(data.data);
+            if(data.code=="410"){
+                Toast.info("您的账号已在其他设备登录", 2);
+                setTimeout(function(){
+                    hashHistory.push("login")
+                },2000)
+              }else if(data.code=="411"){
+                Toast.info("登录已失效,请重新登录", 2);
+                setTimeout(function(){
+                    hashHistory.push("login")
+                },2000) 
+              }else if(data.code=="408"){
+                Toast.info("系统响应超时", 2);
+              }else if(data.code=="500"){
+                Toast.info("系统错误", 2);
+              }
+              else{
+                that.setState(data.data);
+              } 
           }).catch(function(e) {
                 console.log("Oops, error");
                 Toast.info("服务器响应超时", 2);
@@ -81,6 +104,9 @@ export default React.createClass({
             .then((data)=>{
                 console.log(data)
                 if(data.code=="200"){
+                    that.setState({
+                        check2:true
+                    })
                     that.setState(data.data);
                     if(data.data.listCoupon.length==0){//如果没有优惠券,把选择默认按钮去掉
                         that.setState({
@@ -130,7 +156,9 @@ export default React.createClass({
                     // that.setState(data.data);
                     that.setState({show:false});
                     Toast.info(data.msg, 2);
-                    hashHistory.push("loan")
+                    hashHistory.push("loan");
+                    // localStorage.card="";
+                    sessionStorage.width="";
                 }
                 
             }).catch(function(e) {
@@ -138,16 +166,16 @@ export default React.createClass({
                 Toast.info("服务器响应超时", 2);
         });
     },
-    change2(){
+    change2(e){
         // console.log(1)
         this.setState({check2:!this.state.check2})
-        if(this.state.check2){
+        if(e.target.checked){
             this.setState({
-                actualAmount:this.state.actualAmount+40,
+                actualAmount:this.state.actualAmount-40,
             })
         }else{
             this.setState({
-                actualAmount:this.state.actualAmount-40,
+                actualAmount:this.state.actualAmount+40,
             })
         }
      },
@@ -174,7 +202,7 @@ export default React.createClass({
                     >
                         <p
                             style={{display:this.state.listCoupon.length>0?"":"none"}}
-                        ><input type="checkbox" defaultChecked={this.state.check2} onChange={this.change2}/>是否使用优惠券</p>
+                        ><input type="checkbox" checked={this.state.check2} onChange={this.change2}/>是否使用优惠券</p>
                     </div>
                     <div className="btn">
                         <div onClick={()=>{this.setState({show:false})}}>取消</div>

@@ -12,12 +12,19 @@ export default React.createClass({
         }
     },
     submit(){
-        console.log(this.refs.step_1.state)
+        // console.log(this.refs.step_1.state)
     },
-   
+    componentWillMount(){
+        if(sessionStorage.info){
+            this.setState(JSON.parse(sessionStorage.info))
+        }
+    },
+    componentWillUnmount(){
+
+        sessionStorage.info=JSON.stringify(this.state)
+    },
     btn(w,rrr){
-        console.log(w)
-        console.log(rrr)
+
         this.setState({
             page:rrr
         })
@@ -38,7 +45,10 @@ export default React.createClass({
                 <Top back={true} title="完善个人信息" />
                 <Step1 page={this.state.page} step={(w)=>{this.setState({page:w})}} ref="step_1" />
                 <Step2 page={this.state.page} step={(w)=>{this.setState({page:w})}}  />
-                <Step3 page={this.state.page} step={(w)=>{this.setState({page:w})}} submit={this.submit} />
+                <Step3 page={this.state.page} step={(w)=>{this.setState({page:w})}} submit={this.submit} changepage={()=>{
+                    this.setState({page:1})
+                    // console.log(1)
+                }} />
                 <Footer />
             </div>
         )

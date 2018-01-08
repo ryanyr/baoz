@@ -6,6 +6,8 @@ import Develop from "../../components/home/homedevelop";
 import Footer from "../../components/public/footer_3";
 import Kk from "../../components/home/popup";
 import List from "../../components/home/homelist";
+import {hashHistory,browserHistory} from "react-router";
+import {Toast} from "antd-mobile";
 import "./style.less";
 import {add,reduce} from "../../../actions/actions";
 import store from "../../../store/store";
@@ -39,7 +41,22 @@ export default React.createClass({
 			  },
 			  method:"POST",body:data})
 			  .then(r=>r.json())
-			  .then((data)=>{    
+			  .then((data)=>{
+                  switch(data.code){
+                    case 408:    Toast.info('系统响应超时', 1);
+                                    break;
+                    case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                                    hashHistory.push("login");
+                                    break;
+                    case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                    hashHistory.push("login");
+                                    break;
+                    case 500:    Toast.info('系统错误', 1);
+                                    break;
+                    case 110001:    Toast.info('服务器响应超时', 1);
+                                    break;
+                    default:        break;
+                }    
 				  that.setState(data.data);
 				store.dispatch({
 					type:"HOME",

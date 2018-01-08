@@ -3,6 +3,7 @@ import url from "../../config/config";
 import store from "../../../store/store";
 import {hashHistory,browserHistory} from "react-router";
 import {compress} from "../../../utils/imgCompress";
+import { setTimeout } from "timers";
 export default React.createClass({
     getInitialState(){
         return {
@@ -18,7 +19,14 @@ export default React.createClass({
             value2:[]//职位列表
         }
     },
+    componentWillUnmount(){
+        sessionStorage.stee=JSON.stringify(this.state);
+    },
     componentWillMount(){
+        if(sessionStorage.stee){
+            this.setState(JSON.parse(sessionStorage.stee))
+        }
+        
         var that=this;
         fetch(url.url+"/api/act/mine/userInfo/insuranceList.htm",{
            headers:{
@@ -69,6 +77,7 @@ export default React.createClass({
     btn(){
         console.log(this.state)
         var that=this
+         
         var reg=/^[0-9a-z]{4,20}$/ig;
         if(!reg.test(this.state.certificateNo)){
             Toast.info("请填写正确保险从业编号", 2);
@@ -100,18 +109,25 @@ export default React.createClass({
             if(data.code=="200"){
                 localStorage.couponinfo=JSON.stringify(data.data);
                 console.log(localStorage.couponinfo)
-                // console.log(that.stateinfo)               
+                Toast.info(data.msg, 2);              
                 if(that.state.info){//判断信息是否获取过登陆优惠券
-                    hashHistory.push("my");                    
+                    that.props.changepage();
+                    setTimeout(function(){
+                        hashHistory.push("my");
+                    },50) 
+                    
+                                      
                 }else{
                     hashHistory.push("waitcoupon");
                    
-                }
-                
-                
+                }                
             }else if(data.code=="400"){
                 Toast.info(data.msg, 2);
 
+            }else if(data.code=="410"){
+                Toast.info("您的账号已在其他设备登录", 2); 
+            }else if(data.code=="411"){
+                Toast.info("登录已失效,请重新登录", 2); 
             }
         }).catch(function(e) {
                 console.log("Oops, error");
@@ -167,6 +183,7 @@ export default React.createClass({
                         <div className="price">
                             <div className="top">
                                 <span>保险从业编号</span><InputItem
+                                value={this.state.certificateNo}
                                 onChange={(e)=>{this.setState({
                                     certificateNo:e})}} 
                                 style={{height:"0.52rem",fontSize:"0.28rem"}}
@@ -185,26 +202,7 @@ export default React.createClass({
                                     <List.Item
                                         style={{width:"4rem"}}
                                     ></List.Item>
-                                    </Picker>
-                                {/* <select
-                                value={this.state.companyName}
-                                onChange={(e)=>{
-                                    // console.log
-                                    this.setState({
-                                        companyName:e.target.value
-                                    })
-                                }}
-                                    style={{height:"0.5rem",lineHeight:"0.5rem"}}
-                                >
-                                    {
-                                        this.state.list.map((ind,index)=>{
-                                            return (
-                                                <option key={index} value={ind.companyName}>{ind.companyName}</option>
-                                            )
-                                        })
-                                    }
-                                </select> */}
-                               
+                                    </Picker>                              
                             </div>
                             <div className="top"
                                 style={{borderTop:"0.02rem solid #f89c47"}}
@@ -222,24 +220,6 @@ export default React.createClass({
                                         style={{width:"4rem"}}
                                     ></List.Item>
                                     </Picker>
-                                {/* <div
-                                    style={{paddingLeft:"15px"}}
-                                >
-                                <select
-                                    style={{border:"0",height:"0.52rem"}}
-                                    value={this.state.title}
-                                    onChange={(e)=>{
-                                        this.setState({
-                                            title:e.target.value
-                                        })
-                                    }}
-                                >
-                                    <option value="代理人">代理人</option>
-                                    <option value="代理人2">主任</option>
-                                    <option value="代理人2">经理</option>
-                                    <option value="代理人2">总监</option>
-                                </select>
-                                </div> */}
                                
                             </div>
                             <div className="upimg">
