@@ -64,8 +64,9 @@ export default React.createClass({
                   <QRCode value={weburl}/>
                 </div>
               </div>
-              <p><span>扫描二维码分享</span></p>
-              
+              <p><span>推广二维码</span></p>
+              <p><span>请向您的推广用户展示此二维码，</span></p>
+              <p><span>用户扫描后将使用您的推广码进行注册</span></p>
             </div>
           </div>
         </div>

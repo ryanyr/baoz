@@ -9,7 +9,7 @@ export default React.createClass({
                     style={{color:"#858585"}}
                 >
                 <div className="homeicon"
-                    style={{background:"url(images/images/home_2.png) 0% 0% /100%",width:"0.45rem",height:"0.4rem",marginTop:"0.18rem",
+                    style={{background:"url(images/images/58921901405805927.png) 0% 0% /100%",width:"0.39rem",height:"0.4rem",marginTop:"0.18rem",
                     color:"#f99b47"}}
                 ></div>
                 <p
@@ -20,7 +20,7 @@ export default React.createClass({
                     style={{color:"#f99b47"}}
                 >
                 <div
-                    style={{background:"url(images/images/my_2.png) 0% 0% /100%",width:"0.33rem",height:"0.38rem",
+                    style={{background:"url(images/images/531594679828317007.png) 0% 0% /100%",width:"0.32rem",height:"0.4rem",
                     marginTop:"0.18rem"
                 }}
                 ></div>

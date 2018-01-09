@@ -57,10 +57,11 @@ export default React.createClass({
         return {liked: true};
     },
     btn(){
-        window.location.reload()
-        hashHistory.push("home");
+        
         localStorage.clear();
         sessionStorage.clear();
+        // window.location.reload()
+        hashHistory.push("home");
     },
     handleClickk: function(event) {
         // sessionStorage.show=true
@@ -182,7 +183,7 @@ export default React.createClass({
                 </Link>
             </div>
             <div className="operationlist">
-                <Link>
+                <Link to="qr">
                     <div className="op_left">
                       <img src="images/images/my_03 (3).gif" />
                     </div>

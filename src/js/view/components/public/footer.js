@@ -11,7 +11,7 @@ export default React.createClass({
                 </Link>
                 <Link to={localStorage.Login?"my":"login"} className="my">
                 <div
-                    style={{background:"url(images/images/my_1.png) 0% 0% /100%"}}
+                    style={{background:"url(images/images/531594679828317007.png) 0% 0% /100%",width:"0.32rem",height:"0.4rem"}}
                 ></div>
                 <p>我的</p>
                 </Link>

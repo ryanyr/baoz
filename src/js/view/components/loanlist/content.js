@@ -66,7 +66,7 @@ export default React.createClass({
                 </div>
                 <div className="title">
                     <i
-                        style={{background:"url(images/images/10475463301731984.png) 0% 0% /100%"}}
+                        style={{background:"url(images/images/10475463301731984.png) no-repeat 0% 0% /100%"}}
                     ></i>
                     <span
                     style={{width:"2rem"}}
@@ -87,51 +87,81 @@ export default React.createClass({
                 <div className="list_info">
                     <div>
                         <span>所有权：</span>
-                        <span><label><input type="radio" name="ti1" defaultChecked={this.state.ti1=="自持"?"true":""} onChange={()=>{
+                        <span><label><div
+                            style={{background:this.state.ti1=="自持"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        >
+                        <input type="radio" name="ti1" defaultChecked={this.state.ti1=="自持"?"true":""} onChange={()=>{
                             this.setState({
                                 ti1:"自持"
                             })
-                        }}/>自持</label></span>
+                        }}/>
+                            </div>自持</label></span>
                         <span
-                            // style={{marginLeft:"0.24rem"}}
-                        ><label><input type="radio"  name="ti1" defaultChecked={this.state.ti1=="租赁"?"true":""} onChange={()=>{
+                        ><label><div
+                        style={{background:this.state.ti1=="租赁"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        ><input type="radio"  name="ti1" defaultChecked={this.state.ti1=="租赁"?"true":""} onChange={()=>{
                             this.setState({
                                 ti1:"租赁"
                             })
-                        }}/>租赁</label></span>
+                        }}/></div>租赁</label></span>
                         <span
-                            style={{marginLeft:"0.34rem"}}
-                        ><label><input type="radio"  name="ti1" defaultChecked={this.state.ti1=="无"?"true":""} onChange={()=>{
+                            style={{marginLeft:"0.54rem"}}
+                        ><label><div
+                        style={{background:this.state.ti1=="无"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        ><input type="radio"  name="ti1" defaultChecked={this.state.ti1=="无"?"true":""} onChange={()=>{
                             this.setState({
                                 ti1:"无"
                             })
-                        }}/>无</label></span>
+                        }}/></div>无</label></span>
                     </div>
                     <div>
                         <span>按揭情况：</span>
-                        <span><label><input type="radio" name="ti2" defaultChecked={this.state.ti2=="全款"?"true":""} onChange={()=>{
+                        <span><label><div
+                            style={{background:this.state.ti2=="全款"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        >
+                        <input type="radio" name="ti2" defaultChecked={this.state.ti2=="全款"?"true":""} onChange={()=>{
                             this.setState({
                                 ti2:"全款"
                             })
-                        }}/>全款</label></span>
-                        <span><label><input type="radio" name="ti2" defaultChecked={this.state.ti2=="按揭"?"true":""} onChange={()=>{
+                        }}/>
+                            </div>全款</label></span>
+                        <span
+                        ><label><div
+                        style={{background:this.state.ti2=="按揭"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        ><input type="radio"  name="ti2" defaultChecked={this.state.ti2=="按揭"?"true":""} onChange={()=>{
                             this.setState({
                                 ti2:"按揭"
                             })
-                        }}/>按揭</label></span>
+                        }}/></div>按揭</label></span>
+                        <span
+                            style={{marginLeft:"0.54rem"}}
+                        ><label><div
+                        style={{background:this.state.ti2=="无"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        ><input type="radio"  name="ti2" defaultChecked={this.state.ti2=="无"?"true":""} onChange={()=>{
+                            this.setState({
+                                ti2:"无"
+                            })
+                        }}/></div>无</label></span>
                     </div>
                     <div>
                         <span>是否延期：</span>
-                        <span><label><input type="radio" name="ti3" defaultChecked={this.state.ti3==1?"true":""} onChange={()=>{
+                        <span><label><div
+                            style={{background:this.state.ti3=="1"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        >
+                        <input type="radio" name="ti3" defaultChecked={this.state.ti3=="1"?"true":""} onChange={()=>{
                             this.setState({
-                                ti3:1
+                                ti3:"1"
                             })
-                        }}/>是</label></span>
-                        <span><label><input type="radio" name="ti3" defaultChecked={this.state.ti3==2?"true":""} onChange={()=>{
+                        }}/>
+                            </div>是</label></span>
+                        <span
+                        ><label><div
+                        style={{background:this.state.ti3=="0"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        ><input type="radio"  name="ti3" defaultChecked={this.state.ti3=="0"?"true":""} onChange={()=>{
                             this.setState({
-                                ti3:0
+                                ti3:"0"
                             })
-                        }}/>否</label></span>
+                        }}/></div>否</label></span>                       
                     </div>
                 </div>
                 <div className="tips">
@@ -143,23 +173,32 @@ export default React.createClass({
                 <div className="list_info">
                     <div>
                         <span>按揭情况：</span>
-                        <span><label><input type="radio" name="ti4" defaultChecked={this.state.ti4=="全款"?"true":""} onChange={()=>{
+                        <span><label><div
+                            style={{background:this.state.ti4=="全款"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        >
+                        <input type="radio" name="ti4" defaultChecked={this.state.ti4=="全款"?"true":""} onChange={()=>{
                             this.setState({
                                 ti4:"全款"
                             })
-                        }}/>全款</label></span>
-                        <span><label><input type="radio" name="ti4" defaultChecked={this.state.ti4=="按揭"?"true":""} onChange={()=>{
+                        }}/>
+                            </div>全款</label></span>
+                        <span
+                        ><label><div
+                        style={{background:this.state.ti4=="按揭"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        ><input type="radio"  name="ti4" defaultChecked={this.state.ti4=="按揭"?"true":""} onChange={()=>{
                             this.setState({
                                 ti4:"按揭"
                             })
-                        }}/>按揭</label></span>
+                        }}/></div>按揭</label></span>
                         <span
-                            style={{marginLeft:"0.34rem"}}
-                        ><label><input type="radio"  name="ti4" defaultChecked={this.state.ti4=="无"?"true":""} onChange={()=>{
+                            style={{marginLeft:"0.54rem"}}
+                        ><label><div
+                        style={{background:this.state.ti4=="无"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        ><input type="radio"  name="ti4" defaultChecked={this.state.ti4=="无"?"true":""} onChange={()=>{
                             this.setState({
                                 ti4:"无"
                             })
-                        }}/>无</label></span>
+                        }}/></div>无</label></span>
                     </div>
                 </div>
                 <div className="tips">
@@ -171,16 +210,23 @@ export default React.createClass({
                 <div className="list_info">
                     <div>
                         <span>缴纳情况：</span>
-                        <span><label><input type="radio" name="ti5" defaultChecked={this.state.ti5==1?"true":""} onChange={()=>{
+                        <span><label><div
+                            style={{background:this.state.ti5=="1"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        >
+                        <input type="radio" name="ti5" defaultChecked={this.state.ti5=="1"?"true":""} onChange={()=>{
                             this.setState({
-                                ti5:1
+                                ti5:"1"
                             })
-                        }}/>有</label></span>
-                        <span><label><input type="radio" name="ti5" defaultChecked={this.state.ti5==2?"true":""} onChange={()=>{
+                        }}/>
+                            </div>是</label></span>
+                        <span
+                        ><label><div
+                        style={{background:this.state.ti5=="0"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        ><input type="radio"  name="ti5" defaultChecked={this.state.ti5=="0"?"true":""} onChange={()=>{
                             this.setState({
-                                ti5:0
+                                ti5:"0"
                             })
-                        }}/>无</label></span>
+                        }}/></div>否</label></span>  
                     </div>
                 </div>
                 <div className="tips">
@@ -191,17 +237,24 @@ export default React.createClass({
                 </div>
                 <div className="list_info">
                     <div>
-                        <span>缴纳情况：</span>
-                        <span><label><input type="radio" name="ti6" defaultChecked={this.state.ti6==1?"true":""} onChange={()=>{
-                            this.setState({
-                                ti6:1
-                            })
-                        }}/>有</label></span>
-                        <span><label><input type="radio" name="ti6" defaultChecked={this.state.ti6==2?"true":""} onChange={()=>{
-                            this.setState({
-                                ti6:0
-                            })
-                        }}/>无</label></span>
+                    <span>缴纳情况：</span>
+                    <span><label><div
+                    style={{background:this.state.ti6=="1"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                >
+                <input type="radio" name="ti6" defaultChecked={this.state.ti6=="1"?"true":""} onChange={()=>{
+                    this.setState({
+                        ti6:"1"
+                    })
+                }}/>
+                    </div>是</label></span>
+                <span
+                ><label><div
+                style={{background:this.state.ti6=="0"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                ><input type="radio"  name="ti6" defaultChecked={this.state.ti6=="0"?"true":""} onChange={()=>{
+                    this.setState({
+                        ti6:"0"
+                    })
+                }}/></div>否</label></span>
                     </div>
                 </div>
                 <div className="tips">
@@ -236,16 +289,23 @@ export default React.createClass({
                 <div className="list_info">
                     <div>
                         <span>是否有保险：</span>
-                        <span><label><input type="radio" name="ti7" defaultChecked={this.state.ti7==1?"true":""} onChange={()=>{
+                        <span><label><div
+                            style={{background:this.state.ti7=="1"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        >
+                        <input type="radio" name="ti7" defaultChecked={this.state.ti7=="1"?"true":""} onChange={()=>{
                             this.setState({
-                                ti7:1
+                                ti7:"1"
                             })
-                        }}/>有</label></span>
-                        <span><label><input type="radio" name="ti7" defaultChecked={this.state.ti7==2?"true":""} onChange={()=>{
+                        }}/>
+                            </div>有</label></span>
+                        <span
+                        ><label><div
+                        style={{background:this.state.ti7=="0"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
+                        ><input type="radio"  name="ti7" defaultChecked={this.state.ti7=="0"?"true":""} onChange={()=>{
                             this.setState({
-                                ti7:0
+                                ti7:"0"
                             })
-                        }}/>无</label></span>
+                        }}/></div>无</label></span> 
                     </div>
                 </div>
                 <div className="submit">

@@ -1,6 +1,6 @@
 import url from "../../config/config";
 import {Toast} from "antd-mobile";
-
+import {hashHistory} from "react-router";
 
 export default React.createClass({
     getInitialState(){

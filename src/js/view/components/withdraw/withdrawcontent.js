@@ -41,12 +41,12 @@ export default React.createClass({
            method:"get"})
            .then(r=>r.json())
            .then((data)=>{
-               console.log(data)
+            //    console.log(data)
                var newlist=data.data.map((con)=>{
                     return {label:con.companyName,value:con.companyName}
                     // console.log(con.bankName)
                })
-               console.log(newlist)
+            //    console.log(newlist)
                that.setState({
                 companyName:newlist
                })
@@ -55,9 +55,9 @@ export default React.createClass({
                 console.log("Oops, error");
                 Toast.info("服务器响应超时", 2);
             });
-        console.log(sessionStorage.withdraw1)
+        // console.log(sessionStorage.withdraw1)
         if(sessionStorage.withdraw1){
-            console.log(1)
+            // console.log(1)
             this.setState(JSON.parse(sessionStorage.withdraw1))
         }
         var that=this;
@@ -69,7 +69,7 @@ export default React.createClass({
             headers:{"Content-Type":"text/plain;charset=UTF-8",token:localStorage.Token},
             success: function (r) {
                 
-                console.log(r)
+                // console.log(r)
                 // if(r.code=="200"){
                     that.setState({
                         insuranceCompany:r.data.companyName
@@ -87,7 +87,7 @@ export default React.createClass({
           method:"POST",body:data})
           .then(r=>r.json())
           .then((data)=>{
-              console.log(data)
+            //   console.log(data)
             if(data.code=="410"){
                 Toast.info("您的账号已在其他设备登录", 2);
                 setTimeout(function(){

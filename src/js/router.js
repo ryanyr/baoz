@@ -33,48 +33,48 @@ import Pmh from "./view/router/pmh/pmhRouter";//信用卡还款
 import Ddd from "./view/router/ddd/dd"
 export default React.createClass({
     enterMy(){
-        // window.scrollTo(0,0)
+        window.scrollTo(0,0);
     },
     render:function(){
         return (
             <Router history={hashHistory}>
-                <Route path="/" component={Rou}>
+                <Route path="/" component={Rou} onEnter={this.enterMy}>
                     <IndexRedirect to="home"/>                   
-                    <Route path="home" component={Home} />
+                    <Route path="home" component={Home} onEnter={this.enterMy}/>
                     <Route path="my" component={My} onEnter={this.enterMy} />
-                    <Route path="login" component={Login} />
-                    <Route path="merchants" component={Merchants} />
-                    <Route path="qr" component={Qr} />
-                    <Route path="information" component={Information} />
-                    <Route path="perfect" component={Perfect} />
-                    <Route path="loan" component={Loan} />
-                    <Route path="repayment" component={Repayment} />
-                    <Route path="already" component={Already} />
-                    <Route path="about" component={About} />
-                    <Route path="withdraw" component={Withdraw} />
-               		<Route path="coupon" component={Coupon} />
-                    <Route path="meloan" component={Meloan} />
-                    <Route path="memoney" component={Memoney} />
-                    <Route path="gvrp" component={Gvrp} />
-                    <Route path="getcoupon" component={Getcoupon} />
-                    <Route path="waitcoupon" component={Waitcoupon} />
-                    <Route path="believe" component={Believe} />
-                    <Route path="tcsuccess" component={Tcsuccess} />
-                    <Route path="txing" component={Txing} />
-                    <Route path="bzhome" component={Bzhome} />
-                    <Route path="loginsuccess" component={Loginsuccess} />
-                    <Route path="card" component={Card} />
-                    <Route path="loanlist" component={Loanlist} />
-                    <Route path="makemoney" component={Makemoney} />
-                    <Route path="sqcg" component={Sqcg} />
-                    <Route path="sqsb" component={Sqsb} />
-                    <Route path="pmh" component={Pmh} />
-                    <Route path="sqsb" component={Sqsb} />
-                    <Route path="pmh" component={Pmh} />
-                    <Route path="loanlist" component={Loanlist} />
-                    <Route path="makemoney" component={Makemoney} />                   
-                    <Route path="ddd" component={Ddd} />
-                    <Route path="usecoupon" component={Usecoupon} />                     
+                    <Route path="login" component={Login} onEnter={this.enterMy}/>
+                    <Route path="merchants" component={Merchants} onEnter={this.enterMy}/>
+                    <Route path="qr" component={Qr} onEnter={this.enterMy}/>
+                    <Route path="information" component={Information} onEnter={this.enterMy}/>
+                    <Route path="perfect" component={Perfect} onEnter={this.enterMy}/>
+                    <Route path="loan" component={Loan} onEnter={this.enterMy}/>
+                    <Route path="repayment" component={Repayment} onEnter={this.enterMy}/>
+                    <Route path="already" component={Already} onEnter={this.enterMy}/>
+                    <Route path="about" component={About} onEnter={this.enterMy}/>
+                    <Route path="withdraw" component={Withdraw} onEnter={this.enterMy}/>
+               		<Route path="coupon" component={Coupon} onEnter={this.enterMy}/>
+                    <Route path="meloan" component={Meloan} onEnter={this.enterMy}/>
+                    <Route path="memoney" component={Memoney} onEnter={this.enterMy}/>
+                    <Route path="gvrp" component={Gvrp} onEnter={this.enterMy}/>
+                    <Route path="getcoupon" component={Getcoupon} onEnter={this.enterMy}/>
+                    <Route path="waitcoupon" component={Waitcoupon} onEnter={this.enterMy}/>
+                    <Route path="believe" component={Believe} onEnter={this.enterMy}/>
+                    <Route path="tcsuccess" component={Tcsuccess} onEnter={this.enterMy}/>
+                    <Route path="txing" component={Txing} onEnter={this.enterMy}/>
+                    <Route path="bzhome" component={Bzhome} onEnter={this.enterMy}/>
+                    <Route path="loginsuccess" component={Loginsuccess} onEnter={this.enterMy}/>
+                    <Route path="card" component={Card} onEnter={this.enterMy}/>
+                    <Route path="loanlist" component={Loanlist} onEnter={this.enterMy}/>
+                    <Route path="makemoney" component={Makemoney} onEnter={this.enterMy}/>
+                    <Route path="sqcg" component={Sqcg} onEnter={this.enterMy}/>
+                    <Route path="sqsb" component={Sqsb} onEnter={this.enterMy}/>
+                    <Route path="pmh" component={Pmh} onEnter={this.enterMy}/>
+                    <Route path="sqsb" component={Sqsb} onEnter={this.enterMy}/>
+                    <Route path="pmh" component={Pmh} onEnter={this.enterMy}/>
+                    <Route path="loanlist" component={Loanlist} onEnter={this.enterMy}/>
+                    <Route path="makemoney" component={Makemoney} onEnter={this.enterMy}/>                   
+                    <Route path="ddd" component={Ddd} onEnter={this.enterMy}/>
+                    <Route path="usecoupon" component={Usecoupon} onEnter={this.enterMy}/>                     
                 </Route>
             </Router>
         )

@@ -13,6 +13,7 @@ export default React.createClass({
         }
     },
     componentWillMount(){
+        console.log(store.getState().LIST_3)
         if(store.getState().LIST_3.total){
             this.setState(store.getState().LIST_3);
             this.change(store.getState().LIST_3.page)

@@ -118,7 +118,11 @@ export default React.createClass({
                     
                                       
                 }else{
-                    hashHistory.push("waitcoupon");
+                    setTimeout(function(){
+                        hashHistory.push("waitcoupon");
+                        // hashHistory.push("my");
+                    },200) 
+                    
                    
                 }                
             }else if(data.code=="400"){

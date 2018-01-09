@@ -34,8 +34,9 @@ export default (state={
         return newstate;
         break;
         case "LIST_3"://已还款列表信息
+        console.log(action.data)
         var newstate={};
-        state.LIST_2=action.data
+        state.LIST_3=action.data
         Object.assign(newstate,state);
         return newstate;
         break;

@@ -5,7 +5,7 @@ export default React.createClass({
             <footer className="footer_1">
                 <Link to="home" className="home">
                 <div
-                    style={{background:"url(images/images/home_1.png) 0% 0% /100%"}}
+                    style={{background:"url(images/images/29683062252275484.png) 0% 0% /100%",width:"0.39rem",height:"0.4rem"}}
                 ></div>
                 <p>提现</p>
                 </Link>

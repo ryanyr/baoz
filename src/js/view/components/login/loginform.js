@@ -55,6 +55,7 @@ export default React.createClass({
         }
     },
     send(){
+        
         if(!this.state.phone){
             Toast.info('请填入手机号', 1); 
         }
@@ -72,7 +73,7 @@ export default React.createClass({
                 case 100001:    Toast.info('手机号格式错误', 1);
                                 break;
                 case 100002:    Toast.info('验证码发送成功，请注意查收', 1);
-                                if(data.data.state=="1"&&localStorage.code){
+                                if(data.data.state=="1"&&/^[0-9a-z]{4,6}$/ig.test(localStorage.code)){
                                     that.setState({
                                         showcode:"block"
                                     })
@@ -119,6 +120,7 @@ export default React.createClass({
         },1000);
     },
     submit(e){
+        // console.log(Boolean(undefined))
         e.preventDefault();
         var that=this;
         if(!this.state.phone){

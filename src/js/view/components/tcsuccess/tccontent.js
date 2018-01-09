@@ -16,7 +16,8 @@ export default React.createClass({
                         </div>
                         <div className="lgs_btn"
                             onClick={()=>{
-                                sessionStorage.info="";//清楚订单裂变session,显示第一页
+                                // sessionStorage.info="";//清楚订单裂变session,显示第一页
+                                window.location.reload();
                                 hashHistory.push("loan")
                             }}
                         >查&nbsp;&nbsp;&nbsp;&nbsp;看</div>

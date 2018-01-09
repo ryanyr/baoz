@@ -96,6 +96,7 @@ export default React.createClass({
         })
     },
     changelist(e,ind,index){
+
         if(e.target.value){
             console.log(1)
             this.setState({
@@ -141,8 +142,9 @@ export default React.createClass({
                 style={{display:show}}
             >
                 <div className="checkall" onClick={this.btn}>
-                    <label><Checkbox
-                        checked={this.state.checkall}
+                    <label>
+                        <Checkbox
+                        // checked={this.state.checkall}
                         onChange={this.checkchange} 
                         style={{marginRight:"0.2rem"}}
                     />全选</label>
