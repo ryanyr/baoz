@@ -47,7 +47,7 @@ export default React.createClass({
                
            }).catch(function(e) {
                 console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
+                // Toast.info("服务器响应超时", 2);
             });
 
 
@@ -71,7 +71,7 @@ export default React.createClass({
                
 			  }).catch(function(e) {
                 console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
+                // Toast.info("服务器响应超时", 2);
         });
     },
     btn(){
@@ -131,7 +131,7 @@ export default React.createClass({
             }
         }).catch(function(e) {
                 console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
+                // Toast.info("服务器响应超时", 2);
         });
     }
     },
@@ -152,7 +152,7 @@ export default React.createClass({
             .then((data)=>{
                 console.log(data)
                 that.setState({
-                    imgurl:data.data,
+                    imgurl:files[0].url,
                     imgup:data.data
                     });
             }).catch(function(e) {

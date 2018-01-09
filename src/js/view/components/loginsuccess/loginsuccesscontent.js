@@ -12,7 +12,7 @@ export default React.createClass({
                         <div className="lgs_w">
                             <p>登录成功</p>
                             <p>您是第一次登录，请完成授信</p>
-                            <p>完成授信后将获得<span className="lgs_ws">20万</span>额度</p>
+                            <p>完成授信后将获得<span className="lgs_ws">20万-50万</span>额度</p>
                         </div>
                         <div className="lgs_btn"
                             onClick={()=>{

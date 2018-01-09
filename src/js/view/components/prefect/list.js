@@ -36,9 +36,9 @@ export default React.createClass({
                                     break;
                     default:        break;
                 }     
-                if(r.code=="200"){
-                    that.setState(r.data)
-                }
+                // if(data.code=="200"){
+                    that.setState(data.data)
+                // }
             }
         });
     },

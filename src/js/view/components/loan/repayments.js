@@ -1,7 +1,7 @@
 import {  Checkbox } from 'antd-mobile';
 import {Link} from "react-router";
 import url from "../../config/config";
-import {Pagination,Icon} from 'antd-mobile';
+import {Pagination,Icon,Toast} from 'antd-mobile';
 import store from "../../../store/store";
 export default React.createClass({
     getInitialState(){
@@ -10,8 +10,9 @@ export default React.createClass({
           page:1,
           total:"",
           showpage:false,
-          allcheck:0
-        //   checklist:[true]
+          checkall:true,
+          num:0,
+          oders:[]
         }
     },
     componentWillMount(){
@@ -88,9 +89,19 @@ export default React.createClass({
         });
     },
     checkchange(e){
+        // console.log(this.state.checkall)
+        console.log(e.target.checked)
         this.setState({
             checkall:!this.state.checkall
         })
+    },
+    changelist(e,ind,index){
+        if(e.target.value){
+            console.log(1)
+            this.setState({
+
+            })
+        }
     },
     btn(){
         console.log(this.refs.nu)
@@ -101,20 +112,9 @@ export default React.createClass({
                 <div className="repayments_list" to="repayment" key={index} ref="nu">
                     <Checkbox 
                         style={{marginLeft:"0.2rem"}}
-                        
-                        // defaultChecked={this.state.checklist[index]}
+
                         onChange={(e)=>{
-                            // console.log(e.target.checked)
-                            if(e.target.checked){
-                                this.setState({
-                                    allcheck:this.state.allcheck++
-                                })
-                            }else{
-                                this.setState({
-                                    allcheck:this.state.allcheck--
-                                }) 
-                            }
-                            console.log(this.state.allcheck)
+                            this.changelist(e,ind,index)
                         }}
                     />
                     <div className="info_left">
@@ -142,7 +142,7 @@ export default React.createClass({
             >
                 <div className="checkall" onClick={this.btn}>
                     <label><Checkbox
-                        
+                        checked={this.state.checkall}
                         onChange={this.checkchange} 
                         style={{marginRight:"0.2rem"}}
                     />全选</label>

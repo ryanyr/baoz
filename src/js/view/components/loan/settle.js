@@ -1,6 +1,6 @@
 import {Link} from "react-router";
 import url from "../../config/config";
-import {Pagination,Icon} from 'antd-mobile';
+import {Pagination,Icon,Toast} from 'antd-mobile';
 import store from "../../../store/store";
 export default React.createClass({
     getInitialState(){

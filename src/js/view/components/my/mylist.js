@@ -221,10 +221,12 @@ export default React.createClass({
                 </Link>
                 <div className="tx_tc" style={{display:texts}}>
                      <div onClick={this.handleClickk} className="tx_tc1">
-                        <div className="tx_tca">确定退出？</div>
+                        <div className="tx_tca">
+                            <div className="tx_tcaa">确认退出吗？</div>
+                        </div>
                         <div className="tx_tcb">
-                            <Link className="tx_tcc" onClick={this.btn}>是</Link>
-                            <div className="tx_tcd">否</div>
+                            <Link className="tx_tcc" onClick={this.btn}>确认</Link>
+                            <div className="tx_tcd">取消</div>
                         </div>
                      </div>
                 </div>

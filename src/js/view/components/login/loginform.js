@@ -12,6 +12,7 @@ export default React.createClass({
             code:"",
             time:"发送验证码",
             timer:null,//设定全局定时器
+            showcode:"none"
         }
     },
     componentWillUnmount(){
@@ -20,11 +21,12 @@ export default React.createClass({
         console.log(JSON.stringify(this.state))
     },
     componentWillMount(){
+        console.log(localStorage.code)
         var that=this;
+        // console.log(sessionStorage.login)
         if(sessionStorage.login){//查询login的session
-            console.log(1)
+            
             this.setState(JSON.parse(sessionStorage.login));
-            console.log(JSON.parse(sessionStorage.login))
             if(JSON.parse(sessionStorage.login).time!="发送验证码"){
                 // console
                 var i=JSON.parse(sessionStorage.login).time.split("秒")[0];
@@ -45,6 +47,7 @@ export default React.createClass({
 
             }
         }
+        // if()
         if(/^[0-9a-z]{3,6}$/ig.test(localStorage.code)){
             this.setState({
                 code:localStorage.code
@@ -69,6 +72,11 @@ export default React.createClass({
                 case 100001:    Toast.info('手机号格式错误', 1);
                                 break;
                 case 100002:    Toast.info('验证码发送成功，请注意查收', 1);
+                                if(data.data.state=="1"&&localStorage.code){
+                                    that.setState({
+                                        showcode:"block"
+                                    })
+                                }
                                 that.sendAgain();
                                 break;
                 case 100003:    Toast.info('验证码发送失败，请稍后再次发送', 1);
@@ -187,14 +195,12 @@ export default React.createClass({
                     ></i><input placeholder="请输入验证码" type="number" onChange={this.pwd} />
                     <div onClick={this.send} className={this.state.time=="发送验证码"?"":"active"}>{this.state.time}</div>
                 </div>
-                <div className="form_qr">
+                <div className="form_qr"
+                    style={{display:this.state.showcode}}//是否显示code输入框
+                >
                     <i 
                     style={{background:"url(images/images/icon_03.png)",width:"0.37rem",height:"0.37rem",backgroundSize:"100%"}}
-                    ></i><input placeholder="请输入推广码" type="text" value={this.state.code} onChange={(e)=>{
-                        this.setState({
-                            code:e.target.value
-                        })
-                    }} />
+                    ></i><input placeholder="请输入推广码" type="text" value={this.state.code}  />
                 </div>
                 <div className="protocol">
                     <input type="checkbox" defaultChecked={this.state.check} onChange={this.editChecked} />

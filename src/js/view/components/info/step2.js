@@ -42,18 +42,10 @@ export default React.createClass({
             .then(r=>r.json())
             .then((data)=>{
                 // console.log(data);
-                if(data.code=="200"){
-                    var newlist=data.data.map((con)=>{
-                        return {
-                            label:con.bankName,
-                            value:con.bankName
-                        }
-                    })
-                    that.setState({
-                        banklist:newlist,
-                        creditcardlist:data.data
-                    })
-                }else if(data.code=="410"){
+                // if(data.code=="200"){
+                    
+                // }else 
+                if(data.code=="410"){
                     Toast.info("您的账号已在其他设备登录", 2);
                     setTimeout(function(){
                         hashHistory.push("login")
@@ -67,6 +59,17 @@ export default React.createClass({
                     Toast.info("系统响应超时", 2);
                   }else if(data.code=="500"){
                     Toast.info("系统错误", 2);
+                  }else{
+                    var newlist=data.data.map((con)=>{
+                        return {
+                            label:con.bankName,
+                            value:con.bankName
+                        }
+                    })
+                    that.setState({
+                        banklist:newlist,
+                        creditcardlist:data.data
+                    })
                   }
                 
                 
@@ -169,7 +172,7 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl:data.data,
+                imgurl:files[0].url,
                 imgup1:data.data
             })
         })
@@ -179,7 +182,7 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl2:data.data,
+                imgurl2:files[0].url,
                 imgup2:data.data
             })
         })
@@ -188,7 +191,7 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl3:data.data,
+                imgurl3:files[0].url,
                 imgup3:data.data
             })
         })
@@ -197,7 +200,7 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl4:data.data,
+                imgurl4:files[0].url,
                 imgup4:data.data
             })
         })

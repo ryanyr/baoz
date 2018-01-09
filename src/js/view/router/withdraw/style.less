@@ -24,7 +24,9 @@
     }
 }
 .withdraw{
-
+    .am-list-item .am-input-control input{
+        color:#555;
+    }
     .am-list-item{
         background: none;
     }
@@ -91,6 +93,7 @@
                 align-items: center;
                 font-size: 0.28rem;
                 padding-left: 0.15rem;
+                color:#555;
                 &:nth-child(1){
                     border-bottom: 0.02rem solid #ffe7c0;
                 }
@@ -124,10 +127,31 @@
             }
         }
         .picker{
-            padding: 0.36rem 0 0.36rem 0.27rem;
+            // .am-image-picker-list .am-image-picker-upload-btn input{
+            //     width:5rem;
+            //     height: 5rem;
+            // }
+            padding: 0.36rem 0.1rem 0.36rem ;
             background: #fff;
             border-radius: 0.15rem;
             box-shadow: 0.04rem 0.04rem 0.08rem 0.05rem #e6dfd7;
+            display: flex;
+            justify-content: space-between;
+            >div{
+                width: 2.02rem;
+                height: 1.38rem;
+                overflow: hidden;
+                position: relative;
+                input{
+                    width:200px;
+                    height: 200px;
+                    z-index: 10;
+                }
+                img{
+                    width: 100px !important;
+                    height: 70px !important; 
+                }
+            }
         }
         .sub{
             padding: 0.7rem 0.48rem 0.58rem;

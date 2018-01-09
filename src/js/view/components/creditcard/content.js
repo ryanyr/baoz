@@ -103,7 +103,7 @@ export default React.createClass({
             .then(r=>r.json())
             .then((data)=>{
                 console.log(data)
-                if(data.code=="200"){
+                if(data.code=="230008"){
                     that.setState({
                         check2:true
                     })
@@ -152,11 +152,11 @@ export default React.createClass({
             .then(r=>r.json())
             .then((data)=>{
                 console.log(data)
-                if(data.code=="200"){
+                if(data.code=="230008"){
                     // that.setState(data.data);
                     that.setState({show:false});
                     Toast.info(data.msg, 2);
-                    hashHistory.push("loan");
+                    hashHistory.push("tcsuccess");
                     // localStorage.card="";
                     sessionStorage.width="";
                 }

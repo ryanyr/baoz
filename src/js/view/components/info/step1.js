@@ -1,6 +1,7 @@
 import {InputItem,ImagePicker,Toast } from "antd-mobile";
 import url from "../../config/config";
 import $ from "jquery";
+// import EXIF from "exif-js";
 import {compress} from "../../../utils/imgCompress";
 
 
@@ -109,10 +110,14 @@ export default React.createClass({
     onChange(files, type, index){
         var that=this;
         this.upimg(files).then((data)=>{
+            // var img = new Image();
+            // var imgurl = "imgurl";
+            // img.src = files[0].url;
+            // var newimg = that.handelImg(img,1);
             that.setState({
-                imgurl:data.data,
+                imgurl:files[0].url,
                 upimg1:data.data
-            })
+            });
         })
                     
       },
@@ -120,7 +125,7 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl2:data.data,
+                imgurl2:files[0].url,
                 upimg2:data.data
             })
         })
@@ -129,11 +134,97 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl3:data.data,
+                imgurl3:files[0].url,
                 upimg3:data.data
             })
         })
       },   
+    handelImg(image,imgurl){
+        var that = this;
+        //此处进行图片旋转的判断处理
+        var width = image.width;
+        var height = image.height;
+        var canvas = document.createElement("canvas")
+        var ctx = canvas.getContext('2d');
+        var newImage = new Image();
+        EXIF.getData(image,function () {
+            var orientation = EXIF.getTag(this,'Orientation');
+            // orientation = 6;//测试数据
+            console.log('orientation:'+orientation);
+            switch (orientation){
+                //正常状态
+                case 1:
+                    console.log('旋转0°');
+                    alert('旋转0°');
+                    // canvas.height = height;
+                    // canvas.width = width;
+                    newImage = image;
+                    break;
+                //旋转90度
+                case 6:
+                    console.log('旋转90°');
+                    alert('旋转90°');
+                    canvas.height = width;
+                    canvas.width = height;
+                    ctx.rotate(Math.PI/2);
+                    ctx.translate(0,-height);
+                    ctx.drawImage(image,0,0)
+                    imageDate = canvas.toDataURL('Image/jpeg',1)
+                    newImage.src = imageDate;
+                    break;
+                //旋转180°
+                case 3:
+                    console.log('旋转180°');
+                    alert('旋转180°');
+                    canvas.height = height;
+                    canvas.width = width;
+                    ctx.rotate(Math.PI);
+                    ctx.translate(-width,-height);
+                    ctx.drawImage(image,0,0)
+                    imageDate = canvas.toDataURL('Image/jpeg',1);
+                    newImage.src = imageDate;
+                    break;
+                //旋转270°
+                case 8:
+                    console.log('旋转270°');
+                    alert('旋转270°');
+                    canvas.height = width;
+                    canvas.width = height;
+                    ctx.rotate(-Math.PI/2);
+                    ctx.translate(-height,0);
+
+                    ctx.drawImage(image,0,0)
+                    imageDate = canvas.toDataURL('Image/jpeg',1)
+                    newImage.src = imageDate;
+                    break;
+                //undefined时不旋转
+                case undefined:
+                    console.log('undefined  不旋转');
+                    alert('undefined  不旋转');
+                    newImage = image;
+                    break;
+                }
+            }
+        );
+        alert(newImage.src);
+        switch(imgurl){            
+            case 1: that.setState({
+                        imgurl:newImage.src
+                    });
+                    break;
+            case 2: that.setState({
+                        imgurl2:newImage.src
+                    });
+                    break;
+            case 3: that.setState({
+                        imgurl3:newImage.src
+                    });
+                    break;
+            default: break;
+        }
+        
+        // return newImage;
+    },
     render(){
         const {files}=this.state;
         var showbox=this.props.page==1?"":"none";
@@ -205,7 +296,7 @@ export default React.createClass({
                                 files={files}
                                 onChange={this.onChange}
                                 onImageClick={(index, fs) => console.log(index, fs)}
-                                selectable={files.length <1}
+                                selectable={files.length <2}
                                 />
                             </div>
                             <div

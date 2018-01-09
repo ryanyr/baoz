@@ -4,8 +4,8 @@ import {hashHistory} from "react-router";
 export default React.createClass({
     getInitialState(){
         return {
-            couponAmount:"",
-            validEndTime:""
+            couponAmount:"40",
+            validEndTime:"2018-2-30"
         }
     },
     componentDidMount(){
@@ -29,7 +29,7 @@ export default React.createClass({
                         <p>您的授信申请将在30分钟内审核，请耐心等耐</p>
                         <p>您的授信额度总额约为10万</p>
                         <p>额度以实际审核结果为准</p>
-                        <p><span className="lgs_wws">获得一张40元优惠券</span></p>
+                        <p><span className="lgs_wws">获得一张优惠券</span></p>
                         
                     </div>
                     <div className="yhq_sq" style={{background:"url(images/images/yuq_bg.png)",backgroundSize:"100%"}} >

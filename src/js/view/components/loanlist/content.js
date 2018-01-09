@@ -20,6 +20,8 @@ export default React.createClass({
     },
     btn(){
         console.log(this.state);
+        // var reg=/^[1-9]{1}[0-9]{0,5}/
+        if(/^[1-9]{1}[0-9]{0,5}$/g.test(this.state.num)){
         var data=new FormData();
         data.append("accumulationFund",this.state.ti5);
         data.append("carMortgage",this.state.ti4);
@@ -39,15 +41,19 @@ export default React.createClass({
             .then(r=>r.json())
             .then((data)=>{
                 console.log(data)
-                if(data.code=="200"){
+                if(data.code=="240013"){
+                    Toast.info(data.msg, 2);
                     hashHistory.push("home")
-                }else if(data.code=="400"){
+                }else{
                     Toast.info(data.msg, 2);
                 }
             }).catch(function(e) {
                 console.log("Oops, error");
                 Toast.info("服务器响应超时", 2);
-        });
+        });            
+    }else{
+        Toast.info("请输入正确的借款金额",1)
+    }
     },  
     render(){
         return (
@@ -63,11 +69,12 @@ export default React.createClass({
                         style={{background:"url(images/images/10475463301731984.png) 0% 0% /100%"}}
                     ></i>
                     <span
+                    style={{width:"2rem"}}
                     >借款金额</span>
                     <InputItem
                     value={this.state.num}
                     onChange={(e)=>{this.setState({num:e})}}
-                    style={{height:"0.42rem",fontSize:"0.28rem",marginLeft:"0.8rem"}} 
+                    style={{height:"0.42rem",fontSize:"0.28rem",marginLeft:"0.2rem"}} 
                     placeholder="请输入借款金额"
                     />
                 </div>
@@ -85,11 +92,20 @@ export default React.createClass({
                                 ti1:"自持"
                             })
                         }}/>自持</label></span>
-                        <span><label><input type="radio"  name="ti1" defaultChecked={this.state.ti1=="租赁"?"true":""} onChange={()=>{
+                        <span
+                            // style={{marginLeft:"0.24rem"}}
+                        ><label><input type="radio"  name="ti1" defaultChecked={this.state.ti1=="租赁"?"true":""} onChange={()=>{
                             this.setState({
                                 ti1:"租赁"
                             })
                         }}/>租赁</label></span>
+                        <span
+                            style={{marginLeft:"0.34rem"}}
+                        ><label><input type="radio"  name="ti1" defaultChecked={this.state.ti1=="无"?"true":""} onChange={()=>{
+                            this.setState({
+                                ti1:"无"
+                            })
+                        }}/>无</label></span>
                     </div>
                     <div>
                         <span>按揭情况：</span>
@@ -137,6 +153,13 @@ export default React.createClass({
                                 ti4:"按揭"
                             })
                         }}/>按揭</label></span>
+                        <span
+                            style={{marginLeft:"0.34rem"}}
+                        ><label><input type="radio"  name="ti4" defaultChecked={this.state.ti4=="无"?"true":""} onChange={()=>{
+                            this.setState({
+                                ti4:"无"
+                            })
+                        }}/>无</label></span>
                     </div>
                 </div>
                 <div className="tips">
@@ -185,14 +208,14 @@ export default React.createClass({
                     <i
                         style={{background:"url(images/images/icon_05.png) 0% 0% /100%"}}
                     ></i>
-                    <span>社保信息</span>
+                    <span>工资流水信息</span>
                 </div>
                 <div className="list_info">
                     <div>
                         <span>工资流水：</span>
                         <Picker extra="请选择职务"
                                     
-                                    data={[{label:"0-3000元/月",value:"0-3000元/月"},{label:"3001-6000元/月",value:"3001-6000元/月"},{label:"6001-9000元/月",value:"6001-9000元/月"},{label:"9001-12000元/月",value:"9001-12000元/月"},]}
+                                    data={[{label:"0-3000元/月",value:"0-3000元/月"},{label:"3001-6000元/月",value:"3001-6000元/月"},{label:"6001-9000元/月",value:"6001-9000元/月"},{label:"9001-12000元/月",value:"9001-12000元/月"},{label:"大于12000元/月",value:"大于12000元/月"}]}
                                     cols="1" 
                                     value={this.state.ti8}                                  
                                     onOk={e => {this.setState({ti8:e})}}

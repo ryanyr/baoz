@@ -10,22 +10,22 @@ export default React.createClass({
 	},
   btn1(){
     if(localStorage.Login){
-      if(this.state.info=="已完善"){
+      // if(this.state.info=="已完善"){
         hashHistory.push("meloan")
-      }else{
-        hashHistory.push("information")
-      }
+      // }else{
+      //   hashHistory.push("information")
+      // }
     }else{
       hashHistory.push("login");
     }
   },
   btn2(){
     if(localStorage.Login){
-      if(this.state.info=="已完善"){
+      // if(this.state.info=="已完善"){
         hashHistory.push("memoney")
-      }else{
-        hashHistory.push("information")
-      }
+      // }else{
+      //   hashHistory.push("information")
+      // }
     }else{
       hashHistory.push("login");
     }
@@ -49,11 +49,11 @@ export default React.createClass({
             </div>
             <div className="other_a" onClick={()=>{
                 if(localStorage.Login){
-                  if(this.state.info=="已完善"){
+                  // if(this.state.info=="已完善"){
                     hashHistory.push("qr")
-                  }else{
-                    hashHistory.push("information")
-                  }
+                  // }else{
+                  //   hashHistory.push("information")
+                  // }
                 }else{
                   hashHistory.push("login")
                 }
