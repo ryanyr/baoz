@@ -32,13 +32,23 @@ export default React.createClass({
             return <List key={index} info={con} />
         })
         return (
-           <div className="wyzqcnm">
-            
-            <div className="wyzqflist">
-                
-                <div className="wyzq_box">
-                    {info}
+           <div className="wyzqcnm">            
+                <div className="wyzqflist">                    
+                    <div className="wyzq_box">
+                        <div className="wyzqlist">                
+                    <a href="https://qcrapp.chainfin.com/oauth/walletOauthApp/activeLogin.html?recommendNum=13343440123" className="zq_father">
+                        <div className="zq_left">
+                        <img  src="images/images/daikuan_14.gif"/>
+                        </div>
+                        <div className="zq_right">
+                            <p className="wyzqw1">超人贷</p>
+                            <p className="wyzqw2">一键管理您的信用卡</p>                        
+                        </div>
+                        <div className="zq_d"><img src="images/images/daikuan_08.gif" /></div>
+                    </a>                    
                 </div>
+                {info}
+            </div>
                 
             </div>
             </div>

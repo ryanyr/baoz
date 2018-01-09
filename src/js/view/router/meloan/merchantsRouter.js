@@ -8,12 +8,12 @@ export default React.createClass({
     getDefaultProps(){
         return {
             list:[
-            {
-                title:"超人贷",
-                content:"一键管理您的信用卡",
-                img:"images/images/daikuan_14.gif",
-                path:"coupon"
-            },
+            // {
+            //     title:"超人贷",
+            //     content:"一键管理您的信用卡",
+            //     img:"images/images/daikuan_14.gif",
+            //     path:"coupon"
+            // },
             {
                 title:"其他",
                 content:"一键管理您的信用卡",
