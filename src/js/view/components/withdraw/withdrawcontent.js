@@ -278,9 +278,10 @@ export default React.createClass({
             var that=this;
             var data=new FormData();
             //此处图片进行压缩,写入image异步onload中
-            var img = new Image();
+            /* var img = new Image();
             img.onload = ()=>{
                     var compressImg = compress(img);
+                    console.log(compressImg);
                     data.append("img",compressImg);     
                     fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
                         headers:{
@@ -301,8 +302,28 @@ export default React.createClass({
                                 // Toast.info("服务器响应超时", 2);
                         });
             } 
-            img.src = files[0].url;     
+            img.src = files[0].url;      */
             //图片压缩结束
+
+                data.append("img",files[0].url);     
+                fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
+                    headers:{
+                        token:localStorage.Token
+                    },
+                    method:"POST",body:data})
+                    .then(r=>r.json())
+                    .then((data)=>{
+                        if(data.code==120008||data.code==120009){
+                            Toast.info("上传保单图片失败，请稍后再次上传", 2);
+                        }else{
+                            suc(data)
+                        }
+                        
+                    }).catch(function(e) {
+                            console.log("Oops, error");                                
+                            // Toast.info("服务器响应超时", 2);
+                    });
+
         })
             
       },

@@ -12,7 +12,6 @@ const List=React.createClass({
                     <div className="zq_right">
                         <p className="wyzqw1">{this.props.info.title}</p>
                         <p className="wyzqw2">{this.props.info.content}</p>
-                       
                     </div>
                     <div className="zq_d"><img src="images/images/daikuan_08.gif" /></div>
                 </Link>

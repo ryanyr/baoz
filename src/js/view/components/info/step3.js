@@ -142,8 +142,9 @@ export default React.createClass({
     onChange(files, type, index){
         var that=this;
         var data=new FormData();
+
         //此处图片进行压缩,写入image异步onload中
-        var img = new Image();
+        /* var img = new Image();
         img.onload = ()=>{
             var compressImg = compress(img);
             data.append("img",compressImg);     
@@ -164,8 +165,27 @@ export default React.createClass({
                 Toast.info("服务器响应超时", 2);
         });
         } 
-        img.src = files[0].url;     
+        img.src = files[0].url;      */
         //图片压缩结束 
+
+        data.append("img",files[0].url);     
+            fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
+            headers:{
+                token:localStorage.Token
+            },
+            method:"POST",body:data})
+            .then(r=>r.json())
+            .then((data)=>{
+                console.log(data)
+                that.setState({
+                    imgurl:data.data,
+                    imgup:data.data
+                    });
+            }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
+
       },
     render(){
         const {files}=this.state;
@@ -186,7 +206,7 @@ export default React.createClass({
                     <div className="wrap">
                         <div className="price">
                             <div className="top">
-                                <span>保险从业编号</span><InputItem
+                                <span>资格证书号码</span><InputItem
                                 value={this.state.certificateNo}
                                 onChange={(e)=>{this.setState({
                                     certificateNo:e})}} 

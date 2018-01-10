@@ -3,6 +3,18 @@ import { Modal, Button, WhiteSpace, WingBlank, Toast } from 'antd-mobile';
 import url from "../../config/config";
 import store from "../../../store/store";
 const Out=React.createClass({
+    getInitialState(){
+        return {
+            liked: true
+        }
+    },
+    componentWillMount(){
+        if(!sessionStorage.show){
+            this.setState({
+              liked:false
+            })
+        }
+    },
     componentDidMount(){
         // alert(1)
     },
@@ -221,13 +233,13 @@ export default React.createClass({
                     </div>   
                 </Link>
                 <div className="tx_tc" style={{display:texts}}>
-                     <div onClick={this.handleClickk} className="tx_tc1">
+                     <div className="tx_tc1">
                         <div className="tx_tca">
                             <div className="tx_tcaa">确认退出吗？</div>
                         </div>
                         <div className="tx_tcb">
                             <Link className="tx_tcc" onClick={this.btn}>确认</Link>
-                            <div className="tx_tcd">取消</div>
+                            <div onClick={this.handleClickk}  className="tx_tcd">取消</div>
                         </div>
                      </div>
                 </div>

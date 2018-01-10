@@ -3,8 +3,17 @@ import {hashHistory,browserHistory} from "react-router";
 
 
 export default React.createClass({
+    getInitialState(){
+        return {
+            liked: true
+        }
+    },
     componentWillMount(){
-        
+        if(!sessionStorage.show){
+            this.setState({
+              liked:false
+            })
+        }
     },
     btn(){
         hashHistory.push("qr");
@@ -20,7 +29,15 @@ export default React.createClass({
     btt(){
         hashHistory.push("usecoupon");
     },
+    phone(){
+        alert(1212)
+    }
+    ,
+    handleClicks: function(event) {
+        this.setState({liked: !this.state.liked});
+      },  
     render(){
+        var tex = this.state.liked ? 'none' : 'block';
         var goback=null;
         var show=null;
         var write=null;
@@ -58,8 +75,20 @@ export default React.createClass({
         }
         if(this.props.phone){
             phone=(
-                <div className="phone">
-                    <img src="images/images/phone.png" />
+                <div>
+                <div className="phone" onClick={this.handleClicks}>
+                    <img src="images/images/phone.png" /> 
+                </div>
+                <div className="phonea" style={{display:tex}} >
+                    <div className="phoneb">
+                        <p className="phone-w1">是否拨打客户电话</p>
+                        <p className="phone-w2">400610160</p>
+                        <div className="phonec">
+                            <div className="phone-w3" onClick={this.handleClicks}>取消</div>
+                            <a href="tel:400610160" className="phone-w4">确认</a>
+                        </div>
+                    </div>
+                </div> 
                 </div>
             )
         }

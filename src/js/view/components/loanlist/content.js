@@ -12,12 +12,20 @@ export default React.createClass({
             ti5:1,
             ti6:1,
             ti7:1,
-            ti8:["0-3000元/月"]
+            ti8:["0-3000元/月"],
+            liked: true
         }
     },
     componentWillMount(){
-        
+        if(!sessionStorage.show){
+            this.setState({
+              liked:false
+            })
+        }
     },
+    handleClicks: function(event) {
+        this.setState({liked: !this.state.liked});
+      },
     btn(){
         console.log(this.state);
         // var reg=/^[1-9]{1}[0-9]{0,5}/
@@ -54,10 +62,12 @@ export default React.createClass({
     }else{
         Toast.info("请输入正确的借款金额",1)
     }
-    },  
+    }, 
     render(){
+        var tex = this.state.liked ? 'none' : 'block';
         return (
             <div className="list_con">
+                
                 <div className="tip">
                     <i
                         style={{background:"url(images/images/icon_05.png) 0% 0% /100%"}}

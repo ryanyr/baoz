@@ -170,7 +170,7 @@ export default React.createClass({
                 </div>
                 <div className="list_item">
                         <div>
-                            <span>保险从业编号</span>
+                            <span>资格证书号码</span>
                             <span>{this.state.certificateNo}</span>
                         </div>
                         <div className="border_item">

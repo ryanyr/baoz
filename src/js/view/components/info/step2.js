@@ -141,7 +141,8 @@ export default React.createClass({
         var that=this;
         return new Promise(function(suc,err){
         var data=new FormData();
-        //此处图片进行压缩,写入image异步onload中
+
+        /* //此处图片进行压缩,写入image异步onload中
         var img = new Image();
         img.onload = ()=>{
             var compressImg = compress(img);
@@ -164,15 +165,33 @@ export default React.createClass({
             // return p;
         } 
         img.src = files[0].url;
+        //图片压缩结束 */     
+
+        data.append("img",files[0].url);     
+                    
+            fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
+                headers:{
+                    token:localStorage.Token
+                },
+                method:"POST",body:data})
+                .then(r=>r.json())
+                .then((data)=>{
+                    console.log(data)
+                    suc(data)
+                }).catch(function(e) {
+                console.log("Oops, error");
+                Toast.info("服务器响应超时", 2);
+        });
     })     
-        //图片压缩结束        
+           
     },
     onChange(files, type, index){
         
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl:files[0].url,
+                // imgurl:files[0].url,
+                imgurl:data.data,
                 imgup1:data.data
             })
         })
@@ -182,7 +201,8 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl2:files[0].url,
+                // imgurl2:files[0].url,
+                imgurl2:data.data,
                 imgup2:data.data
             })
         })
@@ -191,7 +211,8 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl3:files[0].url,
+                // imgurl3:files[0].url,
+                imgurl3:data.data,
                 imgup3:data.data
             })
         })
@@ -200,7 +221,8 @@ export default React.createClass({
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
-                imgurl4:files[0].url,
+                // imgurl4:files[0].url,
+                imgurl4:data.data,
                 imgup4:data.data
             })
         })
