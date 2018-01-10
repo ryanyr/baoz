@@ -4,8 +4,8 @@ export default React.createClass({
     getInitialState(){
         return {
             repayTime:"",
-            createTime:""
-
+            createTime:"",
+            realRepayTime:""
         }
     },
   componentWillMount(){
@@ -80,6 +80,12 @@ export default React.createClass({
                         <i
                             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
                         ></i>
+                        <span>延期费用：{this.state.extensionAmount}.00元</span>
+                    </div>
+                    <div>
+                        <i
+                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+                        ></i>
                         <span>借款期限：7天</span>
                     </div>
                     <div>
@@ -112,7 +118,7 @@ export default React.createClass({
                         <i
                             style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>优惠减免：{this.state.remitAmount}.00元</span>
+                        <span>优惠减免：{this.state.amount<=1000?20:this.state.remitAmount}.00元</span>
                     </div>
                     <div className="yellow">
                         <i
@@ -124,8 +130,20 @@ export default React.createClass({
                         <i
                             style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
                         ></i>
+                        <span>实还金额：{this.state.realRepayAmount}.00元</span>
+                    </div>
+                    <div className="yellow">
+                        <i
+                            style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
+                        ></i>
                         <span>应还日期：{this.state.repayTime.split(" ")[0]}</span>
-                    </div>                   
+                    </div>
+                    <div className="yellow">
+                        <i
+                            style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
+                        ></i>
+                        <span>实还日期：{this.state.realRepayTime.split(" ")[0]}</span>
+                    </div>                    
                 </div>
       </div>
     )

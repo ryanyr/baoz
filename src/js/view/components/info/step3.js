@@ -1,4 +1,4 @@
-import {InputItem,ImagePicker,Toast,Picker,List} from "antd-mobile";
+import {InputItem,ImagePicker,Toast,Picker,List,Modal} from "antd-mobile";
 import url from "../../config/config";
 import store from "../../../store/store";
 import {hashHistory,browserHistory,Link} from "react-router";
@@ -17,7 +17,8 @@ export default React.createClass({
             check:true,
             info:false,
             value:[],//保险公司列表
-            value2:[]//职位列表
+            value2:[],//职位列表
+            modal1:false
         }
     },
     componentWillUnmount(){
@@ -121,8 +122,27 @@ export default React.createClass({
                     
                                       
                 }else{
+                    switch(that.state.value2[0]){
+                        case "代理人":
+                        sessionStorage.creditmoney=20;
+                        break;
+                        case "主任":
+                        sessionStorage.creditmoney=30;
+                        break;
+                        case "经理":
+                        sessionStorage.creditmoney=40;
+                        break;
+                        case "总监":
+                        sessionStorage.creditmoney=50;
+                        break;
+                    }
                     setTimeout(function(){
+                        // if(this.state.value2[0]=="代理人"){
+                        //     sessionStorage.creditmoney=10
+                        // }
+                        
                         hashHistory.push("waitcoupon");
+                        
                         // hashHistory.push("my");
                     },200) 
                     
@@ -170,32 +190,31 @@ export default React.createClass({
         } 
         img.src = files[0].url;      */
         //图片压缩结束 
-
         data.append("img",files[0].url);     
-            fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
-            headers:{
-                token:localStorage.Token
-            },
-            method:"POST",body:data})
-            .then(r=>r.json())
-            .then((data)=>{
-                console.log(data)
-                that.setState({
-                    imgurl:data.data,
-                    imgup:data.data
-                    });
-            }).catch(function(e) {
-                console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
-        });
+        fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
+        headers:{
+            token:localStorage.Token
+        },
+        method:"POST",body:data})
+        .then(r=>r.json())
+        .then((data)=>{
+            console.log(data)
+            that.setState({
+                imgurl:data.data,
+                imgup:data.data
+                });
+            that.setState({modal1:false});
+        }).catch(function(e) {
+            console.log("Oops, error");
+            Toast.info("服务器响应超时", 2);
+        });           
 
       },
     render(){
         const {files}=this.state;
         var showbox=this.props.page==3?"":"none";
         return (
-            <div className="step_3" style={{display:showbox}}>
-           
+            <div className="step_3" style={{display:showbox}}>           
                 <div className="title">
                     <img src="images/images/title_3.jpg" />
                 </div>
@@ -214,7 +233,7 @@ export default React.createClass({
                                 onChange={(e)=>{this.setState({
                                     certificateNo:e})}} 
                                 style={{height:"0.52rem",fontSize:"0.28rem"}}
-                                placeholder="请输入从业编号" />
+                                placeholder="资格证书号码" />
                             </div>
                             <div className="top">
                                 <span>所属公司</span>

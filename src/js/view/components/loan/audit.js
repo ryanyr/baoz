@@ -43,7 +43,7 @@ export default React.createClass({
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
-        data.append("stateList",[10,20,30,21,32,41]);
+        data.append("stateList",[10,20,30,21,32,41,31]);
         data.append("page",e);
         data.append("pageSize",5);
         fetch(url.url+"/api/act/mine/borrow/list.htm",{
@@ -99,6 +99,9 @@ export default React.createClass({
                         else if(data.data.list[i].state=="41"){
                             data.data.list[i]["info"]="放款失败"
                         }
+                        // else if(data.data.list[i].state=="40"){
+                        //     data.data.list[i]["info"]="待还款"
+                        // }
                         info.push(data.data.list[i]);
                     }
                 }

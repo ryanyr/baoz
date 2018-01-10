@@ -12,7 +12,8 @@ export default React.createClass({
             serviceFee:0,
             couponNo:"",
             check2:true,
-            listCoupon:[]
+            listCoupon:[],
+            expectRepayTime:""//预估时间
         }
     },
     componentWillUnmount(){
@@ -83,23 +84,20 @@ export default React.createClass({
         })
     },
     submit(){
-        this.setState({
-            year:new Date().getFullYear(),
-            month:new Date().getMonth() + 1,
-            day:new Date().getDate()
-        })
-        console.log(this.state)
         var that=this;
         if(this.state.money<100||this.state.money>5000){
             Toast.info('代还金额请填写100-5000之间', 2);
         }else if(this.state.money>this.state.unuse){
             Toast.info('代还金额不得大于可用额度', 2);
+        }else if(!/^[0-9]{1,4}$/g.test(this.state.money)){
+            Toast.info('请填写正确的代还金额', 2);
         }
-        
+
         else{
             if(this.state.check){
             var data=new FormData();
         data.append("amount",this.state.money);
+        data.append("timeLimit",7);
         data.append("userId",localStorage.userId)
         fetch(url.url+"/api/act/pay/repayment/apply.htm",{
             headers:{
@@ -201,7 +199,7 @@ export default React.createClass({
                                     style={{background:"url(images/images/ti1.png) center center no-repeat/100%"}}
                                 ></div>
                                 <div className="ti2">
-                                    预计还款时间{this.state.year}-{this.state.month}-{this.state.day*1+7}
+                                    预计还款时间{this.state.expectRepayTime.split(" ")[0]}
                                 </div>
                                 <div className="ti1"
                                     style={{background:"url(images/images/ti1.png) center center no-repeat/100%"}}

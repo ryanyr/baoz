@@ -16,7 +16,7 @@ export default React.createClass({
             // },
             {
                 title:"其他",
-                content:"一键管理您的信用卡",
+                content:"为您定制专属的贷款方案",
                 img:"images/images/daikuan_16.gif",
                 path:"loanlist"
             },

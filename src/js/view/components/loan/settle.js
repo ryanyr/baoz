@@ -49,6 +49,7 @@ export default React.createClass({
             method:"POST",body:data})
             .then(r=>r.json())
             .then((data)=>{
+                console.log(data)
                 if(data.data.list.length>0){
                     that.setState({
                         showpage:true
@@ -74,7 +75,7 @@ export default React.createClass({
                 return (
                 <Link className="audit_list" to={{pathname:"already",query:{id:ind.orderNo}}} key={index}>
                     <div className="price">
-                        <p>{ind.amount}</p>
+                        <p>{ind.realRepayAmount}</p>
                         <p>{ind.createTime.split(" ")[0]}</p>
                     </div>
                     <span></span>

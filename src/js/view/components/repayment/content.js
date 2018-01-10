@@ -127,6 +127,18 @@ export default React.createClass({
                         <i
                             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
                         ></i>
+                        <span>利息费用：{this.state.interest}.00元</span>
+                    </div>
+                    <div>
+                        <i
+                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+                        ></i>
+                        <span>延期费用：{this.state.extensionAmount}.00元</span>
+                    </div>
+                    <div>
+                        <i
+                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+                        ></i>
                         <span>借款期限：{this.state.timeLimit}天</span>
                     </div>
                     <div>
@@ -147,7 +159,7 @@ export default React.createClass({
                         <i
                             style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
                         ></i>
-                        <span>优惠减免：{this.state.remitAmount}.00元</span>
+                        <span>优惠减免：{this.state.amount<=1000?20:this.state.remitAmount}.00元</span>
                     </div>
                     <div className="yellow">
                         <i

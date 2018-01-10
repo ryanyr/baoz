@@ -234,7 +234,9 @@ export default React.createClass({
                     <p>第一次登录会为你自动注册账号，为正常使用服务需同意<a>《注册协议》</a></p>
                 </div>
                 
-                    <input className="sub" type="submit" value="登录" />
+                    <input className="sub" type="submit" value="登录"
+                        // style={{textAlign:"center"}}
+                    />
                 
             </form>
         )

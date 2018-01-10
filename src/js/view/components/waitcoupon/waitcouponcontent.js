@@ -9,7 +9,7 @@ export default React.createClass({
         }
     },
     componentDidMount(){
-        console.log(localStorage.couponinfo)
+        console.log(sessionStorage.creditmoney)
         // if()
         this.setState(JSON.parse(localStorage.couponinfo))
         
@@ -27,7 +27,7 @@ export default React.createClass({
                     </div>
                     <div className="lgs_w">
                         <p>您的授信申请将在30分钟内审核，请耐心等耐</p>
-                        <p>您的授信额度总额约为10万</p>
+                        <p>您的授信额度总额约为{sessionStorage.creditmoney}万</p>
                         <p>额度以实际审核结果为准</p>
                         <p><span className="lgs_wws">获得一张优惠券</span></p>
                         

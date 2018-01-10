@@ -26,7 +26,10 @@ export default React.createClass({
             check2:true,//勾选优惠券
             couponNo:"",
             listCoupon:[],
-            value:[]
+            value:[],
+            totalMoney:0,
+            expectRepayTime:""//预估时间
+
         }
     },
     componentWillUnmount(){
@@ -49,7 +52,8 @@ export default React.createClass({
                })
             //    console.log(newlist)
                that.setState({
-                companyName:newlist
+                companyName:newlist,
+                totalMoney:data.data.totalMoney
                })
                
            }).catch(function(e) {
@@ -113,13 +117,7 @@ export default React.createClass({
         });       
     },  
     submit(){
-        // console.log(this.state)
-        // console.log(new Date())
-        this.setState({
-            year:new Date().getFullYear(),
-            month:new Date().getMonth() + 1,
-            day:new Date().getDate()
-        })
+        
         var reg = new RegExp("^[0-9]*$");
         console.log(!reg.test(this.state.policyAmount))
         if(!/^[0-9]{1,6}$/g.test(this.state.policyAmount)){
@@ -136,9 +134,12 @@ export default React.createClass({
             Toast.info("请输入提现金额", 2)
         }else if(this.state.money>5000||this.state.money<100){//提交申请
             Toast.info("提现金额请输入100-5000以内额度", 2)
-        }else if(!this.state.upimg1||!this.state.upimg2||!this.state.upimg3){
+        }else if(this.state.policyAmount/this.state.money<2){
+            Toast.info("提现金额不得超过保单金额的一半", 2)
+        }
+        else if(!this.state.upimg1){
 
-            Toast.info("请上传3张保单图片", 2)
+            Toast.info("请上传费用清单", 2)
         }else if(this.state.money-this.state.policyAmount>0){
             console.log(this.state.money);
 
@@ -152,6 +153,7 @@ export default React.createClass({
         var data=new FormData();
         data.append("userId",localStorage.userId);
         data.append("amount",this.state.money);
+        data.append("timeLimit",7);
         data.append("policyAmount",this.state.policyAmount);
         data.append("insuranceCompany",this.state.value[0]);
         // data.append("couponNo",this.state.couponNo);
@@ -203,8 +205,8 @@ export default React.createClass({
       data.append("couponNo",listid);
       data.append("policyAmount",this.state.policyAmount);
       data.append("policyImg",this.state.upimg1);
-      data.append("policyImg1",this.state.upimg2);
-      data.append("policyImg2",this.state.upimg3);
+    //   data.append("policyImg1",this.state.upimg2);
+    //   data.append("policyImg2",this.state.upimg3);
       data.append("serviceFee",this.state.serviceFee);
       data.append("timeLimit","7");
       fetch(url.url+"/api/act/borrow/save.htm",{
@@ -239,13 +241,13 @@ export default React.createClass({
                                 break;
                 case 120006:    Toast.info('提现金额不得超过保单金额', 1);
                                 break;
-                case 120007:    Toast.info('请上传保单图片', 1);
+                case 120007:    Toast.info('请上传费用清单图片', 1);
                                 break;
-                case 120008:    Toast.info('上传保单图片失败，请稍后再次上传', 1);
+                case 120008:    Toast.info('上传费用清单图片失败，请稍后再次上传', 1);
                                 break;
-                case 120009:    Toast.info('上传保单图片失败，请稍后再次上传', 1);
+                case 120009:    Toast.info('上传费用清单图片失败，请稍后再次上传', 1);
                                 break;
-                case 120010:    Toast.info('请上传3-4张保单图片', 1);
+                case 120010:    Toast.info('请上传3-4张费用清单图片', 1);
                                 break;
                 case 120011:    Toast.info('请勾选提现协议', 1);
                                 break;
@@ -280,9 +282,10 @@ export default React.createClass({
         // });
     },
     upimg(files){//上传图片统一方法
+        var that=this;
         console.log(files)
         return new Promise(function(suc,err){
-            var that=this;
+            
             var data=new FormData();
             //此处图片进行压缩,写入image异步onload中
             /* var img = new Image();
@@ -311,8 +314,28 @@ export default React.createClass({
             } 
             img.src = files[0].url;      */
             //图片压缩结束
-
-                data.append("img",files[0].url);     
+                /* that.setState({modal1:true},()=>{
+                    data.append("img",files[0].url);     
+                    fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
+                        headers:{
+                            token:localStorage.Token
+                        },
+                        method:"POST",body:data})
+                        .then(r=>r.json())
+                        .then((data)=>{
+                            // that.setState({modal1:false});
+                            if(data.code==120008||data.code==120009){
+                                Toast.info("上传保单图片失败，请稍后再次上传", 2);
+                            }else{
+                                suc(data)
+                            }
+                            
+                        }).catch(function(e) {
+                                console.log("Oops, error");                                
+                                // Toast.info("服务器响应超时", 2);
+                        });
+                }); */
+                 data.append("img",files[0].url);     
                 fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
                     headers:{
                         token:localStorage.Token
@@ -321,7 +344,7 @@ export default React.createClass({
                     .then(r=>r.json())
                     .then((data)=>{
                         if(data.code==120008||data.code==120009){
-                            Toast.info("上传保单图片失败，请稍后再次上传", 2);
+                            Toast.info("上传费用清单图片失败，请稍后再次上传", 2);
                         }else{
                             suc(data)
                         }
@@ -329,7 +352,7 @@ export default React.createClass({
                     }).catch(function(e) {
                             console.log("Oops, error");                                
                             // Toast.info("服务器响应超时", 2);
-                    });
+                    }); 
 
         })
             
@@ -341,12 +364,28 @@ export default React.createClass({
         var that=this;
         this.setState({check2:!this.state.check2});
         if(e.target.checked){
+            var list=""
+            if(this.state.money<=1000){
+                list=this.state.totalMoney-20;
+
+            }else{
+                list=this.state.totalMoney-40
+            }
+            // console.log(this.state.list)
+            // this.state.listCoupon
             this.setState({
-                actualAmount:this.state.actualAmount-40,
+                totalMoney:list
             })
         }else{
+            var list1=""
+            if(this.state.money<=1000){
+                list1=this.state.totalMoney*1+20
+            }else{
+                list1=this.state.totalMoney*1+40
+            }
+            console.log(list1)
             this.setState({
-                actualAmount:this.state.actualAmount+40,
+                totalMoney:list1,
             })
         }
      },
@@ -381,10 +420,32 @@ export default React.createClass({
             })
         })                    
       },
+    onClose(){
+        this.setState({
+        modal1: false,
+        });
+    },
     render(){
         const {files}=this.state;
         return (
             <div>
+                <Modal
+                    visible={this.state.modal1}
+                    transparent
+                    maskClosable={false}
+                    onClose={this.onClose}
+                    title="Title"
+                    className="imgInfo"
+                    >
+                    <div style={{ height: 100, overflow: 'scroll' }}>
+                        scoll content...<br />
+                        scoll content...<br />
+                        scoll content...<br />
+                        scoll content...<br />
+                        scoll content...<br />
+                        scoll content...<br />
+                    </div>
+                </Modal>
             <div className="wd_top" style={{background:"url(images/images/txtop.png)",backgroundSize:"100% 100%"}}>
                 <p>{this.state.unuse}</p>
                 <div className="wd_topw">剩余可用额度</div>
@@ -404,15 +465,15 @@ export default React.createClass({
                                     style={{background:"url(images/images/ti1.png) center center no-repeat/100%"}}
                                 ></div>
                                 <div className="ti2">
-                                    预计还款时间{this.state.year}-{this.state.month}-{this.state.day*1+7}
+                                    预计还款时间{this.state.expectRepayTime.split(" ")[0]}
                                 </div>
                                 <div className="ti1"
                                     style={{background:"url(images/images/ti1.png) center center no-repeat/100%"}}
                                 ></div>
                             </div>
                             <div className="top-3">
-                                <div className="ti1">{this.state.actualAmount}</div>
-                                <div className="ti2">已优惠{this.state.check2?40:0}元!</div>
+                                <div className="ti1">{this.state.money<=1000?this.state.totalMoney-20:this.state.totalMoney-40}</div>
+                                <div className="ti2">已优惠{this.state.check2?(this.state.money<=1000?20:40):0}元!</div>
                             </div>
                             <div className="top_4">
                                 <div className="ti1">
@@ -559,7 +620,7 @@ export default React.createClass({
                     <i
                         style={{background:"url(images/images/icon_05.png)",backgroundSize:"100%"}}
                     ></i>
-                    上传保单图片
+                    费用清单
                 </div>
                 <div className="picker">
                     <div>
@@ -572,7 +633,7 @@ export default React.createClass({
                                 selectable={files.length <1}
                                 />
                     </div>
-                    <div>
+                    {/* <div>
                         <img src={this.state.img2} />
                         <ImagePicker
                                 style={{position:"absolute",top:"0",left:"0",opacity:"0",width:"10rem",height:"10rem"}}
@@ -591,7 +652,7 @@ export default React.createClass({
                                 onImageClick={(index, fs) => console.log(index, fs)}
                                 selectable={files.length <1}
                                 />
-                    </div>
+                    </div> */}
                 </div>
                 <div className="sub">
                     <input type="submit" onClick={this.submit} value="提交申请" />
