@@ -30,7 +30,10 @@ import Makemoney from "./view/router/makemoneylist/makemoneylist";//我要赚钱
 import Sqcg from "./view/router/sqcg/sqcgRouter";//申请成功
 import Sqsb from "./view/router/sqsb/sqsbRouter";//授信失败
 import Pmh from "./view/router/pmh/pmhRouter";//信用卡还款
-import Ddd from "./view/router/ddd/dd"
+import Ddd from "./view/router/ddd/dd";
+import Borrow from "./view/router/protocol/borrow";//借款协议
+import Auth from "./view/router/protocol/auth";//授信协议
+
 export default React.createClass({
     enterMy(){
         window.scrollTo(0,0);
@@ -74,7 +77,9 @@ export default React.createClass({
                     <Route path="loanlist" component={Loanlist} onEnter={this.enterMy}/>
                     <Route path="makemoney" component={Makemoney} onEnter={this.enterMy}/>                   
                     <Route path="ddd" component={Ddd} onEnter={this.enterMy}/>
-                    <Route path="usecoupon" component={Usecoupon} onEnter={this.enterMy}/>                     
+                    <Route path="usecoupon" component={Usecoupon} onEnter={this.enterMy}/> 
+                    <Route path="borrow" component={Borrow} onEnter={this.enterMy}/> 
+                    <Route path="auth" component={Auth} onEnter={this.enterMy}/>                      
                 </Route>
             </Router>
         )

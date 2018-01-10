@@ -3,6 +3,7 @@ import {Link} from "react-router";
 import url from "../../config/config";
 import {Pagination,Icon,Toast} from 'antd-mobile';
 import store from "../../../store/store";
+import { setTimeout } from 'timers';
 export default React.createClass({
     getInitialState(){
         return {
@@ -12,7 +13,9 @@ export default React.createClass({
           showpage:false,
           checkall:true,
           num:0,
-          oders:[]
+          orders:["","","","",""],
+          moneylist:["","","","",""],
+        //   li1:true
         }
     },
     componentWillMount(){
@@ -42,7 +45,7 @@ export default React.createClass({
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
-        data.append("stateList",[40,31,52,55,60]);
+        data.append("stateList",[40,52,55,60]);
         data.append("page",e);
         data.append("pageSize",5);
         fetch(url.url+"/api/act/mine/borrow/list.htm",{
@@ -52,6 +55,7 @@ export default React.createClass({
             method:"POST",body:data})
             .then(r=>r.json())
             .then((data)=>{
+                console.log(data)
                 if(data.data.list.length>0){
                     that.setState({
                         showpage:true
@@ -60,14 +64,11 @@ export default React.createClass({
 
                 var info=[];
                 for(var i=0;i<data.data.list.length;i++){
-                    if(data.data.list[i].state=="31"||data.data.list[i].state=="52"||data.data.list[i].state=="60"||data.data.list[i].state=="55"){
+                    if(data.data.list[i].state=="52"||data.data.list[i].state=="60"||data.data.list[i].state=="55"){
                         // data.data.list[i]["info"]="待还款"
                         if(data.data.list[i].state=="40"){
                             data.data.list[i]["info"]="待还款"
                             console.log(data.data.list[i])
-                        }
-                        else if(data.data.list[i].state=="31"){
-                            data.data.list[i]["info"]="待还款"
                         }
                         else if(data.data.list[i].state=="52"){
                             data.data.list[i]["info"]="还款中"
@@ -89,18 +90,31 @@ export default React.createClass({
         });
     },
     checkchange(e){
+        var che=document.getElementById("che")
+        console.log(che)
         // console.log(this.state.checkall)
-        console.log(e.target.checked)
-        this.setState({
-            checkall:!this.state.checkall
-        })
+        // console.log(e.target.checked)
+        // this.setState({
+        //     checkall:!this.state.checkall
+        // })
+        // if(e.target.checked){
+        //     console.log(this.refs.nu1.length)
+        // }
     },
     changelist(e,ind,index){
-
-        if(e.target.value){
-            console.log(1)
+        // console()
+        var that=this;
+        if(e.target.checked){
+            this.state.orders[index]=ind.orderNo;
             this.setState({
-
+                num:this.state.num++
+            })
+            console.log(this.state.num);
+            
+        }else{
+            this.state.orders[index]="";
+            this.setState({
+                num:this.state.num--
             })
         }
     },
@@ -112,8 +126,10 @@ export default React.createClass({
             return (
                 <div className="repayments_list" to="repayment" key={index} ref="nu">
                     <Checkbox 
+                        ref="nu1"
+                        id="che"
                         style={{marginLeft:"0.2rem"}}
-
+                        // checked={this.state.li1}
                         onChange={(e)=>{
                             this.changelist(e,ind,index)
                         }}
@@ -144,12 +160,15 @@ export default React.createClass({
                 <div className="checkall" onClick={this.btn}>
                     <label>
                         <Checkbox
+                        ref="all"
                         // checked={this.state.checkall}
                         onChange={this.checkchange} 
                         style={{marginRight:"0.2rem"}}
                     />全选</label>
                     <span className="allmoney">总计：<span>0元</span></span>
-                    <div className="click">
+                    <div className="click" onClick={()=>{
+                        console.log(this.state)
+                    }}>
                         批量还款
                     </div>
                 </div>

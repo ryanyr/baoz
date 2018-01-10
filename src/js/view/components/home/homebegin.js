@@ -17,7 +17,7 @@ export default React.createClass({
 			if(this.state.info=="已完善"){//根据父组件传过来的信息是否完善
 				hashHistory.push("withdraw");
 				sessionStorage.withdraw="";
-			}else{
+			}else if(this.state.info=="未完善"){
 				hashHistory.push("information")
 			}
 		}else{

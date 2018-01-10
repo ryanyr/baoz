@@ -1,7 +1,7 @@
 import {InputItem,ImagePicker,Toast,Picker,List} from "antd-mobile";
 import url from "../../config/config";
 import store from "../../../store/store";
-import {hashHistory,browserHistory} from "react-router";
+import {hashHistory,browserHistory,Link} from "react-router";
 import {compress} from "../../../utils/imgCompress";
 import { setTimeout } from "timers";
 export default React.createClass({
@@ -14,6 +14,7 @@ export default React.createClass({
             companyName:[],
             title:"代理人",
             list:[],
+            check:true,
             info:false,
             value:[],//保险公司列表
             value2:[]//职位列表
@@ -90,7 +91,9 @@ export default React.createClass({
         }
         else if(!this.state.imgup){
             Toast.info("请上传行销系统职位截图", 2);
-        }        
+        }else if(!this.state.check){
+            Toast.info("请勾选授信协议", 2);
+        }         
         else{
         var data=new FormData();
         data.append("certificateNo",this.state.certificateNo);
@@ -270,6 +273,11 @@ export default React.createClass({
                     <div className="step">
                         <button onClick={()=>{this.props.step(2)}}>上一步</button><button onClick={this.btn}>提交</button>
                     </div>  
+                    <div className="sub">
+                        <input type="checkbox" defaultChecked={this.state.check} onChange={()=>{this.setState({check:!this.state.check})}}/>
+                        <p>同意</p>
+                        <Link to="auth">《授信协议》</Link>
+                    </div>
                 </div>
             </div>
             

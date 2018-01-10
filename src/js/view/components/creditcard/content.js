@@ -5,6 +5,7 @@ import {hashHistory} from "react-router"
 export default React.createClass({
     getInitialState(){
         return {
+            ti2:"checked",
             check:true,
             money:"",
             show:false,
@@ -82,6 +83,11 @@ export default React.createClass({
         })
     },
     submit(){
+        this.setState({
+            year:new Date().getFullYear(),
+            month:new Date().getMonth() + 1,
+            day:new Date().getDate()
+        })
         console.log(this.state)
         var that=this;
         if(this.state.money<100||this.state.money>5000){
@@ -186,31 +192,80 @@ export default React.createClass({
                     style={{display:this.state.show?"block":"none"}}
                 >
                     <div className="con">
-                    <div className="top"
-                        style={{background:"url(images/images/850855399924466698.png) 0% 0%/100%" }}
-                    >
-                        <p>您的保单体现申请信息如下</p>
-                        <p>提现金额:{this.state.amount}</p>
-                        <p>时间期限:7天</p>
-                        <p>手续费:{this.state.serviceFee}</p>
-                        <p>待还金额:{this.state.totalMoney}</p>
-                        <p>应还金额:{this.state.actualAmount}</p>
-                    </div>
-                    <div className="bottom">
-                    <div
-                        style={{height:"0.6rem"}}
-                    >
-                        <p
-                            style={{display:this.state.listCoupon.length>0?"":"none"}}
-                        ><input type="checkbox" checked={this.state.check2} onChange={this.change2}/>是否使用优惠券</p>
-                    </div>
-                    <div className="btn">
-                        <div onClick={()=>{this.setState({show:false})}}>取消</div>
-                        <div onClick={this.confirm}>确认</div>
-                    </div>
-                    </div>
-                    
-                    </div>
+                        <div className="top">
+                            <div className="top-1">
+                                您的保单提现申请信息
+                            </div>
+                            <div className="top-2">
+                                <div className="ti1"
+                                    style={{background:"url(images/images/ti1.png) center center no-repeat/100%"}}
+                                ></div>
+                                <div className="ti2">
+                                    预计还款时间{this.state.year}-{this.state.month}-{this.state.day*1+7}
+                                </div>
+                                <div className="ti1"
+                                    style={{background:"url(images/images/ti1.png) center center no-repeat/100%"}}
+                                ></div>
+                            </div>
+                            <div className="top-3">
+                                <div className="ti1">{this.state.actualAmount}</div>
+                                <div className="ti2">已优惠{this.state.check2?40:0}元!</div>
+                            </div>
+                            <div className="top_4">
+                                <div className="ti1">
+                                <p>{this.state.amount}元</p>
+                                <p>提现金额</p>
+                                </div>
+                                <div className="ti2"
+                                    style={{background:"url(images/images/zhu.png) 0% 0%/100%"}}
+                                ></div>
+                                <div className="ti1">
+                                <p>7天</p>
+                                <p>期限</p>
+                                </div>
+                                <div className="ti2"
+                                    style={{background:"url(images/images/zhu.png) 0% 0%/100%"}}
+                                ></div>
+                                <div className="ti1">
+                                <p>{this.state.serviceFee}元</p>
+                                <p>手续费</p>
+                                </div>
+                            </div>
+                            <div className="top_5">
+                            <div
+                                style={{visibility:this.state.listCoupon.length>0?"":"hidden"}}
+                            >
+                                <label><div
+                                    style={{background:this.state.check2?"url(images/images/small-2.png) 0% 0%/100%":"url(images/images/small-1.jpg) 0% 0%/100%"}}
+                                ><input type="checkbox"
+                                checked={this.state.check2}
+                                onChange={
+                                    this.change2
+                                   }
+                                        // style={{width:"0.1rem",height:"0.1rem"}}
+                                    /></div>使用优惠券</label>
+                                    <span>(可使用优惠券额度40元)</span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div className="bottom"
+                            style={{background:"url(images/images/top-bg.png) 0% 0%/100%"}}
+                        >
+                        <div className="left"
+                            onClick={()=>{
+                                this.setState({
+                                    show:false
+                                })
+                            }}
+                        >取消</div>
+                        <div className="right"
+                            onClick={()=>{
+                                this.confirm()
+                            }}
+                        >确认</div>
+                        </div>
+                    </div>  
                 </div>
                 <div className="tip">
                     <i
@@ -256,7 +311,7 @@ export default React.createClass({
                     <i
                     style={{background:"url(images/images/367267659602419724.png) 0% 0% /100%"}}
                     ></i>
-                    <span>选择借款天数</span>
+                    <span>借款天数</span>
                     <span>7天</span>
                 </div>
                 <div className="submit">

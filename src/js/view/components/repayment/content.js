@@ -1,7 +1,7 @@
 import url from "../../config/config";
 import {Toast} from "antd-mobile";
 import {hashHistory} from "react-router";
-
+import store from "../../../store/store";
 export default React.createClass({
     getInitialState(){
         return {
@@ -36,7 +36,11 @@ export default React.createClass({
                 case 500:    Toast.info('服务器错误', 1);
                                 break;
                 case 150004:    Toast.info('您已还款成功', 1);
-                                sessionStorage.info=3;
+                                // sessionStorage.info=3;
+                                store.dispatch({
+                                    type:"INFO",
+                                    data:3
+                                })
                                 hashHistory.push("loan")
                                 break;
                 case 150005:    Toast.info('还款失败，请稍后再次尝试', 1);

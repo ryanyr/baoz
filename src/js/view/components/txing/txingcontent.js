@@ -57,7 +57,7 @@ export default React.createClass({
                     <div className="imgbox">
                         <img src="images/images/bg_3.jpg" />
                     </div>
-                    <span>您的订单正在审核中，请稍后查看审核信息</span>
+                    <span>{this.state.state=="10"?"您的订单正在审核中，请稍后查看审核信息":this.state.state=="20"?"您的订单人工审核通过":this.state.state=="21"?"您的订单人工审核未通过":this.state.state=="30"?"您的订单正在待放款审核中，请稍后查看审核信息":this.state.state=="31"?"您的订单放款审核通过":this.state.state=="32"?"您的订单放款审核未通过":"您的订单放款失败"}</span>
                 </div>
                 <div className="info">
                     <div className="info_title">

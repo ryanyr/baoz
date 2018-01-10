@@ -56,9 +56,11 @@ export default React.createClass({
     },
     send(){
         
-        if(!this.state.phone){
-            Toast.info('请填入手机号', 1); 
-        }
+        if(!/^[1]{1}(3|5|7|8|9){1}[0-9]{9}$/g.test(this.state.phone)){
+            Toast.info('请填入正确的手机号', 1); 
+        }else{
+
+        
         if(this.state.time=="发送验证码"){
         var that=this;
         var data=new FormData();//发送验证码
@@ -76,6 +78,12 @@ export default React.createClass({
                                 if(data.data.state=="1"&&/^[0-9a-z]{4,6}$/ig.test(localStorage.code)){
                                     that.setState({
                                         showcode:"block"
+                                    })
+                                }else{
+                                    // localStorage.code="";
+                                    that.setState({
+                                        showcode:"none",
+                                        code:""
                                     })
                                 }
                                 that.sendAgain();
@@ -101,11 +109,25 @@ export default React.createClass({
         });
         }else{
             
-        }
+        }}
     },
     sendAgain(){
          var that = this;
          var i=60;
+        //  this.setState({
+        //     timer:setInterval(function(){
+        //         i--;
+        //         that.setState({
+        //             time:i+"秒后再次发送"
+        //         })
+        //         if(i==0){
+        //             clearInterval(that.state.timer);//60秒计时完成清除定时器
+        //             that.setState({
+        //                 time:"发送验证码"
+        //             })
+        //         }
+        //     },1000);
+        //  })
          var timer=setInterval(function(){
             i--;
             that.setState({
@@ -147,6 +169,8 @@ export default React.createClass({
                     localStorage.Token=data.data.token;
                     localStorage.Phone=this.state.phone;
                     Toast.info('登录成功', 1);
+                    // window.reload();
+                    // clearInterval(this.state.)
                     if(data.state==2){
                         hashHistory.push("home");
                         
@@ -155,6 +179,7 @@ export default React.createClass({
                         hashHistory.push("loginsuccess");
                         localStorage.write=false;//第一次登陆,信息没有完善,没有获取到优惠券
                     }
+                   
                 }else{
                     Toast.info(data.msg, 1);
                 }

@@ -42,6 +42,7 @@ export default React.createClass({
 			  method:"POST",body:data})
 			  .then(r=>r.json())
 			  .then((data)=>{
+                  console.log(data)
                   switch(data.code){
                     case 408:    Toast.info('系统响应超时', 1);
                                     break;

@@ -15,6 +15,7 @@ export default React.createClass({
         // console.log(this.refs.step_1.state)
     },
     componentWillMount(){
+        
         if(sessionStorage.info){
             this.setState(JSON.parse(sessionStorage.info))
         }
