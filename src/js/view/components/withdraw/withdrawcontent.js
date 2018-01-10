@@ -472,7 +472,7 @@ export default React.createClass({
                                 ></div>
                             </div>
                             <div className="top-3">
-                                <div className="ti1">{this.state.money<=1000?this.state.totalMoney-20:this.state.totalMoney-40}</div>
+                                <div className="ti1">{this.state.listCoupon.length==0?this.state.totalMoney:(this.state.money<=1000?this.state.totalMoney-20:this.state.totalMoney-40)}</div>
                                 <div className="ti2">已优惠{this.state.check2?(this.state.money<=1000?20:40):0}元!</div>
                             </div>
                             <div className="top_4">

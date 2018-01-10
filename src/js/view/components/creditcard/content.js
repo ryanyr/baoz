@@ -109,7 +109,8 @@ export default React.createClass({
                 console.log(data)
                 if(data.code=="230008"){
                     that.setState({
-                        check2:true
+                        check2:true,
+                        listCoupon:data.data.listCoupon
                     })
                     that.setState(data.data);
                     if(data.data.listCoupon.length==0){//如果没有优惠券,把选择默认按钮去掉
@@ -172,14 +173,31 @@ export default React.createClass({
     },
     change2(e){
         // console.log(1)
-        this.setState({check2:!this.state.check2})
+        var that=this;
+        this.setState({check2:!this.state.check2});
         if(e.target.checked){
+            var list=""
+            if(this.state.money<=1000){
+                list=this.state.totalMoney-20;
+
+            }else{
+                list=this.state.totalMoney-40
+            }
+            // console.log(this.state.list)
+            // this.state.listCoupon
             this.setState({
-                actualAmount:this.state.actualAmount-40,
+                totalMoney:list
             })
         }else{
+            var list1=""
+            if(this.state.money<=1000){
+                list1=this.state.totalMoney*1+20
+            }else{
+                list1=this.state.totalMoney*1+40
+            }
+            console.log(list1)
             this.setState({
-                actualAmount:this.state.actualAmount+40,
+                totalMoney:list1,
             })
         }
      },
@@ -206,8 +224,8 @@ export default React.createClass({
                                 ></div>
                             </div>
                             <div className="top-3">
-                                <div className="ti1">{this.state.actualAmount}</div>
-                                <div className="ti2">已优惠{this.state.check2?40:0}元!</div>
+                                <div className="ti1">{this.state.listCoupon.length==0?this.state.totalMoney:(this.state.money<=1000?this.state.totalMoney-20:this.state.totalMoney-40)}</div>
+                                <div className="ti2">已优惠{this.state.check2?(this.state.money<=1000?20:40):0}元!</div>
                             </div>
                             <div className="top_4">
                                 <div className="ti1">
