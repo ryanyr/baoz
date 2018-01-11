@@ -52,64 +52,113 @@ export default React.createClass({
     },
     render(){
         return (
-            <div className="con_box">
-                <div className="title">
-                    <div className="imgbox">
-                        <img src="images/images/bg_3.jpg" />
-                    </div>
-                    <span>{this.state.state=="10"?"您的订单正在审核中，请稍后查看审核信息":this.state.state=="20"?"您的订单人工审核通过":this.state.state=="21"?"您的订单人工审核未通过":this.state.state=="30"?"您的订单正在待放款审核中，请稍后查看审核信息":this.state.state=="31"?"您的订单放款审核通过":this.state.state=="32"?"您的订单放款审核未通过":"您的订单放款失败"}</span>
+            <div className="already-boxs">
+            <div className="already-topk" style={{background:"url(images/images/txing-bg-1.png)",backgroundSize:"100%"}}>
+                <div className="txing-top">
+                    <p>您的订单正在审核中</p>
+                    <p className="txing-top1">请稍后查看审核信息!</p>
                 </div>
-                <div className="info">
-                    <div className="info_title">
-                        <i
-                        style={{background:"url(images/images/icon_05.png)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>以下为你的借款信息</span>
+                <div className="already-list">
+                    <div className="already-list1">
+                        <div className="already-list1a">
+                            <div className="already-list1a1">{this.state.amount}<span className="already-list1a1a">.00元</span></div>
+                            <div className="already-list1a2">借款金额</div>
+                        </div>
+                        <div className="already-list1b">
+                            <div className="already-list1b1"></div>
+                        </div>
+                        <div className="already-list1c">
+                            <div className="already-list1a1">{this.state.realAmount}<span className="already-list1a1a">.00元</span></div>
+                            <div className="already-list1a2">实际到账（元）</div>
+                        </div>
                     </div>
-                    <div className="info_list">
-                        <i
-                        style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
-                        ></i>
-                        <span>借款类型：{this.state.borrowType}</span>
+                    <div className="already-list2">
+                        <div className="already-list2a">借款期限</div>
+                        <div className="already-list2b">{this.state.timeLimit}天</div>
                     </div>
-                    <div className="info_list">
-                        <i
-                        style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
-                        ></i>
-                        <span>借款金额：{this.state.amount}.00元</span>
+                    <div className="already-list2">
+                        <div className="already-list2a">服务费用</div>
+                        <div className="already-list2b">{this.state.serviceFee}.00元</div>
                     </div>
-                    <div className="info_list">
-                        <i
-                        style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
-                        ></i>
-                        <span>实际到账：{this.state.realAmount}.00元</span>
+                    <div className="already-list2">
+                        <div className="already-list2a">借款类别</div>
+                        <div className="already-list2b">{this.state.borrowType}</div>
                     </div>
-                    <div className="info_list">
-                        <i
-                        style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
-                        ></i>
-                        <span>服务费用：{this.state.serviceFee}.00元</span>
+                    <div className="already-list2">
+                        <div className="already-list2a">申请时间</div>
+                        <div className="already-list2b">{this.state.createTime.split(" ")[0]}</div>
                     </div>
-                    <div className="info_list">
-                        <i
-                        style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
-                        ></i>
-                        <span>借款期限：{this.state.timeLimit}天</span>
+                    <div className="already-list2">
+                        <div className="already-list2a">应还日期</div>
+                        <div className="already-list2b">12</div>
                     </div>
-                    <div className="info_list">
-                        <i
-                        style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
-                        ></i>
-                        <span>申请时间：{this.state.createTime.split(" ")[0]}</span>
+                    
+                    <div className="already-list2">
+                        <div className="already-list2a">收款卡号</div>
+                        <div className="already-list2b">{this.state.cardNo}</div>
                     </div>
-                    <div className="info_list">
-                        <i
-                        style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
-                        ></i>
-                        <span>收款卡号：{this.state.cardNo}</span>
-                    </div>
+                    {/* <div className="already-list3">再次借款</div> */}
                 </div>
             </div>
+        </div>
+            // <div className="con_box">
+            //     <div className="title">
+            //         <div className="imgbox">
+            //             <img src="images/images/bg_3.jpg" />
+            //         </div>
+            //         <span>{this.state.state=="10"?"您的订单正在审核中，请稍后查看审核信息":this.state.state=="20"?"您的订单人工审核通过":this.state.state=="21"?"您的订单人工审核未通过":this.state.state=="30"?"您的订单正在待放款审核中，请稍后查看审核信息":this.state.state=="31"?"您的订单放款审核通过":this.state.state=="32"?"您的订单放款审核未通过":"您的订单放款失败"}</span>
+            //     </div>
+            //     <div className="info">
+            //         <div className="info_title">
+            //             <i
+            //             style={{background:"url(images/images/icon_05.png)",backgroundSize:"100%"}}
+            //             ></i>
+            //             <span>以下为你的借款信息</span>
+            //         </div>
+            //         <div className="info_list">
+            //             <i
+            //             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
+            //             ></i>
+            //             <span>借款类型：{this.state.borrowType}</span>
+            //         </div>
+            //         <div className="info_list">
+            //             <i
+            //             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
+            //             ></i>
+            //             <span>借款金额：{this.state.amount}.00元</span>
+            //         </div>
+            //         <div className="info_list">
+            //             <i
+            //             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
+            //             ></i>
+            //             <span>实际到账：{this.state.realAmount}.00元</span>
+            //         </div>
+            //         <div className="info_list">
+            //             <i
+            //             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
+            //             ></i>
+            //             <span>服务费用：{this.state.serviceFee}.00元</span>
+            //         </div>
+            //         <div className="info_list">
+            //             <i
+            //             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
+            //             ></i>
+            //             <span>借款期限：{this.state.timeLimit}天</span>
+            //         </div>
+            //         <div className="info_list">
+            //             <i
+            //             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
+            //             ></i>
+            //             <span>申请时间：{this.state.createTime.split(" ")[0]}</span>
+            //         </div>
+            //         <div className="info_list">
+            //             <i
+            //             style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}} 
+            //             ></i>
+            //             <span>收款卡号：{this.state.cardNo}</span>
+            //         </div>
+            //     </div>
+            // </div>
         )
     }
 })

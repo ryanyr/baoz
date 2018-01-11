@@ -1,4 +1,4 @@
-import {InputItem,ImagePicker,Toast } from "antd-mobile";
+import {InputItem,ImagePicker,Toast,Modal } from "antd-mobile";
 import url from "../../config/config";
 import $ from "jquery";
 // import EXIF from "exif-js";
@@ -105,8 +105,7 @@ export default React.createClass({
         // console.log(img)     
         //图片压缩结束  */  
 
-        data.append("img",files[0].url);     
-                   
+        /* data.append("img",files[0].url);  
         fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
             headers:{
                 token:localStorage.Token
@@ -123,8 +122,29 @@ export default React.createClass({
         }).catch(function(e) {
             console.log("Oops, error");
             Toast.info("服务器响应超时", 2);
+        }); */
+        that.setState({modal1:true},()=>{
+            data.append("img",files[0].url);  
+            fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
+                headers:{
+                    token:localStorage.Token
+                },
+                method:"POST",body:data})
+                .then(r=>r.json())
+                .then((data)=>{
+                    that.setState({modal1:false});
+                    console.log(data);
+                    if(!data.data){
+                        Toast.info("图片上传错误", 2);
+                    }                    
+                    suc(data)
+                
+            }).catch(function(e) {
+                console.log("Oops, error");
+                that.setState({modal1:false});  
+                Toast.info("服务器响应超时", 2);
+            });
         });
-
         // return p;
     })
         
@@ -251,11 +271,29 @@ export default React.createClass({
         
         // return newImage;
     },
+    onClose(){
+        this.setState({
+        modal1: false,
+        });
+    },
     render(){
         const {files}=this.state;
         var showbox=this.props.page==1?"":"none";
         return (
             <div className="step_1"  style={{display:showbox}}>
+                <Modal
+                    visible={this.state.modal1}
+                    transparent
+                    maskClosable={false}
+                    onClose={this.onClose}
+                    title="提示"
+                    className="imgInfo"
+                    >
+                    <div>                        
+                        <img src="images/images/loading.gif" alt=""/>
+                        <p>图片正在上传中...</p>
+                    </div>
+                </Modal>
                 <div className="title">
                     <img src="images/images/title_2.jpg" />
                 </div>

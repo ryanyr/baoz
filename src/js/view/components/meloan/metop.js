@@ -10,8 +10,8 @@ const List=React.createClass({
                       <img  src={this.props.info.img} />
                     </div>
                     <div className="zq_right">
-                        <p className="wyzqw1" style={{paddingLeft: "0.2rem"}}>{this.props.info.title}</p>
-                        <p className="wyzqw2" style={{paddingLeft: "0.2rem"}}>{this.props.info.content}</p>
+                        <p className="wyzqw1">{this.props.info.title}</p>
+                        <p className="wyzqw2">{this.props.info.content}</p>
                     </div>
                     <div className="zq_d"><img src="images/images/daikuan_08.gif" /></div>
                 </Link>
@@ -40,8 +40,8 @@ export default React.createClass({
                         <img  src="images/images/daikuan_14.gif"/>
                         </div>
                         <div className="zq_right">
-                            <p className="wyzqw1">超人贷</p>
-                            <p className="wyzqw2">最高30万借款额度等你来拿</p>                        
+                            <p className="wyzqw1" style={{paddingLeft: "0.6rem"}}>超人贷</p>
+                            <p className="wyzqw2" style={{paddingLeft: "0.6rem"}}>最高30万借款额度等你来拿</p>                        
                         </div>
                         <div className="zq_d"><img src="images/images/daikuan_08.gif" /></div>
                     </a>                    

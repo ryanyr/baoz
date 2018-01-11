@@ -142,7 +142,11 @@ export default React.createClass({
                 <div className="info_box">
 
             <div className="operationlist">
-                <Link to={this.state.userInfo=="已完善"?"perfect":"information"}>
+                <Link to={this.state.info=="未完善"||this.state.info=="认证未通过"?
+                 "information":
+                
+                "perfect"
+                }>
                     <div className="op_left">
                       <img src="images/images/my_03 (1).gif" />
                     </div>

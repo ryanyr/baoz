@@ -10,7 +10,7 @@ export default React.createClass({
     render:function(){
         return (
             <div className="txing">
-             <Top back="true" title="订单详情"/>
+             <Top back="true" title="审核中"/>
              <Add qu={this.props.location.query} />
              <Footer />
             </div>

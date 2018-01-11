@@ -1,9 +1,10 @@
 import {  Checkbox } from 'antd-mobile';
-import {Link} from "react-router";
+import {Link,hashHistory} from "react-router";
 import url from "../../config/config";
 import {Pagination,Icon,Toast} from 'antd-mobile';
 import store from "../../../store/store";
 import { setTimeout } from 'timers';
+
 var all=0;
 export default React.createClass({
     getInitialState(){
@@ -15,6 +16,12 @@ export default React.createClass({
           checkall:false,
           allmoney:0,
           num:0,
+          li0:false,
+          li1:false,
+          li2:false,
+          li3:false,
+          li4:false,
+          changelist:[true,false],
           selectedStores:[],
           changelist:true,
           orders:["","","","",""],
@@ -43,15 +50,61 @@ export default React.createClass({
         })
     },
     changeall(e){
-        
         this.setState({
-            checkall:!this.state.checkall
+            checkall:!this.state.checkall,
+            orders:[],
+            moneylist:[],
+            allmoney:0
         })
-        if(e.target.checked){
-            console.log(this.refs.nu1.checked)
-        }
+        setTimeout(()=>{
+            if(e.target.checked){//当全选框的状态是true时,把所有的状态都改为true
+                this.setState({
+                    li0:true,
+                    li1:true,
+                    li2:true,
+                    li3:true,
+                    li4:true,
+                })
+                all=this.state.list.length
+                var allmoney=0;//先把总金额设置为0
+                for(var i=0;i<this.state.list.length;i++){//再把订单号和每笔订单的金额都加进状态
+                    this.state.moneylist.push(this.state.list[i].repayAmount);
+                    this.state.orders.push(this.state.list[i].orderId);
+                    allmoney+=this.state.list[i].repayAmount  //计算总金额             
+                }
+                
+                this.setState({
+                    allmoney:allmoney
+                })
+            }else{//当全选为空时,把所有的状态改为false
+                all=0;//把all标记也改为0
+                this.setState({
+                    li0:false,
+                    li1:false,
+                    li2:false,
+                    li3:false,
+                    li4:false,
+                    orders:[],
+                    moneylist:[],
+                    allmoney:0
+                }) 
+            }
+        },100)
+
     },
-    change(e){
+    change(e){//获取列表
+        all=0;//翻页也要设置为空
+                this.setState({
+                    li0:false,
+                    li1:false,
+                    li2:false,
+                    li3:false,
+                    li4:false,
+                    orders:[],
+                    moneylist:[],
+                    allmoney:0,
+                    checkall:false,//把全选按钮状态也改为空
+                })
         this.setState({
             page:e
         })
@@ -81,7 +134,6 @@ export default React.createClass({
                         // data.data.list[i]["info"]="待还款"
                         if(data.data.list[i].state=="40"){
                             data.data.list[i]["info"]="待还款"
-                            console.log(data.data.list[i])
                         }
                         else if(data.data.list[i].state=="52"){
                             data.data.list[i]["info"]="还款中"
@@ -103,12 +155,38 @@ export default React.createClass({
         });
     },
     changelist(e,ind,index){
+        var li=e.target.value;
+        if(index==0){
+            this.setState({
+                li0:e.target.checked
+            })
+        }
+        if(index==1){
+            this.setState({
+                li1:e.target.checked
+            })
+        }
+        if(index==2){
+            this.setState({
+                li2:e.target.checked
+            })
+        }
+        if(index==3){
+            this.setState({
+                li3:e.target.checked
+            })
+        }
+        if(index==4){
+            this.setState({
+                li4:e.target.checked
+            })
+        }       
         var that=this;
-        if(e.target.checked){
-            this.state.orders[index]=ind.orderNo;
+        if(e.target.checked==true){
+            
+            this.state.orders[index]=ind.orderId;//分别在数组加入金额和订单号
             this.state.moneylist[index]=ind.repayAmount;
             all++;
-            // console.log(this.state.list.length)
             this.setState({
                 allmoney:this.state.allmoney+ind.repayAmount*1
             })
@@ -128,13 +206,57 @@ export default React.createClass({
             this.setState({
                 checkall:false
             })
-        };
-        
-        
-        
+        };    
     },
-    btn(){
-        console.log(this.refs.nu)
+    allpay(){//批量还款
+        var newlist=[]
+        for(var i=0;i<this.state.orders.length;i++){
+            if(this.state.orders[i]>0){
+                newlist.push(this.state.orders[i])
+            }
+        }
+        let orders=newlist.join(",");
+        if(this.state.allmoney=="0"){
+            Toast.info("您还没有选择要还款的订单", 2);
+        }else{
+            var data=new FormData();//还款
+            data.append("orderId",orders);
+            data.append("userId",localStorage.userId);
+            fetch(url.url+"/api/act/pay/repayment/repay.htm",{
+                headers:{
+                    token:localStorage.Token
+                },
+                method:"POST",body:data})
+                .then(r=>r.json())
+                .then((data)=>{
+                    console.log(data)
+                  switch(data.code){
+                    case 408:    Toast.info('系统响应超时', 1);
+                                    break;
+                    case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                                    hashHistory.push("login");
+                                    break;
+                    case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                    hashHistory.push("login");
+                                    break;
+                    case 500:    Toast.info('服务器错误', 1);
+                                    break;
+                    case 150004:    Toast.info('您已还款成功', 1);
+                                    window.location.reload();
+                                    store.dispatch({
+                                        type:"INFO",
+                                        data:3
+                                    })
+                                    // hashHistory.push("loan")
+                                    break;
+                    case 150005:    Toast.info('还款失败，请稍后再次尝试', 1);
+                                    break;
+                    case 150006:    Toast.info('还款服务超时，请稍后再次尝试', 1);
+                                    break;
+                    default:        break;
+                    }                     
+                })
+        }
     },
     render(){
         var list=this.state.list.map((ind,index)=>{
@@ -142,12 +264,12 @@ export default React.createClass({
                 <div  className="repayments_list" to="repayment" key={index} ref="nu">
                     <Checkbox 
                         ref="nu1"
-                        id="che"
+                        id=""
                         style={{marginLeft:"0.2rem"}}
-                        value={index}
-                        // checked={this.state.changelist}
+                        value={`li${index}`}
+                        checked={this.state[`li${index}`]}
                         onChange={(e)=>{
-                            console.log(this.refs.nu1)
+                            // console.log(e.target.value)
                             this.changelist(e,ind,index)
                         }}
                     />
@@ -187,9 +309,7 @@ export default React.createClass({
                         style={{marginLeft:}}
                     >批量还款</div> */}
                     <span className="allmoney">总计：<span>{this.state.allmoney}元</span></span>
-                    <div className="click" onClick={()=>{
-                        console.log(this.state)
-                    }}>
+                    <div className="click" onClick={this.allpay}>
                         批量还款
                     </div>
                 </div>

@@ -28,41 +28,43 @@ export default React.createClass({
             listCoupon:[],
             value:[],
             totalMoney:0,
-            expectRepayTime:""//预估时间
-
+            expectRepayTime:"",//预估时间
+            showsearch:false,//显示搜索
+            searchcon:"",//搜索框内容
         }
     },
     componentWillUnmount(){
         // localStorage.withdraw=JSON.stringify(this.state);
         sessionStorage.withdraw1=JSON.stringify(this.state);
     },
-    componentWillMount(){
+    getinsurance(){//模糊搜索保险公司
         var that=this;
-        fetch(url.url+"/api/act/mine/userInfo/insuranceList.htm",{
-           headers:{
-               token:localStorage.Token
-           },
-           method:"get"})
-           .then(r=>r.json())
-           .then((data)=>{
-            //    console.log(data)
-               var newlist=data.data.map((con)=>{
-                    return {label:con.companyName,value:con.companyName}
-                    // console.log(con.bankName)
-               })
-            //    console.log(newlist)
-               that.setState({
-                companyName:newlist,
-                totalMoney:data.data.totalMoney
-               })
-               
-           }).catch(function(e) {
-                console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
-            });
-        // console.log(sessionStorage.withdraw1)
+        var data=new FormData();
+        data.append("companyName",this.state.searchcon);
+        $.ajax({
+            type: "get",
+            url: url.url+"/api/act/mine/userInfo/insuranceList.htm",
+            data: {companyName:that.state.searchcon},
+            dataType: "json",
+            headers:{"Content-Type":"text/plain;charset=UTF-8",token:localStorage.Token},
+            success: function (data) {
+                if(data.data.length==0){
+                    Toast.info("未找到匹配项", 2);
+                }
+
+
+
+                var newlist=data.data.map((con)=>{
+                        return {label:con.companyName,value:con.companyName}
+                    })
+                that.setState({
+                    companyName:newlist,                
+                })                 
+            }
+        });
+    },
+    componentWillMount(){
         if(sessionStorage.withdraw1){
-            // console.log(1)
             this.setState(JSON.parse(sessionStorage.withdraw1))
         }
         var that=this;
@@ -117,7 +119,7 @@ export default React.createClass({
         });       
     },  
     submit(){
-        
+        console.log(this.state)
         var reg = new RegExp("^[0-9]*$");
         console.log(!reg.test(this.state.policyAmount))
         if(!/^[0-9]{1,6}$/g.test(this.state.policyAmount)){
@@ -144,7 +146,7 @@ export default React.createClass({
             console.log(this.state.money);
 
             Toast.info("提现金额不得超过保单金额", 2)
-        }else if(this.state.money>this.state.unuser){
+        }else if(this.state.money>this.state.unuse){
             Toast.info("提现金额不得大于剩余额度", 2)
         }
         else{
@@ -189,6 +191,7 @@ export default React.createClass({
      }}   
     },
     confirm(){//确认申请
+        
         var that=this;
         var listid="";//优惠券号
         if(this.state.check2){
@@ -258,7 +261,6 @@ export default React.createClass({
                 case 120015:    Toast.info('服务器错误，请稍后再次申请', 1);
                                 break;
                 case 120016:    Toast.info('恭喜您，已申请成功，请稍后查看订单信息', 1);
-                                // alert(1)
                                 that.setState({
                                     show:false
                                 })
@@ -275,11 +277,6 @@ export default React.createClass({
             }      
            
         })
-        // .catch(function(e) {
-        //         console.log("Oops, error");
-        //         Toast.info("服务器响应超时", 2);
-                
-        // });
     },
     upimg(files){//上传图片统一方法
         var that=this;
@@ -314,7 +311,7 @@ export default React.createClass({
             } 
             img.src = files[0].url;      */
             //图片压缩结束
-                /* that.setState({modal1:true},()=>{
+                 that.setState({modal1:true},()=>{
                     data.append("img",files[0].url);     
                     fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
                         headers:{
@@ -323,7 +320,7 @@ export default React.createClass({
                         method:"POST",body:data})
                         .then(r=>r.json())
                         .then((data)=>{
-                            // that.setState({modal1:false});
+                            that.setState({modal1:false});
                             if(data.code==120008||data.code==120009){
                                 Toast.info("上传保单图片失败，请稍后再次上传", 2);
                             }else{
@@ -331,11 +328,12 @@ export default React.createClass({
                             }
                             
                         }).catch(function(e) {
-                                console.log("Oops, error");                                
+                                console.log("Oops, error");   
+                                that.setState({modal1:false});                            
                                 // Toast.info("服务器响应超时", 2);
                         });
-                }); */
-                 data.append("img",files[0].url);     
+                }); 
+                 /* data.append("img",files[0].url);     
                 fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
                     headers:{
                         token:localStorage.Token
@@ -352,7 +350,7 @@ export default React.createClass({
                     }).catch(function(e) {
                             console.log("Oops, error");                                
                             // Toast.info("服务器响应超时", 2);
-                    }); 
+                    });  */
 
         })
             
@@ -434,16 +432,12 @@ export default React.createClass({
                     transparent
                     maskClosable={false}
                     onClose={this.onClose}
-                    title="Title"
+                    title="提示"
                     className="imgInfo"
                     >
-                    <div style={{ height: 100, overflow: 'scroll' }}>
-                        scoll content...<br />
-                        scoll content...<br />
-                        scoll content...<br />
-                        scoll content...<br />
-                        scoll content...<br />
-                        scoll content...<br />
+                    <div>                        
+                        <img src="images/images/loading.gif" alt=""/>
+                        <p>图片正在上传中...</p>
                     </div>
                 </Modal>
             <div className="wd_top" style={{background:"url(images/images/txtop.png)",backgroundSize:"100% 100%"}}>
@@ -451,7 +445,53 @@ export default React.createClass({
                 <div className="wd_topw">剩余可用额度</div>
             </div>
             <div className="withdrawcontent">
-                
+                <div id="search" 
+                    style={{display:this.state.showsearch?"":"none"}}//搜索
+                >
+                    <div
+                        className="con"
+                        
+                    >
+                        <div className="small"
+                            onClick={()=>{
+                                this.setState({
+                                    showsearch:false
+                                })
+                            }}
+                            style={{background:"url(images/images/cha1.png) 0% 0%/100%"}}
+                        >
+                        </div>
+                        <div className="title1">
+                            请输入关键字
+                        </div>
+                        <div className="serbox">
+                                <input type="text" value={this.state.searchcon}
+                                    onChange={(e)=>{
+                                        this.setState({
+                                            searchcon:e.target.value
+                                        })
+                                    }}
+                                />
+                                <div
+                                    style={{background:"url(images/images/cha22.png) 0% 0% / 100%"}}
+                                    onClick={this.getinsurance}
+                                >
+                                    <Picker extra="搜索"
+                                    data={this.state.companyName}
+                                    cols="1" 
+                                    onOk={e => {this.setState({value:e,showsearch:false})}}
+                                                onDismiss={e => console.log('dismiss', e)}
+                                                >
+                                                <List.Item
+                                                    style={{width:"4rem"}}
+                                                ></List.Item>
+                                                </Picker> 
+                                </div>  
+                        </div>
+                        
+                                          
+                    </div>
+                </div>
                 <div className="modal" 
                     style={{display:this.state.show?"block":"none"}}
                 >
@@ -590,7 +630,16 @@ export default React.createClass({
                 <div className="company">
                 
                 <span style={{width:"1.52rem"}}>承保公司</span>
-                <Picker extra="请选择所属公司"
+                <div
+                style={{fontSize:"0.28rem",marginLeft:"0.25rem"}}
+                    onClick={()=>{
+                        
+                        this.setState({
+                            showsearch:true
+                        })
+                    }}
+                >{this.state.value[0]?this.state.value[0]:"请选择承保公司"}</div>
+                {/* <Picker extra="请选择所属公司"
                                     
                                     data={this.state.companyName}
                                     cols="1" 
@@ -601,7 +650,7 @@ export default React.createClass({
                                     <List.Item
                                         style={{width:"4rem"}}
                                     ></List.Item>
-                                    </Picker>                              
+                                    </Picker>                               */}
                             {/* </div> */}
                 {/* <InputItem
                         value={this.state.insuranceCompany}

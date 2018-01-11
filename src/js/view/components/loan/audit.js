@@ -43,7 +43,7 @@ export default React.createClass({
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
-        data.append("stateList",[10,20,30,21,32,41,31]);
+        data.append("stateList",[10,20,30,31,41]);
         data.append("page",e);
         data.append("pageSize",5);
         fetch(url.url+"/api/act/mine/borrow/list.htm",{
@@ -77,25 +77,25 @@ export default React.createClass({
                 }
                 var info=[];
                 for(var i=0;i<data.data.list.length;i++){
-                    if(data.data.list[i].state=="10"||data.data.list[i].state=="20"||data.data.list[i].state=="21"||data.data.list[i].state=="30"||data.data.list[i].state=="31"||data.data.list[i].state=="32"){
+                    if(data.data.list[i].state=="10"||data.data.list[i].state=="20"||data.data.list[i].state=="41"||data.data.list[i].state=="21"||data.data.list[i].state=="30"||data.data.list[i].state=="31"||data.data.list[i].state=="32"){
                         
                         if(data.data.list[i].state=="10"){
                             data.data.list[i]["info"]="审核中"
                         }else if(data.data.list[i].state=="20"){
                             data.data.list[i]["info"]="人工审核通过"
                         }
-                        else if(data.data.list[i].state=="21"){
-                            data.data.list[i]["info"]="人工审核未通过"
-                        }
+                        // else if(data.data.list[i].state=="21"){
+                        //     data.data.list[i]["info"]="人工审核未通过"
+                        // }
                         else if(data.data.list[i].state=="30"){
                             data.data.list[i]["info"]="待放款审核"
                         }
                         else if(data.data.list[i].state=="31"){
                             data.data.list[i]["info"]="放款审核通过"
                         }
-                        else if(data.data.list[i].state=="32"){
-                            data.data.list[i]["info"]="放款审核未通过"
-                        }
+                        // else if(data.data.list[i].state=="32"){
+                        //     data.data.list[i]["info"]="放款审核未通过"
+                        // }
                         else if(data.data.list[i].state=="41"){
                             data.data.list[i]["info"]="放款失败"
                         }

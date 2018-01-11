@@ -55,7 +55,7 @@ export default React.createClass({
         }
     },
     send(){
-        
+        console.log(1)
         if(!/^[1]{1}(3|5|7|8|9){1}[0-9]{9}$/g.test(this.state.phone)){
             Toast.info('请填入正确的手机号', 1); 
         }else{
@@ -75,7 +75,7 @@ export default React.createClass({
                 case 100001:    Toast.info('手机号格式错误', 1);
                                 break;
                 case 100002:    Toast.info('验证码发送成功，请注意查收', 1);
-                                if(data.data.state=="1"&&/^[0-9a-z]{4,6}$/ig.test(localStorage.code)){
+                                if(data.data.state=="1"){
                                     that.setState({
                                         showcode:"block"
                                     })
@@ -142,6 +142,7 @@ export default React.createClass({
         },1000);
     },
     submit(e){
+        console.log(1)
         // console.log(Boolean(undefined))
         e.preventDefault();
         var that=this;
@@ -177,7 +178,6 @@ export default React.createClass({
                     }if(data.state==1){
                         
                         hashHistory.push("loginsuccess");
-                        localStorage.write=false;//第一次登陆,信息没有完善,没有获取到优惠券
                     }
                    
                 }else{
@@ -227,7 +227,13 @@ export default React.createClass({
                 >
                     <i 
                     style={{background:"url(images/images/icon_03.png)",width:"0.37rem",height:"0.37rem",backgroundSize:"100%"}}
-                    ></i><input placeholder="请输入推广码" type="text" value={this.state.code}  />
+                    ></i><input placeholder="请输入推广码" type="text" value={this.state.code}  
+                    onChange={(e)=>{
+                        this.setState({
+                            code:e.target.value
+                        })
+                    }}
+                    />
                 </div>
                 <div className="protocol">
                     <input type="checkbox" defaultChecked={this.state.check} onChange={this.editChecked} />

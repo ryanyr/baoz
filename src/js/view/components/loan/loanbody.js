@@ -45,7 +45,7 @@ export default React.createClass({
                     <div className={this.state.page==3?"active":""} onClick={()=>{this.setState({page:3})}}>
                         <i
                         style={{background:imgurlright}}
-                        ></i><span>已结清</span>
+                        ></i><span>已结束</span>
                     </div>
                 </div>
                 <div className="content">

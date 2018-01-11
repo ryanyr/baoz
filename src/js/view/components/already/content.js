@@ -1,5 +1,6 @@
 import url from "../../config/config";
 import {InputItem,ImagePicker,Toast } from "antd-mobile";
+import {hashHistory,browserHistory} from "react-router";
 export default React.createClass({
     getInitialState(){
         return {
@@ -8,6 +9,10 @@ export default React.createClass({
             realRepayTime:""
         }
     },
+    btn(){
+            hashHistory.push("withdraw")
+         
+      },
   componentWillMount(){
     // console.log(this.props.id)
         var orderNo=this.props.id;
@@ -47,105 +52,153 @@ export default React.createClass({
                 Toast.info("服务器响应超时", 2);
             });
   },
-  render() {
-    return (
-      <div className="con_box">
-          <div className="content">
-                    <img className="title"  src="images/images/bg_2.jpg" />
-                    <div className="top">
-                        <i
-                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>借款金额：{this.state.amount}.00元</span>
+    render() {
+        return (
+            <div className="already-box">
+                <div className="already-top" style={{background:"url(images/images/already-bga.png)",backgroundSize:"100%"}}>
+                    <div className="already-head">还款完成时间 {this.state.realRepayTime.split(" ")[0]}</div>
+                    <div className="already-min1">已减免{this.state.amount<=1000?20:this.state.remitAmount}元</div>
+                    <div className="already-min2"><span className="already-min2a">{this.state.repayAmount}.</span><span className="already-min2b">00</span></div>
+                    <div className="already-min3">应还金额（元）</div>
+                    <div className="already-list">
+                        <div className="already-list1">
+                            <div className="already-list1a">
+                                <div className="already-list1a1">{this.state.amount}<span className="already-list1a1a">.00元</span></div>
+                                <div className="already-list1a2">借款金额</div>
+                            </div>
+                            <div className="already-list1b">
+                                <div className="already-list1b1"></div>
+                            </div>
+                            <div className="already-list1c">
+                                <div className="already-list1a1">{this.state.realAmount}<span className="already-list1a1a">.00元</span></div>
+                                <div className="already-list1a2">实际到账（元）</div>
+                            </div>
+                        </div>
+                        <div className="already-list2">
+                            <div className="already-list2a">服务费用</div>
+                            <div className="already-list2b">{this.state.serviceFee}.00元</div>
+                        </div>
+                        <div className="already-list2">
+                            <div className="already-list2a">利息费用</div>
+                            <div className="already-list2b">{this.state.interest}.00元</div>
+                        </div>
+                        <div className="already-list2">
+                            <div className="already-list2a">借款期限</div>
+                            <div className="already-list2b">7天</div>
+                        </div>
+                        <div className="already-list2">
+                            <div className="already-list2a">应还日期</div>
+                            <div className="already-list2b">{this.state.repayTime.split(" ")[0]}</div>
+                        </div>
+                        <div className="already-list2">
+                            <div className="already-list2a">申请时间</div>
+                            <div className="already-list2b">{this.state.createTime.split(" ")[0]}</div>
+                        </div>
+                        <div className="already-list2">
+                            <div className="already-list2a">收款卡号</div>
+                            <div className="already-list2b">{this.state.cardNo}</div>
+                        </div>
+                        <div className="already-list3" onClick={this.btn}>再次借款</div>
                     </div>
-                    <div>
-                        <i
-                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>实际到账：{this.state.realAmount}.00元</span>
-                    </div>
-                    <div>
-                        <i
-                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>服务费用：{this.state.serviceFee}.00元</span>
-                    </div>
-                    <div>
-                        <i
-                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>利息费用：{this.state.interest}.00元</span>
-                    </div>
-                    <div>
-                        <i
-                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>延期费用：{this.state.extensionAmount}.00元</span>
-                    </div>
-                    <div>
-                        <i
-                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>借款期限：7天</span>
-                    </div>
-                    <div>
-                        <i
-                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>申请时间：{this.state.createTime.split(" ")[0]}</span>
-                    </div>
-                    <div>
-                        <i
-                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>收款卡号：{this.state.cardNo}</span>
-                    </div>
-                    <div>
-                        <i
-                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>应还金额：{this.state.repayAmount}</span>
-                    </div>
-                    <div>
-                        <i
-                            style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>应还日期：{this.state.repayTime.split(" ")[0]}</span>
-                    </div>
-                    <div className="yellow"
-                        style={{marginTop:"0.4rem"}}
-                    >
-                        <i
-                            style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>优惠减免：{this.state.amount<=1000?20:this.state.remitAmount}.00元</span>
-                    </div>
-                    <div className="yellow">
-                        <i
-                            style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>应还金额：{this.state.repayAmount}.00元</span>
-                    </div>
-                    <div className="yellow">
-                        <i
-                            style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>实还金额：{this.state.realRepayAmount}.00元</span>
-                    </div>
-                    <div className="yellow">
-                        <i
-                            style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>应还日期：{this.state.repayTime.split(" ")[0]}</span>
-                    </div>
-                    <div className="yellow">
-                        <i
-                            style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
-                        ></i>
-                        <span>实还日期：{this.state.realRepayTime.split(" ")[0]}</span>
-                    </div>                    
                 </div>
-      </div>
+            </div>
+    //   <div className="con_box">
+    //       <div className="content">
+    //                 <img className="title"  src="images/images/bg_2.jpg" />
+    //                 <div className="top">
+    //                     <i
+    //                         style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>借款金额：{this.state.amount}.00元</span>
+    //                 </div>
+    //                 <div>
+    //                     <i
+    //                         style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>实际到账：{this.state.realAmount}.00元</span>
+    //                 </div>
+    //                 <div>
+    //                     <i
+    //                         style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>服务费用：{this.state.serviceFee}.00元</span>
+    //                 </div>
+    //                 <div>
+    //                     <i
+    //                         style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>利息费用：{this.state.interest}.00元</span>
+    //                 </div>
+    //                 <div>
+    //                     <i
+    //                         style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>延期费用：{this.state.extensionAmount}.00元</span>
+    //                 </div>
+    //                 <div>
+    //                     <i
+    //                         style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>借款期限：7天</span>
+    //                 </div>
+    //                 <div>
+    //                     <i
+    //                         style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>申请时间：{this.state.createTime.split(" ")[0]}</span>
+    //                 </div>
+    //                 <div>
+    //                     <i
+    //                         style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>收款卡号：{this.state.cardNo}</span>
+    //                 </div>
+    //                 <div>
+    //                     <i
+    //                         style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>应还金额：{this.state.repayAmount}</span>
+    //                 </div>
+    //                 <div>
+    //                     <i
+    //                         style={{background:"url(images/images/circle_2.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>应还日期：{this.state.repayTime.split(" ")[0]}</span>
+    //                 </div>
+    //                 <div className="yellow"
+    //                     style={{marginTop:"0.4rem"}}
+    //                 >
+    //                     <i
+    //                         style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>优惠减免：{this.state.amount<=1000?20:this.state.remitAmount}.00元</span>
+    //                 </div>
+    //                 <div className="yellow">
+    //                     <i
+    //                         style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>应还金额：{this.state.repayAmount}.00元</span>
+    //                 </div>
+    //                 <div className="yellow">
+    //                     <i
+    //                         style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>实还金额：{this.state.realRepayAmount}.00元</span>
+    //                 </div>
+    //                 <div className="yellow">
+    //                     <i
+    //                         style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>应还日期：{this.state.repayTime.split(" ")[0]}</span>
+    //                 </div>
+    //                 <div className="yellow">
+    //                     <i
+    //                         style={{background:"url(images/images/circle_1.jpg)",backgroundSize:"100%"}}
+    //                     ></i>
+    //                     <span>实还日期：{this.state.realRepayTime.split(" ")[0]}</span>
+    //                 </div>                    
+    //             </div>
+    //   </div>
     )
   }
 })

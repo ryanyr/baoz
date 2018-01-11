@@ -39,7 +39,7 @@ export default React.createClass({
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
-        data.append("stateList",[50,51]);
+        data.append("stateList",[21,32,50,51]);
         data.append("page",e);
         data.append("pageSize",5);
         fetch(url.url+"/api/act/mine/borrow/list.htm",{
@@ -56,9 +56,20 @@ export default React.createClass({
                     })
                 }
                 var info=[];
-                // for(var i=0;i<;i++)
+                for(var i=0;i<data.data.list.length;i++){
+                    if(data.data.list[i].state=="50"||data.data.list[i].state=="51"){
+                        data.data.list[i]["info"]="已还款"
+                    }
+                    else if(data.data.list[i].state=="21"){
+                            data.data.list[i]["info"]="人工审核未通过"
+                        }
+                        else if(data.data.list[i].state=="32"){
+                            data.data.list[i]["info"]="放款审核未通过"
+                        }
+                        info.push(data.data.list[i]);
+                }
                 that.setState({
-                    list:data.data.list,
+                    list:info,
                     total:data.data.pageInfo.total
                 })
                 
@@ -78,7 +89,7 @@ export default React.createClass({
                         <p>{ind.realRepayAmount}</p>
                         <p>{ind.createTime.split(" ")[0]}</p>
                     </div>
-                    <span></span>
+                    <span>{ind.info}</span>
                     <i
                         style={{background:"url(images/images/right.png)",backgroundSize:"100%",marginLeft:"0.3rem"}}
                     ></i>

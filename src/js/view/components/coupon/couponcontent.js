@@ -22,7 +22,8 @@ export default React.createClass({
         },
         method:"POST",body:data})
         .then(r=>r.json())
-        .then((data)=>{  
+        .then((data)=>{
+          console.log(data)  
             that.setState({
               coupon:data.data.list
             })
@@ -42,6 +43,7 @@ export default React.createClass({
           method:"POST",body:newdata})
           .then(r=>r.json())
           .then((data)=>{
+            console.log(data)
               if(data.code=="200"){
                 that.setState({
                   usedcoupon:data.data.list
@@ -121,7 +123,7 @@ export default React.createClass({
                   style={{display:showused}}
                 >
                 {/* "images/images/used.png" */}
-                  <img src={ind.state==20?"images/images/646095611030435475.png":"images/images/used.png"} />
+                  <img src={ind.state==20||ind.state==30?"images/images/646095611030435475.png":"images/images/used.png"} />
                   <div className="use_con"
                   style={{background:"url(images/images/coupon_2.png)",backgroundSize:"100%"}}
                   >
