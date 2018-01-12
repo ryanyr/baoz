@@ -7,19 +7,19 @@ import Content from "../../components/already/content"
 export default React.createClass({
     getInitialState(){
         return {
-            id:""
+            orderId:""
         }
     },
     componentWillMount(){
-        // console.log(this.props.location.query.id);
+        console.log(this.props.location.query);
         this.setState(this.props.location.query)
     },
     render:function(){
         return (
             <div className="already">
-                 <Top title="已还款" back={true} />
+                 <Top title="已结束" back={true} />
 
-                     <Content id={this.state.id}/>
+                     <Content id={this.state.orderId}/>
 
                  <Footer />   
             </div>

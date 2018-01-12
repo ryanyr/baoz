@@ -9,6 +9,11 @@ export default React.createClass({
     componentWillMount(){
         var orderNo=this.props.qu.orderId;
         var state=this.props.qu.state;
+        console.log(orderNo);
+        console.log(state)
+        this.setState({
+            state1:this.props.qu.state
+        })
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
@@ -55,14 +60,17 @@ export default React.createClass({
             <div className="already-boxs">
             <div className="already-topk" style={{background:"url(images/images/txing-bg-1.png)",backgroundSize:"100%"}}>
                 <div className="txing-top">
-                    <p>您的订单正在审核中</p>
-                    <p className="txing-top1">请稍后查看审核信息!</p>
+                    <p
+                        style={{width:"80%",margin:"0 auto",lineHeight:"0.6rem"}}
+                    >
+                    {this.state.state1==10?"您的订单正在审核中,请稍后查看审核信息!":this.state.state1==20?"您的订单人工审核通过,请稍后查看审核信息!":this.state.state1==30?"您的订单正在待放款审核,请稍后查看审核信息!":this.state.state1==31?"您的订单放款审核通过,请稍后查看审核信息!":this.state.state1==41?"您的订单放款失败!":this.state.state1==21?"您的订单人工审核未通过":"您的订单放款审核未通过"}</p>
+                    {/* <p className="txing-top1">请稍后查看审核信息!</p> */}
                 </div>
                 <div className="already-list">
                     <div className="already-list1">
                         <div className="already-list1a">
                             <div className="already-list1a1">{this.state.amount}<span className="already-list1a1a">.00元</span></div>
-                            <div className="already-list1a2">借款金额</div>
+                            <div className="already-list1a2">借款金额(元)</div>
                         </div>
                         <div className="already-list1b">
                             <div className="already-list1b1"></div>
@@ -77,7 +85,7 @@ export default React.createClass({
                         <div className="already-list2b">{this.state.timeLimit}天</div>
                     </div>
                     <div className="already-list2">
-                        <div className="already-list2a">服务费用</div>
+                        <div className="already-list2a">手续费用</div>
                         <div className="already-list2b">{this.state.serviceFee}.00元</div>
                     </div>
                     <div className="already-list2">
@@ -89,8 +97,8 @@ export default React.createClass({
                         <div className="already-list2b">{this.state.createTime.split(" ")[0]}</div>
                     </div>
                     <div className="already-list2">
-                        <div className="already-list2a">应还日期</div>
-                        <div className="already-list2b">12</div>
+                        <div className="already-list2a">订单号码</div>
+                        <div className="already-list2b">{this.state.orderNo}</div>
                     </div>
                     
                     <div className="already-list2">

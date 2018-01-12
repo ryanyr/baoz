@@ -26,15 +26,16 @@ export default React.createClass({
     getinsurance(){//模糊搜索保险公司
         var that=this;
         var data=new FormData();
-        data.append("companyName",this.state.searchcon);
-        $.ajax({
-            type: "get",
-            url: url.url+"/api/act/mine/userInfo/insuranceList.htm",
-            data: {companyName:that.state.searchcon},
-            dataType: "json",
-            headers:{"Content-Type":"text/plain;charset=UTF-8",token:localStorage.Token},
-            success: function (data) {
-                if(data.data.length==0){
+        data.append("companyName",this.state.searchcon);  
+        fetch(url.url+"/api/act/mine/userInfo/insuranceList.htm",{
+          headers:{
+              token:localStorage.Token
+          },
+          method:"POST",body:data})
+          .then(r=>r.json())
+          .then((data)=>{
+              console.log(data);
+                      if(data.data.length==0){
                     Toast.info("未找到匹配项", 2);
                 }
 
@@ -45,9 +46,8 @@ export default React.createClass({
                     })
                 that.setState({
                     companyName:newlist,                
-                })                 
-            }
-        });
+                }) 
+          })
     },
     componentWillUnmount(){
         sessionStorage.stee=JSON.stringify(this.state);
@@ -57,28 +57,28 @@ export default React.createClass({
             this.setState(JSON.parse(sessionStorage.stee))
         }
         
-        var that=this;
-        fetch(url.url+"/api/act/mine/userInfo/insuranceList.htm",{
-           headers:{
-               token:localStorage.Token
-           },
-           method:"get"})
-           .then(r=>r.json())
-           .then((data)=>{
-               console.log(data)
-               var newlist=data.data.map((con)=>{
-                    return {label:con.companyName,value:con.companyName}
-                    // console.log(con.bankName)
-               })
-               console.log(newlist)
-               that.setState({
-                companyName:newlist
-               })
+        // var that=this;
+        // fetch(url.url+"/api/act/mine/userInfo/insuranceList.htm",{
+        //    headers:{
+        //        token:localStorage.Token
+        //    },
+        //    method:"get"})
+        //    .then(r=>r.json())
+        //    .then((data)=>{
+        //        console.log(data)
+        //        var newlist=data.data.map((con)=>{
+        //             return {label:con.companyName,value:con.companyName}
+        //             // console.log(con.bankName)
+        //        })
+        //        console.log(newlist)
+        //        that.setState({
+        //         companyName:newlist
+        //        })
                
-           }).catch(function(e) {
-                console.log("Oops, error");
-                // Toast.info("服务器响应超时", 2);
-            });
+        //    }).catch(function(e) {
+        //         console.log("Oops, error");
+        //         // Toast.info("服务器响应超时", 2);
+        //     });
 
 
            var that=this;//查询信息是否完善
@@ -108,9 +108,9 @@ export default React.createClass({
         console.log(this.state)
         var that=this
          
-        var reg=/^[0-9]{26}$/ig;
+        var reg=/^[0-9]{1,26}$/ig;
         if(!reg.test(this.state.certificateNo)){
-            Toast.info("请填写正确保险从业编号", 2);
+            Toast.info("请填写正确的资格证书号码", 2);
         }
         else if(!this.state.value[0]){
             Toast.info("请选择所属公司", 2);

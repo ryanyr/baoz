@@ -59,10 +59,6 @@ export default React.createClass({
                     default:        break;
                 }    
 				  that.setState(data.data);
-				store.dispatch({
-					type:"HOME",
-					data:data.data
-				})
 			  })
 
       

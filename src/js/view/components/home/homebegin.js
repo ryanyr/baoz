@@ -14,7 +14,7 @@ export default React.createClass({
 	btn(){
 		
 		if(localStorage.Login){//判断是否登录
-			if(this.state.info=="未完善"||this.state.info=="认证未通过"){//根据父组件传过来的信息是否完善
+			if(this.state.info=="未完善"){//根据父组件传过来的信息是否完善
 				hashHistory.push("information");
 			}else{
 				
@@ -38,7 +38,7 @@ export default React.createClass({
 		</div>
 		<div className="anser" onClick={() => {
 			if(localStorage.Login){
-				if(this.state.info=="未完善"||this.state.info=="认证未通过"){
+				if(this.state.info=="未完善"){
 					hashHistory.push("information");
 
 				}else{

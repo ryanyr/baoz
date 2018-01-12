@@ -142,7 +142,7 @@ export default React.createClass({
                 <div className="info_box">
 
             <div className="operationlist">
-                <Link to={this.state.info=="未完善"||this.state.info=="认证未通过"?
+                <Link to={this.state.userInfo=="未完善"?
                  "information":
                 
                 "perfect"
@@ -156,7 +156,7 @@ export default React.createClass({
                         <span>个人信息</span>
                         <span
                         style={{position:"absolute",width:"1.5rem",fontSize:"0.26rem",color:"#f99b47",left:"3rem"}}
-                        >{this.state.userInfo}</span>
+                        >{this.state.userInfo=="已认证"?"已认证":"未认证"}</span>
                     </div>
                     
                  <div className="op_d"><img src="images/images/daikuan_08.gif" /></div>

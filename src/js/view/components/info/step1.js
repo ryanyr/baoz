@@ -3,7 +3,7 @@ import url from "../../config/config";
 import $ from "jquery";
 // import EXIF from "exif-js";
 import {compress} from "../../../utils/imgCompress";
-
+import idcard from "../method/idcard";
 
 export default React.createClass({
     getInitialState(){
@@ -25,8 +25,12 @@ export default React.createClass({
         if(!/^[\u4e00-\u9fa5]{2,4}/g.test(this.state.name)){
             Toast.info("请输入正确的用户名", 2);
         }else if(!this.state.idcard){
-            Toast.info("请输入身份证", 2);
-        }else if(!this.state.upimg1||!this.state.upimg2||!this.state.upimg3){
+            Toast.info("请输入身份证号码", 2);
+        }else if(!idcard(this.state.idcard)){
+            Toast.info("请输入正确的身份号码", 2);
+        }
+        
+        else if(!this.state.upimg1||!this.state.upimg2||!this.state.upimg3){
             Toast.info("请上传身份证照片", 2);
         }else{
         var that=this;
@@ -61,7 +65,7 @@ export default React.createClass({
         e.nativeEvent.preventDefault();
     },
     componentWillMount(){
-        // console.log(Boolean(sessionStorage.step))
+        // console.log(idcard("1"))
         if(sessionStorage.step){
             
             this.setState(JSON.parse(sessionStorage.step))

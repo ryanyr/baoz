@@ -39,7 +39,7 @@ export default React.createClass({
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
-        data.append("stateList",[21,32,50,51]);
+        data.append("stateList",[21,32,50,41,51]);
         data.append("page",e);
         data.append("pageSize",5);
         fetch(url.url+"/api/act/mine/borrow/list.htm",{
@@ -65,6 +65,8 @@ export default React.createClass({
                         }
                         else if(data.data.list[i].state=="32"){
                             data.data.list[i]["info"]="放款审核未通过"
+                        }else if(data.data.list[i].state=="41"){
+                            data.data.list[i]["info"]="放款失败"
                         }
                         info.push(data.data.list[i]);
                 }
@@ -84,9 +86,9 @@ export default React.createClass({
         if(this.state.list.length>0){
             list=this.state.list.map((ind,index)=>{
                 return (
-                <Link className="audit_list" to={{pathname:"already",query:{id:ind.orderNo}}} key={index}>
+                <Link className="audit_list" to={{pathname:ind.state==21||ind.state==32||ind.state==41?"txing":"already",query:{orderId:ind.orderNo,state:ind.state}}} key={index}>
                     <div className="price">
-                        <p>{ind.realRepayAmount}</p>
+                        <p>{ind.state==21||ind.state==32||ind.state==41?ind.realAmount:ind.realRepayAmount}</p>
                         <p>{ind.createTime.split(" ")[0]}</p>
                     </div>
                     <span>{ind.info}</span>

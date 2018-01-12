@@ -1,7 +1,7 @@
 import {InputItem,ImagePicker,Toast,Picker,List,Modal} from "antd-mobile";
 import url from "../../config/config";
 import {compress} from "../../../utils/imgCompress";
-
+import bank from "../method/bank";
 
 export default React.createClass({
     getInitialState(){
@@ -85,7 +85,10 @@ export default React.createClass({
         if(!this.state.bankcard){
             Toast.info("请填写银行卡号", 2);
             
-        }else if(!this.state.imgup1){
+        }else if(!bank(this.state.bankcard)){
+            Toast.info("请填写正确的银行卡号", 2);
+        }
+        else if(!this.state.imgup1){
             Toast.info("请上传银行卡正面", 2);
         }else if(!this.state.imgup2){
             Toast.info("请上传银行卡背面", 2);

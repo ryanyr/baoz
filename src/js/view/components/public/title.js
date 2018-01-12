@@ -20,6 +20,7 @@ export default React.createClass({
     },
     write(){
         // console.log(1);
+        sessionStorage.info=JSON.stringify({page:1})
         localStorage.writed=true;//填写信息是从修改信息按钮进入
         hashHistory.push("information");
     },

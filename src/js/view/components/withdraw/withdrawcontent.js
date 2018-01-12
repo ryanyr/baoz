@@ -39,16 +39,18 @@ export default React.createClass({
     },
     getinsurance(){//模糊搜索保险公司
         var that=this;
+        console.log(that.state.searchcon);
         var data=new FormData();
-        data.append("companyName",this.state.searchcon);
-        $.ajax({
-            type: "get",
-            url: url.url+"/api/act/mine/userInfo/insuranceList.htm",
-            data: {companyName:that.state.searchcon},
-            dataType: "json",
-            headers:{"Content-Type":"text/plain;charset=UTF-8",token:localStorage.Token},
-            success: function (data) {
-                if(data.data.length==0){
+        data.append("companyName",this.state.searchcon);  
+        fetch(url.url+"/api/act/mine/userInfo/insuranceList.htm",{
+          headers:{
+              token:localStorage.Token
+          },
+          method:"POST",body:data})
+          .then(r=>r.json())
+          .then((data)=>{
+              console.log(data);
+                      if(data.data.length==0){
                     Toast.info("未找到匹配项", 2);
                 }
 
@@ -59,31 +61,54 @@ export default React.createClass({
                     })
                 that.setState({
                     companyName:newlist,                
-                })                 
-            }
-        });
+                }) 
+          })
+        // var data=new FormData();
+        // data.append("companyName",this.state.searchcon);
+        // $.ajax({
+        //     type: "post",
+        //     url: url.url+"/api/act/mine/userInfo/insuranceList.htm",
+        //     data: {companyName:that.state.searchcon},
+        //     dataType: "json",
+        //     headers:{"Content-Type":"text/plain;charset=UTF-8",token:localStorage.Token},
+        //     success: function (data) {
+        //         console.log(data)
+        //         if(data.data.length==0){
+        //             Toast.info("未找到匹配项", 2);
+        //         }
+
+
+
+        //         var newlist=data.data.map((con)=>{
+        //                 return {label:con.companyName,value:con.companyName}
+        //             })
+        //         that.setState({
+        //             companyName:newlist,                
+        //         })                 
+        //     }
+        // });
     },
     componentWillMount(){
         if(sessionStorage.withdraw1){
             this.setState(JSON.parse(sessionStorage.withdraw1))
         }
-        var that=this;
-        $.ajax({
-            type: "get",
-            url: url.url+"/api/act/mine/userInfo/getUserInfo.htm",
-            data: {userId:localStorage.userId},
-            dataType: "json",
-            headers:{"Content-Type":"text/plain;charset=UTF-8",token:localStorage.Token},
-            success: function (r) {
+        // var that=this;
+        // $.ajax({
+        //     type: "get",
+        //     url: url.url+"/api/act/mine/userInfo/getUserInfo.htm",
+        //     data: {userId:localStorage.userId},
+        //     dataType: "json",
+        //     headers:{"Content-Type":"text/plain;charset=UTF-8",token:localStorage.Token},
+        //     success: function (r) {
                 
-                // console.log(r)
-                // if(r.code=="200"){
-                    that.setState({
-                        insuranceCompany:r.data.companyName
-                    })
+        //         console.log(r)
+        //         // if(r.code=="200"){
+        //             that.setState({
+        //                 insuranceCompany:r.data.companyName
+        //             })
                 
-            }
-        });
+        //     }
+        // });
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);  

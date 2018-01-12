@@ -14,7 +14,7 @@ export default React.createClass({
          
       },
   componentWillMount(){
-    // console.log(this.props.id)
+    console.log(this.props)
         var orderNo=this.props.id;
         console.log(orderNo)
         var that=this;
@@ -57,14 +57,14 @@ export default React.createClass({
             <div className="already-box">
                 <div className="already-top" style={{background:"url(images/images/already-bga.png)",backgroundSize:"100%"}}>
                     <div className="already-head">还款完成时间 {this.state.realRepayTime.split(" ")[0]}</div>
-                    <div className="already-min1">已减免{this.state.amount<=1000?20:this.state.remitAmount}元</div>
+                    <div className="already-min1">已减免{this.state.remitAmount}元</div>
                     <div className="already-min2"><span className="already-min2a">{this.state.repayAmount}.</span><span className="already-min2b">00</span></div>
                     <div className="already-min3">应还金额（元）</div>
                     <div className="already-list">
                         <div className="already-list1">
                             <div className="already-list1a">
                                 <div className="already-list1a1">{this.state.amount}<span className="already-list1a1a">.00元</span></div>
-                                <div className="already-list1a2">借款金额</div>
+                                <div className="already-list1a2">借款金额(元)</div>
                             </div>
                             <div className="already-list1b">
                                 <div className="already-list1b1"></div>
@@ -75,7 +75,7 @@ export default React.createClass({
                             </div>
                         </div>
                         <div className="already-list2">
-                            <div className="already-list2a">服务费用</div>
+                            <div className="already-list2a">手续费用</div>
                             <div className="already-list2b">{this.state.serviceFee}.00元</div>
                         </div>
                         <div className="already-list2">
@@ -83,19 +83,28 @@ export default React.createClass({
                             <div className="already-list2b">{this.state.interest}.00元</div>
                         </div>
                         <div className="already-list2">
+                            <div className="already-list2a">延期费用</div>
+                            <div className="already-list2b">{this.state.extensionAmount}.00元</div>
+                        </div>
+                        <div className="already-list2">
                             <div className="already-list2a">借款期限</div>
-                            <div className="already-list2b">7天</div>
+                            <div className="already-list2b">{this.state.timeLimit}天</div>
+                        </div>
+                        
+                        <div className="already-list2">
+                            <div className="already-list2a">申请时间</div>
+                            <div className="already-list2b">{this.state.createTime.split(" ")[0]}</div>
                         </div>
                         <div className="already-list2">
                             <div className="already-list2a">应还日期</div>
                             <div className="already-list2b">{this.state.repayTime.split(" ")[0]}</div>
                         </div>
                         <div className="already-list2">
-                            <div className="already-list2a">申请时间</div>
-                            <div className="already-list2b">{this.state.createTime.split(" ")[0]}</div>
+                            <div className="already-list2a">订单号码</div>
+                            <div className="already-list2b">{this.state.orderNo}</div>
                         </div>
                         <div className="already-list2">
-                            <div className="already-list2a">收款卡号</div>
+                            <div className="already-list2a">还款卡号</div>
                             <div className="already-list2b">{this.state.cardNo}</div>
                         </div>
                         <div className="already-list3" onClick={this.btn}>再次借款</div>
