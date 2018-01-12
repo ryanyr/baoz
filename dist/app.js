@@ -56824,7 +56824,7 @@ exports.default = React.createClass({
             li4: false,
             changelist: [true, false],
             selectedStores: []
-        }, _defineProperty(_ref, "changelist", true), _defineProperty(_ref, "orders", ["", "", "", "", ""]), _defineProperty(_ref, "moneylist", ["", "", "", "", ""]), _ref;
+        }, _defineProperty(_ref, "changelist", true), _defineProperty(_ref, "orders", ["", "", "", "", ""]), _defineProperty(_ref, "moneylist", ["", "", "", "", ""]), _defineProperty(_ref, "ordernum", ["", "", "", "", ""]), _ref;
     },
     componentWillMount: function componentWillMount() {
         if (_store2.default.getState().LIST_2.total) {
@@ -56851,7 +56851,8 @@ exports.default = React.createClass({
             checkall: !this.state.checkall,
             orders: [],
             moneylist: [],
-            allmoney: 0
+            allmoney: 0,
+            ordernum: []
         });
         (0, _timers.setTimeout)(function () {
             if (e.target.checked) {
@@ -56869,6 +56870,7 @@ exports.default = React.createClass({
                     //再把订单号和每笔订单的金额都加进状态
                     _this.state.moneylist.push(_this.state.list[i].repayAmount);
                     _this.state.orders.push(_this.state.list[i].orderId);
+                    _this.state.ordernum.push(_this.state.list[i].orderNo);
                     allmoney += _this.state.list[i].repayAmount; //计算总金额             
                 }
 
@@ -56886,7 +56888,8 @@ exports.default = React.createClass({
                     li4: false,
                     orders: [],
                     moneylist: [],
-                    allmoney: 0
+                    allmoney: 0,
+                    orderNo: []
                 });
             }
         }, 100);
@@ -56951,6 +56954,7 @@ exports.default = React.createClass({
         });
     },
     changelist: function changelist(e, ind, index) {
+        //选择列表
         var li = e.target.value;
         if (index == 0) {
             this.setState({
@@ -56982,6 +56986,7 @@ exports.default = React.createClass({
 
             this.state.orders[index] = ind.orderId; //分别在数组加入金额和订单号
             this.state.moneylist[index] = ind.repayAmount;
+            this.state.ordernum[index] = ind.orderNo;
             all++;
             this.setState({
                 allmoney: this.state.allmoney + ind.repayAmount * 1
@@ -56994,6 +56999,7 @@ exports.default = React.createClass({
         } else {
             this.state.orders[index] = "";
             this.state.moneylist[index] = "";
+            this.state.ordernum[index] = "";
             this.setState({
                 allmoney: this.state.allmoney - ind.repayAmount * 1
             });
@@ -57005,61 +57011,63 @@ exports.default = React.createClass({
     },
     allpay: function allpay() {
         //批量还款
+        console.log(this.state);
         var newlist = [];
+        var numlist = [];
         for (var i = 0; i < this.state.orders.length; i++) {
             if (this.state.orders[i] > 0) {
                 newlist.push(this.state.orders[i]);
             }
         }
+        for (var i = 0; i < this.state.ordernum.length; i++) {
+            if (this.state.ordernum[i].length > 0) {
+                numlist.push(this.state.ordernum[i]);
+            }
+        }
+        console.log(numlist);
         var orders = newlist.join(",");
+        var numli = numlist.join(",");
         if (this.state.allmoney == "0") {
             _toast2.default.info("您还没有选择要还款的订单", 2);
         } else {
-            var data = new FormData(); //还款
-            data.append("orderId", orders);
-            data.append("userId", localStorage.userId);
-            fetch(_config2.default.url + "/api/act/pay/repayment/repay.htm", {
-                headers: {
-                    token: localStorage.Token
-                },
-                method: "POST", body: data }).then(function (r) {
-                return r.json();
-            }).then(function (data) {
-                console.log(data);
-                switch (data.code) {
-                    case 408:
-                        _toast2.default.info('系统响应超时', 1);
-                        break;
-                    case 410:
-                        _toast2.default.info('用户信息过期，请重新登录', 1);
-                        _reactRouter.hashHistory.push("login");
-                        break;
-                    case 411:
-                        _toast2.default.info('用户已在其他设备登录，请重新登录', 1);
-                        _reactRouter.hashHistory.push("login");
-                        break;
-                    case 500:
-                        _toast2.default.info('服务器错误', 1);
-                        break;
-                    case 150004:
-                        _toast2.default.info('您已还款成功', 1);
-                        window.location.reload();
-                        _store2.default.dispatch({
-                            type: "INFO",
-                            data: 3
-                        });
-                        // hashHistory.push("loan")
-                        break;
-                    case 150005:
-                        _toast2.default.info('还款失败，请稍后再次尝试', 1);
-                        break;
-                    case 150006:
-                        _toast2.default.info('还款服务超时，请稍后再次尝试', 1);
-                        break;
-                    default:
-                        break;
-                }
-            });
+
+            // var data=new FormData();//还款
+            // data.append("orderId",orders);
+            // data.append("userId",localStorage.userId);
+            // fetch(url.url+"/api/act/pay/repayment/repay.htm",{
+            //     headers:{
+            //         token:localStorage.Token
+            //     },
+            //     method:"POST",body:data})
+            //     .then(r=>r.json())
+            //     .then((data)=>{
+            //         console.log(data)
+            //       switch(data.code){
+            //         case 408:    Toast.info('系统响应超时', 1);
+            //                         break;
+            //         case 410:    Toast.info('用户信息过期，请重新登录', 1);
+            //                         hashHistory.push("login");
+            //                         break;
+            //         case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+            //                         hashHistory.push("login");
+            //                         break;
+            //         case 500:    Toast.info('服务器错误', 1);
+            //                         break;
+            //         case 150004:    Toast.info('您已还款成功', 1);
+            //                         window.location.reload();
+            //                         store.dispatch({
+            //                             type:"INFO",
+            //                             data:3
+            //                         })
+            //                         // hashHistory.push("loan")
+            //                         break;
+            //         case 150005:    Toast.info('还款失败，请稍后再次尝试', 1);
+            //                         break;
+            //         case 150006:    Toast.info('还款服务超时，请稍后再次尝试', 1);
+            //                         break;
+            //         default:        break;
+            //         }                     
+            //     })
         }
     },
     render: function render() {
@@ -59115,7 +59123,7 @@ exports.default = React.createClass({
                 React.createElement(
                     "div",
                     { className: "already-min3" },
-                    "\u5E94\u8FD8\u91D1\u989D\uFF08\u5143\uFF09"
+                    "\u5E94\u8FD8\u91D1\u989D(\u5143)"
                 ),
                 React.createElement(
                     "div",
@@ -59163,7 +59171,7 @@ exports.default = React.createClass({
                             React.createElement(
                                 "div",
                                 { className: "already-list1a2" },
-                                "\u5B9E\u9645\u5230\u8D26\uFF08\u5143\uFF09"
+                                "\u5B9E\u9645\u5230\u8D26(\u5143)"
                             )
                         )
                     ),
@@ -59602,7 +59610,7 @@ exports.default = React.createClass({
                 React.createElement(
                     "div",
                     { className: "already-min3" },
-                    "\u5E94\u8FD8\u91D1\u989D\uFF08\u5143\uFF09"
+                    "\u5E94\u8FD8\u91D1\u989D(\u5143)"
                 ),
                 React.createElement(
                     "div",
@@ -59650,7 +59658,7 @@ exports.default = React.createClass({
                             React.createElement(
                                 "div",
                                 { className: "already-list1a2" },
-                                "\u5B9E\u9645\u5230\u8D26\uFF08\u5143\uFF09"
+                                "\u5B9E\u9645\u5230\u8D26(\u5143)"
                             )
                         )
                     ),
@@ -60745,7 +60753,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, ".wd_top {\n  width: 100%;\n  height: 4.16rem;\n  text-align: center;\n  position: relative;\n}\n.wd_top p {\n  font-size: 0.8rem;\n  line-height: 4.16rem;\n  color: #fff;\n}\n.wd_top .wd_topw {\n  width: 2.33rem;\n  height: 0.58rem;\n  background: #fb752a;\n  border-radius: 0.1rem;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, 0.75rem);\n  line-height: 0.58rem;\n  color: #fff;\n}\n.withdraw {\n  padding: 0.88rem 0 0.98rem;\n  background-color: #f9f9f9;\n  color: #555555;\n}\n.withdraw .am-list-item .am-input-control input {\n  color: #555;\n}\n.withdraw .am-list-item {\n  background: none;\n}\n.withdraw .withdrawcontent {\n  padding: 0rem 0.29rem 0 0.31rem;\n}\n.withdraw .withdrawcontent .title {\n  background-color: #fff;\n  height: 1.5rem;\n  border-radius: 0.15rem;\n  padding: 0.51rem 0.2rem 0;\n  box-sizing: border-box;\n  box-shadow: 0.04rem 0.04rem 0.1rem 0.05rem #e6dfd7;\n}\n.withdraw .withdrawcontent .title .title_con {\n  height: 0.48rem;\n  line-height: 0.48rem;\n  display: flex;\n  font-size: 0.34rem;\n}\n.withdraw .withdrawcontent .title .title_con .ti {\n  margin-top: 0.08rem;\n  display: block;\n  width: 0.31rem;\n  height: 0.32rem;\n}\n.withdraw .withdrawcontent .title .title_con span:nth-child(2) {\n  margin-left: 0.2rem;\n  color: #565656;\n}\n.withdraw .withdrawcontent .title .title_con span:nth-child(3) {\n  color: #f89c47;\n}\n.withdraw .withdrawcontent .tip {\n  height: 1.1rem;\n  line-height: 1.1rem;\n  position: relative;\n  padding-left: 0.2rem;\n  font-size: 0.32rem;\n  font-weight: 400;\n  margin-top: 0.3rem;\n}\n.withdraw .withdrawcontent .tip i {\n  display: block;\n  width: 0.12rem;\n  height: 0.36rem;\n  position: absolute;\n  top: 50%;\n  margin-top: -0.18rem;\n  left: 0;\n}\n.withdraw .withdrawcontent .price {\n  padding-left: 0.23rem;\n  border-radius: 0.15rem;\n  box-shadow: 0.04rem 0.04rem 0.08rem 0.05rem #e6dfd7;\n  background: #fff;\n}\n.withdraw .withdrawcontent .price .top {\n  display: flex;\n  height: 1.1rem;\n  align-items: center;\n  font-size: 0.28rem;\n  padding-left: 0.15rem;\n  color: #555;\n}\n.withdraw .withdrawcontent .price .top:nth-child(1) {\n  border-bottom: 0.02rem solid #ffe7c0;\n}\n.withdraw .withdrawcontent .price .top span {\n  margin-right: 0.3rem;\n}\n.withdraw .withdrawcontent .fee {\n  height: 0.64rem;\n  line-height: 0.64rem;\n  padding-left: 0.32rem;\n  font-size: 0.22rem;\n}\n.withdraw .withdrawcontent .company {\n  display: flex;\n  height: 1.1rem;\n  align-items: center;\n  font-size: 0.28rem;\n  padding-left: 0.38rem;\n  border-radius: 0.15rem;\n  box-shadow: 0.04rem 0.04rem 0.08rem 0.05rem #e6dfd7;\n  background: #fff;\n}\n.withdraw .withdrawcontent .company span {\n  margin-right: 0.3rem;\n}\n.withdraw .withdrawcontent .day span {\n  color: #f89c47;\n}\n.withdraw .withdrawcontent .picker {\n  padding: 0.36rem 0.1rem 0.36rem ;\n  background: #fff;\n  border-radius: 0.15rem;\n  box-shadow: 0.04rem 0.04rem 0.08rem 0.05rem #e6dfd7;\n  display: flex;\n  justify-content: space-between;\n}\n.withdraw .withdrawcontent .picker > div {\n  width: 2.02rem;\n  height: 1.40rem;\n  overflow: hidden;\n  position: relative;\n}\n.withdraw .withdrawcontent .picker > div input {\n  width: 200px;\n  height: 200px;\n  z-index: 10;\n}\n.withdraw .withdrawcontent .picker > div img {\n  width: 100px !important;\n  height: 70px !important;\n}\n.withdraw .withdrawcontent .sub {\n  padding: 0.7rem 0.48rem 0.58rem;\n}\n.withdraw .withdrawcontent .sub input {\n  height: 0.86rem;\n  line-height: 0.86rem;\n  background: #fa9b47;\n  border-radius: 0.15rem;\n  width: 100%;\n  border: 0;\n  color: #ffffff;\n  font-size: 0.34rem;\n}\n.withdraw .withdrawcontent .sub div {\n  display: flex;\n  align-items: center;\n  height: 0.62rem;\n  font-size: 0.26rem;\n}\n.withdraw .withdrawcontent .sub div a {\n  color: #f89c47;\n  font-size: 0.26rem;\n}\n.withdraw .withdrawcontent .sub div p {\n  margin-left: 0.15rem;\n}\n.withdraw .withdrawcontent .sub div input {\n  width: 0.27rem;\n  height: 0.27rem;\n}\n.am-image-picker-list .am-image-picker-upload-btn {\n  border: 1px solid #f89c47;\n}\n.am-image-picker-list .am-image-picker-upload-btn:before,\n.am-image-picker-list .am-image-picker-upload-btn:after {\n  background-color: #f89c47;\n}\n.am-image-picker-list .am-image-picker-upload-btn:before,\n.am-image-picker-list .am-image-picker-upload-btn::before {\n  background-color: #f89c47;\n}\n.am-image-picker-item-content {\n  height: 1.55rem !important;\n  width: 1.55rem !important;\n  background-repeat: round !important;\n  background-size: cover !important;\n}\n.modal {\n  position: fixed;\n  width: 100%;\n  z-index: 1000;\n  height: 100%;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background: rgba(0, 0, 0, 0.8);\n}\n.modal .con {\n  width: 5.46rem;\n  position: absolute;\n  height: 6.46rem;\n  left: 50%;\n  margin-left: -2.73rem;\n  background: #fff;\n  border-radius: 0.15rem;\n  top: 50%;\n  transform: translateY(-50%);\n}\n.modal .con .top {\n  padding: 0.46rem 0.28rem 0.5rem;\n}\n.modal .con .top .top-1 {\n  height: 0.62rem;\n  line-height: 0.62rem;\n  font-size: 0.3rem;\n  color: #fff;\n  text-align: center;\n  background: #fa9b47;\n  border-radius: 0.31rem;\n}\n.modal .con .top .top-2 {\n  height: 0.88rem;\n  display: flex;\n  align-items: center;\n}\n.modal .con .top .top-2 .ti1 {\n  width: 0.62rem;\n  height: 0.01rem;\n}\n.modal .con .top .top-2 .ti2 {\n  flex: 1;\n  text-align: center;\n  color: #7f7f7f;\n  font-size: 0.24rem;\n}\n.modal .con .top .top-3 {\n  height: 1.3rem;\n  padding: 0.22rem 0 0.5rem;\n  box-sizing: border-box;\n  display: flex;\n}\n.modal .con .top .top-3 .ti1 {\n  height: 0.58rem;\n  line-height: 0.58rem;\n  color: #fa9b47;\n  font-size: 0.75rem;\n  margin-left: 1.52rem;\n}\n.modal .con .top .top-3 .ti2 {\n  font-size: 0.22rem;\n  color: #eb5f1c;\n}\n.modal .con .top .top_4 {\n  height: 1.08rem;\n  display: flex;\n  align-items: center;\n}\n.modal .con .top .top_4 .ti1 {\n  width: 1.78rem;\n}\n.modal .con .top .top_4 .ti2 {\n  width: 0.01rem;\n  height: 0.45rem;\n}\n.modal .con .top .top_4 p {\n  height: 0.52rem;\n  line-height: 0.52rem;\n  text-align: center;\n  font-size: 0.22rem;\n  color: #555555;\n}\n.modal .con .top .top_5 {\n  height: 0.36rem;\n  font-size: 0.22rem;\n}\n.modal .con .top .top_5 > div {\n  height: 0.36rem;\n  display: flex;\n  align-items: center;\n}\n.modal .con .top .top_5 > div label {\n  display: flex;\n  align-items: center;\n}\n.modal .con .top .top_5 > div label div {\n  width: 0.23rem;\n  height: 0.23rem;\n}\n.modal .con .top .top_5 > div label input {\n  opacity: 0;\n}\n.modal .con .bottom {\n  height: 1.4rem;\n  display: flex;\n  align-items: center;\n  padding: 0 0.42rem;\n  justify-content: space-between;\n}\n.modal .con .bottom div {\n  width: 1.98rem;\n  height: 0.7rem;\n  line-height: 0.7rem;\n  font-size: 0.3rem;\n  color: #fff;\n  text-align: center;\n  background: #eb5f1c;\n  border-radius: 0.35rem;\n}\n.modal .con .bottom .left {\n  color: #646464;\n  background: #fff;\n}\n.am-modal-header {\n  width: auto;\n  height: auto;\n  background: #fff;\n  position: absolute;\n  top: 0;\n  left: 50%;\n  transform: translate(-50%);\n  padding: 10px 15px 15px;\n  font-weight: 800;\n}\n.am-modal-body {\n  padding-top: 20px !important;\n  text-align: center;\n}\n.am-modal-body p {\n  text-align: center;\n}\n.am-modal-body img {\n  width: 100px;\n  margin: 0 auto;\n}\n#search {\n  position: fixed;\n  padding-top: 200px;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  z-index: 1000;\n  background: rgba(0, 0, 0, 0.8);\n}\n#search .con {\n  padding-top: 1rem;\n  position: absolute;\n  height: 4rem;\n  left: 0;\n  bottom: 4rem;\n  width: 100%;\n  background: #fff;\n}\n#search .con .small {\n  width: 0.25rem;\n  height: 0.26rem;\n  position: absolute;\n  right: 0.4rem;\n  top: 0.3rem;\n}\n#search .con .title1 {\n  height: 0.84rem;\n  line-height: 0.84rem;\n  padding-left: 0.66rem;\n  color: #555555;\n  font-size: 0.3rem;\n}\n#search .con .serbox {\n  height: 0.8rem;\n  border: 0.01rem solid #d2d6de;\n  display: flex;\n  align-items: center;\n  background: #f9f9f9;\n  width: 6.12rem;\n  justify-content: space-between;\n  margin: 0 auto;\n  border-radius: 0.12rem;\n}\n#search .con .serbox input {\n  margin-left: 0.2rem;\n  height: 0.7rem;\n  width: 3.9rem;\n  border: 0;\n  outline: none;\n  background: #f9f9f9;\n}\n#search .con .serbox div {\n  width: 1.9rem;\n  height: 0.8rem;\n  overflow: hidden;\n}\n#search .con .serbox div .am-list-item {\n  opacity: 0;\n}\n", ""]);
+exports.push([module.i, ".wd_top {\n  width: 100%;\n  height: 4.16rem;\n  text-align: center;\n  position: relative;\n}\n.wd_top p {\n  font-size: 0.8rem;\n  line-height: 4.16rem;\n  color: #fff;\n}\n.wd_top .wd_topw {\n  width: 2.33rem;\n  height: 0.58rem;\n  background: #fb752a;\n  border-radius: 0.1rem;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, 0.75rem);\n  line-height: 0.58rem;\n  color: #fff;\n}\n.withdraw {\n  padding: 0.88rem 0 0.98rem;\n  background-color: #f9f9f9;\n  color: #555555;\n}\n.withdraw .am-list-item .am-input-control input {\n  color: #555;\n}\n.withdraw .am-list-item {\n  background: none;\n}\n.withdraw .withdrawcontent {\n  padding: 0rem 0.29rem 0 0.31rem;\n}\n.withdraw .withdrawcontent .title {\n  background-color: #fff;\n  height: 1.5rem;\n  border-radius: 0.15rem;\n  padding: 0.51rem 0.2rem 0;\n  box-sizing: border-box;\n  box-shadow: 0.04rem 0.04rem 0.1rem 0.05rem #e6dfd7;\n}\n.withdraw .withdrawcontent .title .title_con {\n  height: 0.48rem;\n  line-height: 0.48rem;\n  display: flex;\n  font-size: 0.34rem;\n}\n.withdraw .withdrawcontent .title .title_con .ti {\n  margin-top: 0.08rem;\n  display: block;\n  width: 0.31rem;\n  height: 0.32rem;\n}\n.withdraw .withdrawcontent .title .title_con span:nth-child(2) {\n  margin-left: 0.2rem;\n  color: #565656;\n}\n.withdraw .withdrawcontent .title .title_con span:nth-child(3) {\n  color: #f89c47;\n}\n.withdraw .withdrawcontent .tip {\n  height: 1.1rem;\n  line-height: 1.1rem;\n  position: relative;\n  padding-left: 0.2rem;\n  font-size: 0.32rem;\n  font-weight: 400;\n  margin-top: 0.3rem;\n}\n.withdraw .withdrawcontent .tip i {\n  display: block;\n  width: 0.12rem;\n  height: 0.36rem;\n  position: absolute;\n  top: 50%;\n  margin-top: -0.18rem;\n  left: 0;\n}\n.withdraw .withdrawcontent .price {\n  padding-left: 0.23rem;\n  border-radius: 0.15rem;\n  box-shadow: 0.04rem 0.04rem 0.08rem 0.05rem #e6dfd7;\n  background: #fff;\n}\n.withdraw .withdrawcontent .price .top {\n  display: flex;\n  height: 1.1rem;\n  align-items: center;\n  font-size: 0.28rem;\n  padding-left: 0.15rem;\n  color: #555;\n}\n.withdraw .withdrawcontent .price .top:nth-child(1) {\n  border-bottom: 0.02rem solid #ffe7c0;\n}\n.withdraw .withdrawcontent .price .top span {\n  margin-right: 0.2rem;\n}\n.withdraw .withdrawcontent .fee {\n  height: 0.64rem;\n  line-height: 0.64rem;\n  padding-left: 0.32rem;\n  font-size: 0.22rem;\n}\n.withdraw .withdrawcontent .company {\n  display: flex;\n  height: 1.1rem;\n  align-items: center;\n  font-size: 0.28rem;\n  padding-left: 0.38rem;\n  border-radius: 0.15rem;\n  box-shadow: 0.04rem 0.04rem 0.08rem 0.05rem #e6dfd7;\n  background: #fff;\n}\n.withdraw .withdrawcontent .company span {\n  margin-right: 0.3rem;\n}\n.withdraw .withdrawcontent .day span {\n  color: #f89c47;\n}\n.withdraw .withdrawcontent .picker {\n  padding: 0.36rem 0.1rem 0.36rem ;\n  background: #fff;\n  border-radius: 0.15rem;\n  box-shadow: 0.04rem 0.04rem 0.08rem 0.05rem #e6dfd7;\n  display: flex;\n  justify-content: space-between;\n}\n.withdraw .withdrawcontent .picker > div {\n  width: 2.02rem;\n  height: 1.40rem;\n  overflow: hidden;\n  position: relative;\n}\n.withdraw .withdrawcontent .picker > div input {\n  width: 200px;\n  height: 200px;\n  z-index: 10;\n}\n.withdraw .withdrawcontent .picker > div img {\n  width: 2.02rem !important;\n  height: 1.4rem !important;\n}\n.withdraw .withdrawcontent .sub {\n  padding: 0.7rem 0.48rem 0.58rem;\n}\n.withdraw .withdrawcontent .sub input {\n  height: 0.86rem;\n  line-height: 0.86rem;\n  background: #fa9b47;\n  border-radius: 0.15rem;\n  width: 100%;\n  border: 0;\n  color: #ffffff;\n  font-size: 0.34rem;\n}\n.withdraw .withdrawcontent .sub div {\n  display: flex;\n  align-items: center;\n  height: 0.62rem;\n  font-size: 0.26rem;\n}\n.withdraw .withdrawcontent .sub div a {\n  color: #f89c47;\n  font-size: 0.26rem;\n}\n.withdraw .withdrawcontent .sub div p {\n  margin-left: 0.15rem;\n}\n.withdraw .withdrawcontent .sub div input {\n  width: 0.27rem;\n  height: 0.27rem;\n}\n.am-image-picker-list .am-image-picker-upload-btn {\n  border: 1px solid #f89c47;\n}\n.am-image-picker-list .am-image-picker-upload-btn:before,\n.am-image-picker-list .am-image-picker-upload-btn:after {\n  background-color: #f89c47;\n}\n.am-image-picker-list .am-image-picker-upload-btn:before,\n.am-image-picker-list .am-image-picker-upload-btn::before {\n  background-color: #f89c47;\n}\n.am-image-picker-item-content {\n  height: 1.55rem !important;\n  width: 1.55rem !important;\n  background-repeat: round !important;\n  background-size: cover !important;\n}\n.modal {\n  position: fixed;\n  width: 100%;\n  z-index: 1000;\n  height: 100%;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background: rgba(0, 0, 0, 0.8);\n}\n.modal .con {\n  width: 5.46rem;\n  position: absolute;\n  height: 6.46rem;\n  left: 50%;\n  margin-left: -2.73rem;\n  background: #fff;\n  border-radius: 0.15rem;\n  top: 50%;\n  transform: translateY(-50%);\n}\n.modal .con .top {\n  padding: 0.46rem 0.28rem 0.5rem;\n}\n.modal .con .top .top-1 {\n  height: 0.62rem;\n  line-height: 0.62rem;\n  font-size: 0.3rem;\n  color: #fff;\n  text-align: center;\n  background: #fa9b47;\n  border-radius: 0.31rem;\n}\n.modal .con .top .top-2 {\n  height: 0.88rem;\n  display: flex;\n  align-items: center;\n}\n.modal .con .top .top-2 .ti1 {\n  width: 0.62rem;\n  height: 0.01rem;\n}\n.modal .con .top .top-2 .ti2 {\n  flex: 1;\n  text-align: center;\n  color: #7f7f7f;\n  font-size: 0.24rem;\n}\n.modal .con .top .top-3 {\n  height: 1.3rem;\n  padding: 0.22rem 0 0.5rem;\n  box-sizing: border-box;\n  display: flex;\n}\n.modal .con .top .top-3 .ti1 {\n  height: 0.58rem;\n  line-height: 0.58rem;\n  color: #fa9b47;\n  font-size: 0.75rem;\n  margin-left: 1.52rem;\n}\n.modal .con .top .top-3 .ti2 {\n  font-size: 0.22rem;\n  color: #eb5f1c;\n}\n.modal .con .top .top_4 {\n  height: 1.08rem;\n  display: flex;\n  align-items: center;\n}\n.modal .con .top .top_4 .ti1 {\n  width: 1.78rem;\n}\n.modal .con .top .top_4 .ti2 {\n  width: 0.01rem;\n  height: 0.45rem;\n}\n.modal .con .top .top_4 p {\n  height: 0.52rem;\n  line-height: 0.52rem;\n  text-align: center;\n  font-size: 0.22rem;\n  color: #555555;\n}\n.modal .con .top .top_5 {\n  height: 0.36rem;\n  font-size: 0.22rem;\n}\n.modal .con .top .top_5 > div {\n  height: 0.36rem;\n  display: flex;\n  align-items: center;\n}\n.modal .con .top .top_5 > div label {\n  display: flex;\n  align-items: center;\n}\n.modal .con .top .top_5 > div label div {\n  width: 0.23rem;\n  height: 0.23rem;\n}\n.modal .con .top .top_5 > div label input {\n  opacity: 0;\n}\n.modal .con .bottom {\n  height: 1.4rem;\n  display: flex;\n  align-items: center;\n  padding: 0 0.42rem;\n  justify-content: space-between;\n}\n.modal .con .bottom div {\n  width: 1.98rem;\n  height: 0.7rem;\n  line-height: 0.7rem;\n  font-size: 0.3rem;\n  color: #fff;\n  text-align: center;\n  background: #eb5f1c;\n  border-radius: 0.35rem;\n}\n.modal .con .bottom .left {\n  color: #646464;\n  background: #fff;\n}\n.am-modal-header {\n  width: auto;\n  height: auto;\n  background: #fff;\n  position: absolute;\n  top: 0;\n  left: 50%;\n  transform: translate(-50%);\n  padding: 10px 15px 15px;\n  font-weight: 800;\n}\n.am-modal-body {\n  padding-top: 20px !important;\n  text-align: center;\n}\n.am-modal-body p {\n  text-align: center;\n}\n.am-modal-body img {\n  width: 100px;\n  margin: 0 auto;\n}\n#search {\n  position: fixed;\n  padding-top: 200px;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  z-index: 1000;\n  background: rgba(0, 0, 0, 0.8);\n}\n#search .con {\n  padding-top: 1rem;\n  position: absolute;\n  height: 4rem;\n  left: 0;\n  bottom: 4rem;\n  width: 100%;\n  background: #fff;\n}\n#search .con .small {\n  width: 0.25rem;\n  height: 0.26rem;\n  position: absolute;\n  right: 0.4rem;\n  top: 0.3rem;\n}\n#search .con .title1 {\n  height: 0.84rem;\n  line-height: 0.84rem;\n  padding-left: 0.66rem;\n  color: #555555;\n  font-size: 0.3rem;\n}\n#search .con .serbox {\n  height: 0.8rem;\n  border: 0.01rem solid #d2d6de;\n  display: flex;\n  align-items: center;\n  background: #f9f9f9;\n  width: 6.12rem;\n  justify-content: space-between;\n  margin: 0 auto;\n  border-radius: 0.12rem;\n}\n#search .con .serbox input {\n  margin-left: 0.2rem;\n  height: 0.7rem;\n  width: 3.9rem;\n  border: 0;\n  outline: none;\n  background: #f9f9f9;\n}\n#search .con .serbox div {\n  width: 1.9rem;\n  height: 0.8rem;\n  overflow: hidden;\n}\n#search .con .serbox div .am-list-item {\n  opacity: 0;\n}\n", ""]);
 
 // exports
 
@@ -60940,7 +60948,7 @@ exports.default = React.createClass({
         });
     },
     submit: function submit() {
-        console.log(this.state);
+        console.log(this.state.value[0]);
         var reg = new RegExp("^[0-9]*$");
         console.log(!reg.test(this.state.policyAmount));
         if (!/^[0-9]{1,6}$/g.test(this.state.policyAmount)) {
@@ -61025,7 +61033,7 @@ exports.default = React.createClass({
         data.append("borrowType", "20");
         data.append("channelId", "1");
         data.append("client", "h5");
-        data.append("insuranceCompany", this.state.insuranceCompany);
+        data.append("insuranceCompany", this.state.value[0]);
         data.append("couponNo", listid);
         data.append("policyAmount", this.state.policyAmount);
         data.append("policyImg", this.state.upimg1);
@@ -64052,7 +64060,7 @@ exports.default = React.createClass({
                             React.createElement(
                                 "div",
                                 { className: "already-list1a2" },
-                                "\u5B9E\u9645\u5230\u8D26\uFF08\u5143\uFF09"
+                                "\u5B9E\u9645\u5230\u8D26(\u5143)"
                             )
                         )
                     ),

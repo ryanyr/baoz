@@ -323,17 +323,17 @@ export default React.createClass({
                     <div className="wrap">
                         <div className="price">
                             <div className="top">
-                                <span>资格证书号码</span><InputItem
+                                <span>资格证书</span><InputItem
                                 value={this.state.certificateNo}
                                 onChange={(e)=>{this.setState({
                                     certificateNo:e})}} 
                                 style={{height:"0.52rem",fontSize:"0.28rem"}}
-                                placeholder="资格证书号码" />
+                                placeholder="请输入资格证书号码" />
                             </div>
                             <div className="top">
                                 <span>所属公司</span>
                                 <div
-                                    style={{fontSize:"0.28rem",marginLeft:"0.25rem"}}
+                                    style={{fontSize:"0.28rem",flex:"1"}}
                                     onClick={()=>{
                                         this.setState({
                                             showsearch:true

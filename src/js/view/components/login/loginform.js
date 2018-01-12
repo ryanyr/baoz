@@ -186,7 +186,7 @@ export default React.createClass({
             }
         }).catch(function(e) {
                 console.log("Oops, error");
-                // Toast.info("服务器响应超时", 2);
+                Toast.info("",2);
         });     
     }else{
         Toast.info('请勾选注册协议', 1);

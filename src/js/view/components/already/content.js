@@ -32,7 +32,7 @@ export default React.createClass({
             .then((data)=>{
             console.log(data)
             if(data.code=="200"){
-                that.setState(data.data)
+                that.setState(data.data[0])
             }else if(data.code=="410"){
                 Toast.info("您的账号已在其他设备登录", 2);
                 setTimeout(function(){
@@ -55,11 +55,11 @@ export default React.createClass({
     render() {
         return (
             <div className="already-box">
-                <div className="already-top" style={{background:"url(images/images/already-bga.png)",backgroundSize:"100%"}}>
+                <div className="already-top" style={{background:"url(images/images/already-bga.png) no-repeat",backgroundSize:"100% 100%"}}>
                     <div className="already-head">还款完成时间 {this.state.realRepayTime.split(" ")[0]}</div>
                     <div className="already-min1">已减免{this.state.remitAmount}元</div>
                     <div className="already-min2"><span className="already-min2a">{this.state.repayAmount}.</span><span className="already-min2b">00</span></div>
-                    <div className="already-min3">应还金额（元）</div>
+                    <div className="already-min3">应还金额(元)</div>
                     <div className="already-list">
                         <div className="already-list1">
                             <div className="already-list1a">
@@ -71,7 +71,7 @@ export default React.createClass({
                             </div>
                             <div className="already-list1c">
                                 <div className="already-list1a1">{this.state.realAmount}<span className="already-list1a1a">.00元</span></div>
-                                <div className="already-list1a2">实际到账（元）</div>
+                                <div className="already-list1a2">实际到账(元)</div>
                             </div>
                         </div>
                         <div className="already-list2">

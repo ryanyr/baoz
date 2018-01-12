@@ -60,6 +60,10 @@ export default React.createClass({
                             <span>手机号</span>
                             <span>{this.state.phone}</span>
                         </div>
+                        <div className="border_item">
+                            <span>邮箱</span>
+                            <span>{this.state.email}</span>
+                        </div>
                 </div>
                 <div className="tip">
                     <i

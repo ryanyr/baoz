@@ -144,9 +144,10 @@ export default React.createClass({
         });       
     },  
     submit(){
-        console.log(this.state)
+        console.log(this.state.unuse);
+        console.log(this.state.money);
+        console.log(this.state.money>this.state.unuse)
         var reg = new RegExp("^[0-9]*$");
-        console.log(!reg.test(this.state.policyAmount))
         if(!/^[0-9]{1,6}$/g.test(this.state.policyAmount)){
             Toast.info("请输入正确的保单金额", 2)
         }
@@ -159,9 +160,11 @@ export default React.createClass({
 
         if(this.state.money==""){//提交申请
             Toast.info("请输入提现金额", 2)
-        }else if(this.state.money>5000||this.state.money<100){//提交申请
+        }
+        else if(this.state.money>5000||this.state.money<100){//提交申请
             Toast.info("提现金额请输入100-5000以内额度", 2)
-        }else if(this.state.policyAmount/this.state.money<2){
+        }
+        else if(this.state.policyAmount/this.state.money<2){
             Toast.info("提现金额不得超过保单金额的一半", 2)
         }
         else if(!this.state.upimg1){
@@ -171,7 +174,8 @@ export default React.createClass({
             console.log(this.state.money);
 
             Toast.info("提现金额不得超过保单金额", 2)
-        }else if(this.state.money>this.state.unuse){
+        }
+        else if(this.state.money-this.state.unuse>0){
             Toast.info("提现金额不得大于剩余额度", 2)
         }
         else{
@@ -229,7 +233,7 @@ export default React.createClass({
       data.append("borrowType","20");
       data.append("channelId","1");
       data.append("client","h5");
-      data.append("insuranceCompany",this.state.insuranceCompany);
+      data.append("insuranceCompany",this.state.value[0]);
       data.append("couponNo",listid);
       data.append("policyAmount",this.state.policyAmount);
       data.append("policyImg",this.state.upimg1);
@@ -638,7 +642,7 @@ export default React.createClass({
                                 e=5000
                                 i=100
                             }
-                           
+                            // fee:i
                             this.setState({money:e,fee:i})
                         
                     }
@@ -656,7 +660,7 @@ export default React.createClass({
                 
                 <span style={{width:"1.52rem"}}>承保公司</span>
                 <div
-                style={{fontSize:"0.28rem",marginLeft:"0.25rem"}}
+                style={{fontSize:"0.28rem",flex:1}}
                     onClick={()=>{
                         
                         this.setState({

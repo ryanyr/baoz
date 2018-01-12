@@ -17,14 +17,21 @@ export default React.createClass({
             imgurl3:"images/images/icon_07.jpg",
             upimg1:"",
             upimg2:"",
-            upimg3:""
+            upimg3:"",
+            email:"",
         }
     },
     btn(){
       //保存身份接口
+      var reg=/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/;
         if(!/^[\u4e00-\u9fa5]{2,4}/g.test(this.state.name)){
             Toast.info("请输入正确的用户名", 2);
-        }else if(!this.state.idcard){
+        }else if(!this.state.email){
+            Toast.info("请输入邮箱", 2);
+        }else if(!reg.test(this.state.email)){
+            Toast.info("请输入正确的邮箱", 2);
+        }
+        else if(!this.state.idcard){
             Toast.info("请输入身份证号码", 2);
         }else if(!idcard(this.state.idcard)){
             Toast.info("请输入正确的身份号码", 2);
@@ -40,6 +47,7 @@ export default React.createClass({
         data.append("livingImg",this.state.upimg3);
         data.append("idNo",this.state.idcard);
         data.append("phone",this.state.phone);
+        data.append("email",this.state.email);
         data.append("realName",this.state.name);
         data.append("userId",localStorage.userId);
         fetch(url.url+"/api/act/mine/userInfo/save.htm",{
@@ -49,7 +57,7 @@ export default React.createClass({
         method:"POST",body:data})
         .then(r=>r.json())
         .then((data)=>{
-            
+            console.log(data)
             if(data.code=="200"){
                 that.props.step(2)
             }else if(data.code=="400"){
@@ -327,6 +335,17 @@ export default React.createClass({
                             style={{height:"0.52rem",fontSize:"0.28rem"}}
                             placeholder="请输入个人手机号" />
                         </div>
+                        <div className="top">
+                            <span>邮箱</span><InputItem
+                            value={this.state.email}
+                            onChange={(e)=>{
+                                this.setState({
+                                    email:e
+                                })
+                            }}
+                            style={{height:"0.52rem",fontSize:"0.28rem"}}
+                            placeholder="请输入邮箱" />
+                        </div>
                     </div>
                     <div className="tip_2">
                         <i
@@ -348,7 +367,9 @@ export default React.createClass({
                             style={{height:"0.52rem",fontSize:"0.28rem"}}
                             placeholder="请输入身份证号码" />
                         </div>
-                        <div className="top">
+                        <div className="top"
+                            style={{borderBottom:"none"}}
+                        >
                             <span
                                 style={{width:"100%"}}
                             >上传身份证照片</span>

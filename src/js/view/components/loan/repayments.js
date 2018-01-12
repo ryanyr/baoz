@@ -24,8 +24,9 @@ export default React.createClass({
           changelist:[true,false],
           selectedStores:[],
           changelist:true,
-          orders:["","","","",""],
+          orders:["","","","",""],//订单id
           moneylist:["","","","",""],
+          ordernum:["","","","",""],//订单号  
         //   li1:true
         }
     },
@@ -54,7 +55,8 @@ export default React.createClass({
             checkall:!this.state.checkall,
             orders:[],
             moneylist:[],
-            allmoney:0
+            allmoney:0,
+            ordernum:[],
         })
         setTimeout(()=>{
             if(e.target.checked){//当全选框的状态是true时,把所有的状态都改为true
@@ -70,6 +72,7 @@ export default React.createClass({
                 for(var i=0;i<this.state.list.length;i++){//再把订单号和每笔订单的金额都加进状态
                     this.state.moneylist.push(this.state.list[i].repayAmount);
                     this.state.orders.push(this.state.list[i].orderId);
+                    this.state.ordernum.push(this.state.list[i].orderNo)
                     allmoney+=this.state.list[i].repayAmount  //计算总金额             
                 }
                 
@@ -86,7 +89,8 @@ export default React.createClass({
                     li4:false,
                     orders:[],
                     moneylist:[],
-                    allmoney:0
+                    allmoney:0,
+                    orderNo:[]
                 }) 
             }
         },100)
@@ -154,7 +158,7 @@ export default React.createClass({
                 Toast.info("服务器响应超时", 2);
         });
     },
-    changelist(e,ind,index){
+    changelist(e,ind,index){//选择列表
         var li=e.target.value;
         if(index==0){
             this.setState({
@@ -186,6 +190,7 @@ export default React.createClass({
             
             this.state.orders[index]=ind.orderId;//分别在数组加入金额和订单号
             this.state.moneylist[index]=ind.repayAmount;
+            this.state.ordernum[index]=ind.orderNo
             all++;
             this.setState({
                 allmoney:this.state.allmoney+ind.repayAmount*1
@@ -198,7 +203,8 @@ export default React.createClass({
             
         }else{
             this.state.orders[index]="";
-            this.state.moneylist[index]=""
+            this.state.moneylist[index]="";
+            this.state.ordernum[index]="";
             this.setState({
                 allmoney:this.state.allmoney-ind.repayAmount*1
             })
@@ -209,53 +215,63 @@ export default React.createClass({
         };    
     },
     allpay(){//批量还款
-        var newlist=[]
+        console.log(this.state)
+        var newlist=[];
+        var numlist=[];
         for(var i=0;i<this.state.orders.length;i++){
             if(this.state.orders[i]>0){
                 newlist.push(this.state.orders[i])
             }
         }
+        for(var i=0;i<this.state.ordernum.length;i++){
+            if(this.state.ordernum[i].length>0){
+                numlist.push(this.state.ordernum[i])
+            }
+        }
+        console.log(numlist)
         let orders=newlist.join(",");
+        let numli=numlist.join(",");
         if(this.state.allmoney=="0"){
             Toast.info("您还没有选择要还款的订单", 2);
         }else{
-            var data=new FormData();//还款
-            data.append("orderId",orders);
-            data.append("userId",localStorage.userId);
-            fetch(url.url+"/api/act/pay/repayment/repay.htm",{
-                headers:{
-                    token:localStorage.Token
-                },
-                method:"POST",body:data})
-                .then(r=>r.json())
-                .then((data)=>{
-                    console.log(data)
-                  switch(data.code){
-                    case 408:    Toast.info('系统响应超时', 1);
-                                    break;
-                    case 410:    Toast.info('用户信息过期，请重新登录', 1);
-                                    hashHistory.push("login");
-                                    break;
-                    case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
-                                    hashHistory.push("login");
-                                    break;
-                    case 500:    Toast.info('服务器错误', 1);
-                                    break;
-                    case 150004:    Toast.info('您已还款成功', 1);
-                                    window.location.reload();
-                                    store.dispatch({
-                                        type:"INFO",
-                                        data:3
-                                    })
-                                    // hashHistory.push("loan")
-                                    break;
-                    case 150005:    Toast.info('还款失败，请稍后再次尝试', 1);
-                                    break;
-                    case 150006:    Toast.info('还款服务超时，请稍后再次尝试', 1);
-                                    break;
-                    default:        break;
-                    }                     
-                })
+            hashHistory.push({pathname:"batchrepayment",query:{order:orders,orderid:numli,all:this.state.allmoney}})
+            // var data=new FormData();//还款
+            // data.append("orderId",orders);
+            // data.append("userId",localStorage.userId);
+            // fetch(url.url+"/api/act/pay/repayment/repay.htm",{
+            //     headers:{
+            //         token:localStorage.Token
+            //     },
+            //     method:"POST",body:data})
+            //     .then(r=>r.json())
+            //     .then((data)=>{
+            //         console.log(data)
+            //       switch(data.code){
+            //         case 408:    Toast.info('系统响应超时', 1);
+            //                         break;
+            //         case 410:    Toast.info('用户信息过期，请重新登录', 1);
+            //                         hashHistory.push("login");
+            //                         break;
+            //         case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+            //                         hashHistory.push("login");
+            //                         break;
+            //         case 500:    Toast.info('服务器错误', 1);
+            //                         break;
+            //         case 150004:    Toast.info('您已还款成功', 1);
+            //                         window.location.reload();
+            //                         store.dispatch({
+            //                             type:"INFO",
+            //                             data:3
+            //                         })
+            //                         // hashHistory.push("loan")
+            //                         break;
+            //         case 150005:    Toast.info('还款失败，请稍后再次尝试', 1);
+            //                         break;
+            //         case 150006:    Toast.info('还款服务超时，请稍后再次尝试', 1);
+            //                         break;
+            //         default:        break;
+            //         }                     
+            //     })
         }
     },
     render(){

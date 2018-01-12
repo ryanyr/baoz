@@ -33,7 +33,7 @@ import Pmh from "./view/router/pmh/pmhRouter";//信用卡还款
 import Ddd from "./view/router/ddd/dd";
 import Borrow from "./view/router/protocol/borrow";//借款协议
 import Auth from "./view/router/protocol/auth";//授信协议
-
+import Batchrepayment from "./view/router/batch-repayment/batch-repaymentRouter";//批量还款
 export default React.createClass({
     enterMy(){
         window.scrollTo(0,0);
@@ -79,7 +79,8 @@ export default React.createClass({
                     <Route path="ddd" component={Ddd} onEnter={this.enterMy}/>
                     <Route path="usecoupon" component={Usecoupon} onEnter={this.enterMy}/> 
                     <Route path="borrow" component={Borrow} onEnter={this.enterMy}/> 
-                    <Route path="auth" component={Auth} onEnter={this.enterMy}/>                      
+                    <Route path="auth" component={Auth} onEnter={this.enterMy}/>
+                    <Route path="batchrepayment" component={Batchrepayment} onEnter={this.enterMy}/>                         
                 </Route>
             </Router>
         )

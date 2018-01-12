@@ -46,7 +46,7 @@ export default React.createClass({
                 default:        break;
                 }    
             if(data.code=="200"){
-                that.setState(data.data)
+                that.setState(data.data[0])
             }
                 
             }).catch(function(e) {
@@ -58,7 +58,7 @@ export default React.createClass({
     render(){
         return (
             <div className="already-boxs">
-            <div className="already-topk" style={{background:"url(images/images/txing-bg-1.png)",backgroundSize:"100%"}}>
+            <div className="already-topk" style={{background:"url(images/images/txing-tool.png) no-repeat",backgroundSize:"100% 100%"}}>
                 <div className="txing-top">
                     <p
                         style={{width:"80%",margin:"0 auto",lineHeight:"0.6rem"}}
@@ -77,7 +77,7 @@ export default React.createClass({
                         </div>
                         <div className="already-list1c">
                             <div className="already-list1a1">{this.state.realAmount}<span className="already-list1a1a">.00元</span></div>
-                            <div className="already-list1a2">实际到账（元）</div>
+                            <div className="already-list1a2">实际到账(元)</div>
                         </div>
                     </div>
                     <div className="already-list2">

@@ -84,7 +84,7 @@ export default React.createClass({
                                 break;
                 default:        break;
                 }     
-            that.setState(data.data)
+            that.setState(data.data[0])
                 
             }).catch(function(e) {
                 console.log("Oops, error");
@@ -98,7 +98,7 @@ export default React.createClass({
                 {/* <div className="already-head">还款完成时间 11</div> */}
                 <div className="already-min1">已减免{this.state.remitAmount}元</div>
                 <div className="already-min2"><span className="already-min2a">{this.state.repayAmount}.</span><span className="already-min2b">00</span></div>
-                <div className="already-min3">应还金额（元）</div>
+                <div className="already-min3">应还金额(元)</div>
                 <div className="already-list">
                     <div className="already-list1">
                         <div className="already-list1a">
@@ -110,7 +110,7 @@ export default React.createClass({
                         </div>
                         <div className="already-list1c">
                             <div className="already-list1a1">{this.state.realAmount}<span className="already-list1a1a">.00元</span></div>
-                            <div className="already-list1a2">实际到账（元）</div>
+                            <div className="already-list1a2">实际到账(元)</div>
                         </div>
                     </div>
                     <div className="already-list2">
