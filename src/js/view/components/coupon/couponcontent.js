@@ -22,8 +22,7 @@ export default React.createClass({
         },
         method:"POST",body:data})
         .then(r=>r.json())
-        .then((data)=>{
-          console.log(data)  
+        .then((data)=>{ 
             that.setState({
               coupon:data.data.list
             })
@@ -43,7 +42,6 @@ export default React.createClass({
           method:"POST",body:newdata})
           .then(r=>r.json())
           .then((data)=>{
-            console.log(data)
               if(data.code=="200"){
                 that.setState({
                   usedcoupon:data.data.list
@@ -51,9 +49,19 @@ export default React.createClass({
               }else if(data.code=="411"){
                 Toast.info("登录已失效,请重新登录", 2);
                 setTimeout(function(){
+                    localStorage.clear();
+                    sessionStorage.clear();
                     hashHistory.push("login")
                 },2000) 
-              }else if(data.code=="408"){
+              }else if(data.code=="400"){
+                Toast.info("用户已在其他设备登录，请重新登录", 2);
+                setTimeout(function(){
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    hashHistory.push("login")
+                },2000) 
+              }
+              else if(data.code=="408"){
                 Toast.info("系统响应超时", 2);
               }else if(data.code=="500"){
                 Toast.info("系统错误", 2);
@@ -70,21 +78,17 @@ export default React.createClass({
     render(){
         const showuse=this.state.page==1?"":"none";
         const showused=this.state.page==2?"":"none";
-        var imgleft=this.state.page==1?"url(images/images/money_1.png) 0% 0% /100%":"url(images/images/money_2.png) 0% 0% /100%";
-        var imgright=this.state.page==2?"url(images/images/money_4.png) 0% 0% /100%":"url(images/images/money_3.png) 0% 0% /100%";
         return (
             <div className="content">
               <div className="title">
                 <div className={this.state.page==1?"active":""} onClick={()=>{this.setState({page:1})}}>
-                  <i
-                  style={{background:imgleft,width:"0.52rem",height:"0.35rem"}}
-                  ></i>
+                  <img src={this.state.page==1?"images/images/money_1.png":"images/images/money_2.png"} 
+                    style={{width:"0.52rem",height:"0.35rem"}}
+                  />
                   <span>可使用</span>
                 </div>
                 <div className={this.state.page==2?"active":""} onClick={()=>{this.setState({page:2})}}>
-                  <i
-                  style={{background:imgright}}
-                  ></i>
+                  <img src={this.state.page==2?"images/images/money_4.png":"images/images/money_3.png"} />
                   <span>已使用/已过期</span>
                 </div>
               </div>
@@ -132,7 +136,7 @@ export default React.createClass({
                     </div>
                     <div className="right">
                       <p>{ind.couponName}</p>
-                      <p>有效期至：{ind.validEndTime}</p>
+                      <p>有效期至：{ind.validEndTime.split(" ")[0]}</p>
                     </div>
                   </div>
                 </div>  

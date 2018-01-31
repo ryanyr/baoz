@@ -42,14 +42,18 @@ export default React.createClass({
 			  method:"POST",body:data})
 			  .then(r=>r.json())
 			  .then((data)=>{
-                  console.log(data)
+                  
                   switch(data.code){
                     case 408:    Toast.info('系统响应超时', 1);
                                     break;
-                    case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                    case 411:    Toast.info('用户信息过期，请重新登录', 1);
+                                    localStorage.clear();
+                                    sessionStorage.clear();
                                     hashHistory.push("login");
                                     break;
-                    case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                    case 410:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                    localStorage.clear();
+                                    sessionStorage.clear();
                                     hashHistory.push("login");
                                     break;
                     case 500:    Toast.info('系统错误', 1);

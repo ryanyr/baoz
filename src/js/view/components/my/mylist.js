@@ -2,6 +2,7 @@ import {Link,hashHistory,browserHistory} from "react-router";
 import { Modal, Button, WhiteSpace, WingBlank, Toast } from 'antd-mobile';
 import url from "../../config/config";
 import store from "../../../store/store";
+import fetch1 from "fetch-polyfill2";
 const Out=React.createClass({
     getInitialState(){
         return {
@@ -84,21 +85,24 @@ export default React.createClass({
 			var data=new FormData();
 			data.append("userId",localStorage.userId);
 	  
-			fetch(url.url+"/api/act/mine/userInfo/getMyMessage.htm",{
+			fetch1(url.url+"/api/act/mine/userInfo/getMyMessage.htm",{
 			  headers:{
 				  token:localStorage.Token
 			  },
 			  method:"POST",body:data})
 			  .then(r=>r.json())
 			  .then((data)=>{
-                  console.log(data);
                   switch(data.code){
                     case 408:    Toast.info('系统响应超时', 1);
                                     break;
-                    case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                    case 411:    Toast.info('用户信息过期，请重新登录', 1);
+                                    localStorage.clear();
+                                    sessionStorage.clear();
                                     hashHistory.push("login");
                                     break;
-                    case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                    case 410:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                    localStorage.clear();
+                                    sessionStorage.clear();
                                     hashHistory.push("login");
                                     break;
                     case 500:    Toast.info('服务器错误', 1);
@@ -115,6 +119,14 @@ export default React.createClass({
                 console.log("Oops, error");
                 // Toast.info("服务器响应超时", 2);
         });
+    },
+    btn1(){
+        // console.log(1);
+        if(this.state.userInfo=="未完善"){
+            hashHistory.push("information")
+        }else if(this.state.userInfo=="未认证"||this.state.userInfo=="已认证"||this.state.userInfo=="认证过期"||this.state.userInfo=="认证失败"){
+            hashHistory.push("perfect")
+        }
     },
     render(){
         var texts = this.state.liked ? 'none' : 'block';
@@ -142,11 +154,14 @@ export default React.createClass({
                 <div className="info_box">
 
             <div className="operationlist">
-                <Link to={this.state.userInfo=="未完善"?
-                 "information":
+                <Link 
+                onClick={this.btn1}
+                // to={this.state.userInfo=="未完善"?
+                //  "information":
                 
-                "perfect"
-                }>
+                // "perfect"
+                // }
+                >
                     <div className="op_left">
                       <img src="images/images/my_03 (1).gif" />
                     </div>
@@ -156,7 +171,7 @@ export default React.createClass({
                         <span>个人信息</span>
                         <span
                         style={{position:"absolute",width:"1.5rem",fontSize:"0.26rem",color:"#f99b47",left:"3rem"}}
-                        >{this.state.userInfo=="已认证"?"已认证":"未认证"}</span>
+                        >{this.state.userInfo=="已认证"||this.state.userInfo=="认证过期"?"已认证":"未认证"}</span>
                     </div>
                     
                  <div className="op_d"><img src="images/images/daikuan_08.gif" /></div>
@@ -212,7 +227,7 @@ export default React.createClass({
                     >{this.state.invitationCode}</span>
                     </div>
                     
-                 {/* <div className="op_d"><img src="images/images/daikuan_08.gif" /></div> */}
+                 <div className="op_d"><img src="images/images/daikuan_08.gif" /></div>
                 </Link>
             </div>
             {/* <div className="operationlist">

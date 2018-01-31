@@ -17,9 +17,12 @@ export default React.createClass({
                         <div className="lgs_btn"
                             onClick={()=>{
                                 // sessionStorage.info="";//清楚订单裂变session,显示第一页
-                                
+                                sessionStorage.pagenum=1;
+                                sessionStorage.loanlist1="";
+                                sessionStorage.loanlist2="";
+                                sessionStorage.loanlist3="";
                                 hashHistory.push("loan");
-                                window.location.reload();
+                                // window.location.reload();
                             }}
                         >查&nbsp;&nbsp;&nbsp;&nbsp;看</div>
                     </div>

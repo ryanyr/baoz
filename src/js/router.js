@@ -1,4 +1,4 @@
-import {Router,Route,hashHistory,IndexRedirect,browserHistory,IndexRoute} from "react-router";
+import {Router,Route,hashHistory,IndexRedirect,browserHistory,IndexRoute,withRouter,Switch} from "react-router";
 import Rou from "./view/router/router";//跟路由
 import Home from "./view/router/home/homeRouter";//首页
 import My from "./view/router/my/myRouter";//我的
@@ -33,6 +33,7 @@ import Pmh from "./view/router/pmh/pmhRouter";//信用卡还款
 import Ddd from "./view/router/ddd/dd";
 import Borrow from "./view/router/protocol/borrow";//借款协议
 import Auth from "./view/router/protocol/auth";//授信协议
+import Reg from "./view/router/protocol/reg";//注册协议
 import Batchrepayment from "./view/router/batch-repayment/batch-repaymentRouter";//批量还款
 export default React.createClass({
     enterMy(){
@@ -41,7 +42,10 @@ export default React.createClass({
     render:function(){
         return (
             <Router history={hashHistory}>
+            {/* <withRouter> */}
                 <Route path="/" component={Rou} onEnter={this.enterMy}>
+                     <withRouter>
+                
                     <IndexRedirect to="home"/>                   
                     <Route path="home" component={Home} onEnter={this.enterMy}/>
                     <Route path="my" component={My} onEnter={this.enterMy} />
@@ -80,8 +84,11 @@ export default React.createClass({
                     <Route path="usecoupon" component={Usecoupon} onEnter={this.enterMy}/> 
                     <Route path="borrow" component={Borrow} onEnter={this.enterMy}/> 
                     <Route path="auth" component={Auth} onEnter={this.enterMy}/>
-                    <Route path="batchrepayment" component={Batchrepayment} onEnter={this.enterMy}/>                         
+                    <Route path="reg" component={Reg} onEnter={this.enterMy}/>
+                    <Route path="batchrepayment" component={Batchrepayment} onEnter={this.enterMy}/> 
+                    </withRouter>                        
                 </Route>
+                
             </Router>
         )
     }

@@ -12,18 +12,29 @@ export default React.createClass({
             ti5:1,
             ti6:1,
             ti7:1,
-            ti8:["0-3000元/月"]
+            ti8:["0-3000元/月"],
+            showMortgage:true,//是否显示按揭
+            showExtension:false,//是否显示延期
         }
     },
     btn(e){
         //我要赚钱提交接口
-        console.log(this.state);
+        var mortgage=this.state.ti2;//按揭情况
+        var extension=this.state.ti3;//延期情况
         if(/^[1-9]{1}[0-9]{0,5}$/g.test(this.state.num)){
+            if(this.state.ti1=="自持"){
+                extension=null;
+            }else if(this.state.ti1=="租赁"){
+                mortgage=""
+            }else{
+                mortgage="";
+                extension=null;
+            }
         var data=new FormData();
         data.append("accumulationFund",this.state.ti5);
         data.append("carMortgage",this.state.ti4);
-        data.append("houseExtension",this.state.ti3);
-        data.append("houseMortgage",this.state.ti2);
+        data.append("houseExtension",extension);
+        data.append("houseMortgage",mortgage);
         data.append("houseOwnership",this.state.ti1);
         data.append("insuranceInfo",this.state.ti7);
         data.append("loanAmount",this.state.num);
@@ -57,14 +68,12 @@ export default React.createClass({
         return (
             <div className="list_con">
                 <div className="tips">
-                    <i
-                        style={{background:"url(images/images/icon_05.png) no-repeat 0% 0% /100%"}}
-                    ></i>
+                <img src="images/images/icon_05.png" />
                     <span>请输入客户的贷款信息</span>
                 </div>
                 <div className="title">
                     <i
-                        style={{background:"url(images/images/10475463301731984.png) 0% 0% /100%"}}
+                        style={{background:"url(images/images/10475463301731984.png) 0% 0% no-repeat",backgroundSize:"contain"}}
                     ></i>
                     <span
                     >借款金额</span>
@@ -76,9 +85,7 @@ export default React.createClass({
                     />
                 </div>
                 <div className="tips">
-                    <i
-                        style={{background:"url(images/images/icon_05.png) 0% 0% /100%"}}
-                    ></i>
+                <img src="images/images/icon_05.png" />
                     <span>房产信息</span>
                 </div>
                 <div className="list_info">
@@ -87,7 +94,13 @@ export default React.createClass({
                     <span><label><div
                             style={{background:this.state.ti1=="自持"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
                         >
-                        <input type="radio" name="ti1" defaultChecked={this.state.ti1=="自持"?"true":""} onChange={()=>{
+                        <input type="radio" name="ti1" defaultChecked={this.state.ti1=="自持"?"true":""} onChange={(e)=>{
+                            if(e.target.checked){
+                                this.setState({
+                                    showMortgage:true,
+                                    showExtension:false
+                                })
+                            }
                             this.setState({
                                 ti1:"自持"
                             })
@@ -96,7 +109,13 @@ export default React.createClass({
                         <span
                         ><label><div
                         style={{background:this.state.ti1=="租赁"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
-                        ><input type="radio"  name="ti1" defaultChecked={this.state.ti1=="租赁"?"true":""} onChange={()=>{
+                        ><input type="radio"  name="ti1" defaultChecked={this.state.ti1=="租赁"?"true":""} onChange={(e)=>{
+                            if(e.target.checked){
+                                this.setState({
+                                    showMortgage:false,
+                                    showExtension:true
+                                })
+                            }
                             this.setState({
                                 ti1:"租赁"
                             })
@@ -105,13 +124,21 @@ export default React.createClass({
                             style={{marginLeft:"0.54rem"}}
                         ><label><div
                         style={{background:this.state.ti1=="无"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
-                        ><input type="radio"  name="ti1" defaultChecked={this.state.ti1=="无"?"true":""} onChange={()=>{
+                        ><input type="radio"  name="ti1" defaultChecked={this.state.ti1=="无"?"true":""} onChange={(e)=>{
+                            if(e.target.checked){
+                                this.setState({
+                                    showMortgage:false,
+                                    showExtension:false
+                                })
+                            }
                             this.setState({
                                 ti1:"无"
                             })
                         }}/></div>无</label></span>
                     </div>
-                    <div>
+                    <div
+                        style={{display:this.state.showMortgage?"":"none",borderTop:"1px solid #ffe7c0"}}
+                    >
                         <span>按揭情况：</span>
                         <span><label><div
                             style={{background:this.state.ti2=="全款"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
@@ -140,7 +167,9 @@ export default React.createClass({
                             })
                         }}/></div>无</label></span>
                     </div>
-                    <div>
+                    <div
+                        style={{display:this.state.showExtension?"":"none",borderTop:"1px solid #ffe7c0"}}
+                    >
                         <span>是否延展：</span>
                         <span><label><div
                             style={{background:this.state.ti3=="1"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
@@ -162,13 +191,14 @@ export default React.createClass({
                     </div>
                 </div>
                 <div className="tips">
-                    <i
-                        style={{background:"url(images/images/icon_05.png) 0% 0% /100%"}}
-                    ></i>
+                <img src="images/images/icon_05.png" />
                     <span>车辆情况</span>
                 </div>
                 <div className="list_info">
-                    <div>
+                    <div
+                        // style={{borderTop:"1px solid #ffe7c0"}}
+                        // style={{color:"red"}}
+                    >
                         <span>按揭情况：</span>
                         <span><label><div
                             style={{background:this.state.ti4=="全款"?"url(images/images/small-2.png) 0% 0% /100%":"url(images/images/small-1.jpg) 0% 0% /100%"}}
@@ -199,9 +229,7 @@ export default React.createClass({
                     </div>
                 </div>
                 <div className="tips">
-                    <i
-                        style={{background:"url(images/images/icon_05.png) 0% 0% /100%"}}
-                    ></i>
+                <img src="images/images/icon_05.png" />
                     <span>公积金信息</span>
                 </div>
                 <div className="list_info">
@@ -227,9 +255,7 @@ export default React.createClass({
                     </div>
                 </div>
                 <div className="tips">
-                    <i
-                        style={{background:"url(images/images/icon_05.png) 0% 0% /100%"}}
-                    ></i>
+                <img src="images/images/icon_05.png" />
                     <span>社保信息</span>
                 </div>
                 <div className="list_info">
@@ -255,9 +281,7 @@ export default React.createClass({
                     </div>
                 </div>
                 <div className="tips">
-                    <i
-                        style={{background:"url(images/images/icon_05.png) 0% 0% /100%"}}
-                    ></i>
+                <img src="images/images/icon_05.png" />
                     <span>工资流水信息</span>
                 </div>
                 <div className="list_info">
@@ -278,9 +302,7 @@ export default React.createClass({
                     </div>
                 </div>
                 <div className="tips">
-                    <i
-                        style={{background:"url(images/images/icon_05.png) 0% 0% /100%"}}
-                    ></i>
+                <img src="images/images/icon_05.png" />
                     <span>保险信息</span>
                 </div>
                 <div className="list_info">

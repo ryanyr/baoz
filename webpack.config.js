@@ -5,11 +5,11 @@ module.exports = {
     entry : __dirname + "/src/js/main.js",
     output : {
         path : __dirname + "/dist/",
-        filename : "app.[chunkhash:8].js",
-        // filename : "app.js"
+        // filename : "app.[chunkhash:8].js",
+        filename : "app.js"
     },
-    devtool : "false",
-    // devtool : "source-map",
+    // devtool : "false",
+    devtool : "source-map",
     devServer : {
         contentBase : __dirname + "/dist/",
         port : 3000,
@@ -28,7 +28,7 @@ module.exports = {
             $:"jquery",
             Qr:"qrcode"
         }),
-        new webpack.optimize.UglifyJsPlugin({
+        /* new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
             },
@@ -37,6 +37,6 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: 'dist/index.ejs'
-        }) 
+        })  */
     ],  
 }

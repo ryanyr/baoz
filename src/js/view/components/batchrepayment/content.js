@@ -1,7 +1,7 @@
 import url from "../../config/config";
 // import {InputItem,ImagePicker,Toast } from "antd-mobile";
 import {hashHistory,browserHistory} from "react-router";
-import {Toast} from "antd-mobile";
+import {Toast,Modal} from "antd-mobile";
 import store from "../../../store/store";
 export default React.createClass({
     getInitialState(){
@@ -9,7 +9,8 @@ export default React.createClass({
         allmoney:"",
         listi:[],
         orderlist:[],
-        orderid:""
+        orderid:"",
+        modal1:false
       }
     },
     componentWillMount(){
@@ -38,7 +39,7 @@ export default React.createClass({
           method:"POST",body:data})
           .then(r=>r.json())
           .then((data)=>{
-          // console.log(data)
+          console.log(data.code)
           that.setState({
             listi:data.data
           })
@@ -46,17 +47,21 @@ export default React.createClass({
            switch(data.code){
               case 408:    Toast.info('系统响应超时', 1);
                               break;
-              case 410:    Toast.info('用户信息过期，请重新登录', 1);
+              case 411:    Toast.info('用户信息过期，请重新登录', 1);
+                              localStorage.clear();
+                              sessionStorage.clear();
                               hashHistory.push("login");
                               break;
-              case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+              case 410:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                              localStorage.clear();
+                              sessionStorage.clear();
                               hashHistory.push("login");
                               break;
               case 500:    Toast.info('服务器错误', 1);
                               break;
               case 150001:    Toast.info('获取订单详情服务超时', 1);
                               break;
-              case 150003:    Toast.info('获取订单详情服务失败，请稍后再次尝试', 1);
+              case 140003:    Toast.info('获取订单详情服务失败，请稍后再次尝试', 1);
                               break;
               default:        break;
               }                  
@@ -66,8 +71,11 @@ export default React.createClass({
     
     },
     btn(){
-        // console.log(this.state)
-                    var data=new FormData();//还款
+            this.setState({
+              modal1:true
+            })
+            var that=this;
+            var data=new FormData();//还款
             data.append("orderId",this.state.orderid);
             data.append("userId",localStorage.userId);
             fetch(url.url+"/api/act/pay/repayment/repay.htm",{
@@ -77,24 +85,29 @@ export default React.createClass({
                 method:"POST",body:data})
                 .then(r=>r.json())
                 .then((data)=>{
-                    console.log(data)
-                  switch(data.code){
+                    
+                  switch(data.data.code){
+                    case 300:    Toast.info('还款成功:'+data.data.countSuccess+'笔,还款失败'+data.data.countFail+'笔', 1);
+                                break;
                     case 408:    Toast.info('系统响应超时', 1);
                                     break;
-                    case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                    case 411:    Toast.info('用户信息过期，请重新登录', 1);
+                                    localStorage.clear();
+                                    sessionStorage.clear();
                                     hashHistory.push("login");
                                     break;
-                    case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                    case 410:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                    localStorage.clear();
+                                    sessionStorage.clear();
                                     hashHistory.push("login");
                                     break;
                     case 500:    Toast.info('服务器错误', 1);
                                     break;
                     case 150004:    Toast.info('您已还款成功', 1);
-                                    // window.location.reload();
-                                    store.dispatch({
-                                        type:"INFO",
-                                        data:3
+                                    that.setState({
+                                      modal1:false
                                     })
+                                    sessionStorage.pagenum=3;
                                     hashHistory.push("loan")
                                     break;
                     case 150005:    Toast.info('还款失败，请稍后再次尝试', 1);
@@ -106,16 +119,21 @@ export default React.createClass({
                 })
     },
     render() {
-        var list=null;
-        // this.state.listi.map((ind)=>{
-        //   console.log(1)
-        // })
-        console.log(this.state.listi)
-        for(var i=0;i<this.state.listi.length;i++){
-          console.log(this.state.listi[i])
-        }
         return (
            <div>
+             <Modal
+                    visible={this.state.modal1}
+                    transparent
+                    maskClosable={false}
+                    onClose={this.onClose}
+                    title="提示"
+                    className="imgInfo"
+                    >
+                    <div>                        
+                        <img src="images/images/loading.gif" alt=""/>
+                        <p>正在还款中...</p>
+                    </div>
+            </Modal>
             <div className="batch-top" style={{background:"url(images/images/batch-top.png)",backgroundSize:"100% 100%"}}></div>
             <div className="batch-list">
               <div className="batcha" style={{background:"url(images/images/batcha.png)",backgroundSize:"100% 100%"}}>

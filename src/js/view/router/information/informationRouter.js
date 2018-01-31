@@ -25,7 +25,8 @@ export default React.createClass({
         sessionStorage.info=JSON.stringify(this.state)
     },
     btn(w,rrr){
-
+        
+        // window.scrollTo(0,0);
         this.setState({
             page:rrr
         })
@@ -44,9 +45,15 @@ export default React.createClass({
         return (
             <div className="information">
                 <Top back={true} title="完善个人信息" />
-                <Step1 page={this.state.page} step={(w)=>{this.setState({page:w})}} ref="step_1" />
-                <Step2 page={this.state.page} step={(w)=>{this.setState({page:w})}}  />
-                <Step3 page={this.state.page} step={(w)=>{this.setState({page:w})}} submit={this.submit} changepage={()=>{
+                <Step1 page={this.state.page} step={(w)=>{
+                    window.scrollTo(0,0);
+                    this.setState({page:w})}} ref="step_1" />
+                <Step2 page={this.state.page} step={(w)=>{
+                    window.scrollTo(0,0);
+                    this.setState({page:w})}}  />
+                <Step3 page={this.state.page} step={(w)=>{
+                    window.scrollTo(0,0);
+                    this.setState({page:w})}} submit={this.submit} changepage={()=>{
                     this.setState({page:1})
                     // console.log(1)
                 }} />

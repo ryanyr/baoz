@@ -1,4 +1,4 @@
-import {Link} from "react-router";
+import {Link,hashHistory} from "react-router";
 import url from "../../config/config";
 import {Pagination,Icon,Toast} from 'antd-mobile';
 import store from "../../../store/store";
@@ -10,27 +10,35 @@ export default React.createClass({
             showpage:false,
             page:1,
             total:"",
+            shownone:false
         }
     },
     componentWillMount(){
-        console.log(store.getState().LIST_3)
-        if(store.getState().LIST_3.total){
-            this.setState(store.getState().LIST_3);
-            this.change(store.getState().LIST_3.page)
-
+        if(sessionStorage.loanlist3){
+            console.log(JSON.parse(sessionStorage.loanlist3))
+            this.setState(JSON.parse(sessionStorage.loanlist3))
+            this.change(JSON.parse(sessionStorage.loanlist3).page)
         }else{
             this.change(this.state.page)
         }
+        // if(store.getState().LIST_3.total){
+        //     this.setState(store.getState().LIST_3);
+        //     this.change(store.getState().LIST_3.page)
+
+        // }else{
+        //     this.change(this.state.page)
+        // }
     },
     componentWillUnmount(){
-        var that=this;
-        store.dispatch({
-            type:"LIST_3",
-            data:{
-                total:that.state.total,
-                page:that.state.page
-            }
-        })
+        sessionStorage.loanlist3=JSON.stringify(this.state)
+        // var that=this;
+        // store.dispatch({
+        //     type:"LIST_3",
+        //     data:{
+        //         total:that.state.total,
+        //         page:that.state.page
+        //     }
+        // })
     },
     change(e){
         this.setState({//改变页数的时候们也要设置对应状态,卸载时保存进reduce
@@ -39,7 +47,7 @@ export default React.createClass({
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
-        data.append("stateList",[21,32,50,41,51]);
+        data.append("stateList",[21,32,50,51]);
         data.append("page",e);
         data.append("pageSize",5);
         fetch(url.url+"/api/act/mine/borrow/list.htm",{
@@ -52,7 +60,12 @@ export default React.createClass({
                 console.log(data)
                 if(data.data.list.length>0){
                     that.setState({
-                        showpage:true
+                        showpage:true,
+                        shownone:false
+                    })
+                }else{
+                    that.setState({
+                        shownone:true
                     })
                 }
                 var info=[];
@@ -65,9 +78,10 @@ export default React.createClass({
                         }
                         else if(data.data.list[i].state=="32"){
                             data.data.list[i]["info"]="放款审核未通过"
-                        }else if(data.data.list[i].state=="41"){
-                            data.data.list[i]["info"]="放款失败"
                         }
+                        // else if(data.data.list[i].state=="41"){
+                        //     data.data.list[i]["info"]="放款失败"
+                        // }
                         info.push(data.data.list[i]);
                 }
                 that.setState({
@@ -86,7 +100,12 @@ export default React.createClass({
         if(this.state.list.length>0){
             list=this.state.list.map((ind,index)=>{
                 return (
-                <Link className="audit_list" to={{pathname:ind.state==21||ind.state==32||ind.state==41?"txing":"already",query:{orderId:ind.orderNo,state:ind.state}}} key={index}>
+                <Link className="audit_list" 
+                // to={{pathname:ind.state==21||ind.state==32||ind.state==41?"txing":"already",query:{orderId:ind.orderNo,state:ind.state}}} 
+                onClick={()=>{
+                    hashHistory.push({pathname:ind.state==21||ind.state==32||ind.state==41?"txing":"already",query:{orderId:ind.orderNo,state:ind.state}})
+                }}
+                key={index}>
                     <div className="price">
                         <p>{ind.state==21||ind.state==32||ind.state==41?ind.realAmount:ind.realRepayAmount}</p>
                         <p>{ind.createTime.split(" ")[0]}</p>
@@ -106,6 +125,13 @@ export default React.createClass({
                 <div 
                     style={{height:"7rem"}}
                 >
+                <div
+                    className="shownone"
+                    style={{display:this.state.shownone?"block":"none"}}
+                >
+                    <img src="images/images/480580826510928901.png" />
+                    <p>您还没有已结束记录</p>
+                </div>
                 {list}
                 </div>
                 

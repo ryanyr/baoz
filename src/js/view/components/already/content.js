@@ -35,12 +35,17 @@ export default React.createClass({
                 that.setState(data.data[0])
             }else if(data.code=="410"){
                 Toast.info("您的账号已在其他设备登录", 2);
+
                 setTimeout(function(){
+                    localStorage.clear();
+                    sessionStorage.clear();
                     hashHistory.push("login")
                 },2000)
             }else if(data.code=="411"){
                 Toast.info("登录已失效,请重新登录", 2);
                 setTimeout(function(){
+                    localStorage.clear();
+                    sessionStorage.clear();
                     hashHistory.push("login")
                 },2000)
             }else{
@@ -55,12 +60,20 @@ export default React.createClass({
     render() {
         return (
             <div className="already-box">
-                <div className="already-top" style={{background:"url(images/images/already-bga.png) no-repeat",backgroundSize:"100% 100%"}}>
-                    <div className="already-head">还款完成时间 {this.state.realRepayTime.split(" ")[0]}</div>
-                    <div className="already-min1">已减免{this.state.remitAmount}元</div>
+                <div className="already-top" >
+                    <div className="already-head" style={{background:"url(images/images/already-top-t.png)",backgroundSize:"100% 100%"}}>
+                        <div className="already-headword">还款完成时间{this.state.realRepayTime.split(" ")[0]}</div>
+                    </div>
+                    <div className="already-centerfa">
+                    <div className="already-center" style={{background:"url(images/images/already-center.png)",backgroundSize:"100% 100%"}}></div>
+                    </div>
+                    <div className="already-min1"
+                        style={{display:this.state.remitAmount>0?"":"none"}}
+                    >已减免{this.state.remitAmount}元</div>
                     <div className="already-min2"><span className="already-min2a">{this.state.repayAmount}.</span><span className="already-min2b">00</span></div>
                     <div className="already-min3">应还金额(元)</div>
                     <div className="already-list">
+                    <div className="already-jkl">
                         <div className="already-list1">
                             <div className="already-list1a">
                                 <div className="already-list1a1">{this.state.amount}<span className="already-list1a1a">.00元</span></div>
@@ -108,6 +121,8 @@ export default React.createClass({
                             <div className="already-list2b">{this.state.cardNo}</div>
                         </div>
                         <div className="already-list3" onClick={this.btn}>再次借款</div>
+                        <div className="already-good" style={{background:"url(images/images/good.png)",backgroundSize:"100% 100%"}}></div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -16,7 +16,7 @@ export default React.createClass({
 		if(localStorage.Login){//判断是否登录
 			if(this.state.info=="未完善"){//根据父组件传过来的信息是否完善
 				hashHistory.push("information");
-			}else{
+			}else if(this.state.info=="未认证"||this.state.info=="已认证"||this.state.info=="认证过期"||this.state.info=="认证失败"){
 				
 				hashHistory.push("withdraw");
 				sessionStorage.withdraw="";
@@ -36,12 +36,14 @@ export default React.createClass({
 		  <p className="begin_b">最高<span className="begin_c">50万</span>额度垫付</p>
 		  <a className="begin_d" onClick={this.btn}>立即开始</a>
 		</div>
-		<div className="anser" onClick={() => {
+		<div 
+			style={{display:"none"}}
+		className="anser" onClick={() => {
 			if(localStorage.Login){
 				if(this.state.info=="未完善"){
 					hashHistory.push("information");
 
-				}else{
+				}else if(this.state.info=="未认证"||this.state.info=="已认证"||this.state.info=="认证过期"||this.state.info=="认证失败"){
 					
 					hashHistory.push("pmh");
 					sessionStorage.card="";

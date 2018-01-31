@@ -53139,6 +53139,10 @@ exports.default = React.createClass({
     },
     upimg: function upimg(files) {
         var that = this;
+        if (this.judgeImgType(files)) {
+            _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
+            return;
+        }
         return new Promise(function (suc, err) {
             var data = new FormData();
 
@@ -53215,10 +53219,6 @@ exports.default = React.createClass({
     },
     onChange: function onChange(files, type, index) {
         var that = this;
-        if (this.judgeImgType(files[0].file.type)) {
-            _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
-            return;
-        }
         this.upimg(files).then(function (data) {
             // var img = new Image();
             // var imgurl = "imgurl";
@@ -53233,10 +53233,6 @@ exports.default = React.createClass({
     },
     onChange2: function onChange2(files, type, index) {
         var that = this;
-        if (this.judgeImgType(files[0].file.type)) {
-            _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
-            return;
-        }
         this.upimg(files).then(function (data) {
             that.setState({
                 // imgurl2:files[0].url,
@@ -53246,10 +53242,6 @@ exports.default = React.createClass({
         });
     },
     onChange3: function onChange3(files, type, index) {
-        if (this.judgeImgType(files[0].file.type)) {
-            _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
-            return;
-        }
         var that = this;
         this.upimg(files).then(function (data) {
             that.setState({
@@ -53260,12 +53252,12 @@ exports.default = React.createClass({
         });
     },
     judgeImgType: function judgeImgType(file) {
-        var array = file.split('/');
+        var array = file.split('.');
         var index = array.length - 1;
         if (array[index] != 'jpg' || array[index] != 'png' || array[index] != 'jpeg' || array[index] != 'JPG' || array[index] != 'JPEG' || array[index] != 'PNG') {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     },
     handelImg: function handelImg(image, imgurl) {
@@ -54865,10 +54857,6 @@ exports.default = React.createClass((_React$createClass = {
 }), _defineProperty(_React$createClass, "onChange", function onChange(files, type, index) {
 
     var that = this;
-    if (this.judgeImgType(files[0].file.type)) {
-        _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
-        return;
-    }
     this.upimg(files).then(function (data) {
         that.setState({
             // imgurl:files[0].url,
@@ -54879,10 +54867,6 @@ exports.default = React.createClass((_React$createClass = {
 }), _defineProperty(_React$createClass, "onChange2", function onChange2(files, type, index) {
     console.log(2);
     var that = this;
-    if (this.judgeImgType(files[0].file.type)) {
-        _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
-        return;
-    }
     this.upimg(files).then(function (data) {
         that.setState({
             // imgurl2:files[0].url,
@@ -54892,10 +54876,6 @@ exports.default = React.createClass((_React$createClass = {
     });
 }), _defineProperty(_React$createClass, "onChange3", function onChange3(files, type, index) {
     var that = this;
-    if (this.judgeImgType(files[0].file.type)) {
-        _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
-        return;
-    }
     this.upimg(files).then(function (data) {
         that.setState({
             // imgurl3:files[0].url,
@@ -54905,10 +54885,6 @@ exports.default = React.createClass((_React$createClass = {
     });
 }), _defineProperty(_React$createClass, "onChange4", function onChange4(files, type, index) {
     var that = this;
-    if (this.judgeImgType(files[0].file.type)) {
-        _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
-        return;
-    }
     this.upimg(files).then(function (data) {
         that.setState({
             // imgurl4:files[0].url,
@@ -54916,14 +54892,6 @@ exports.default = React.createClass((_React$createClass = {
             imgup4: data.data
         });
     });
-}), _defineProperty(_React$createClass, "judgeImgType", function judgeImgType(file) {
-    var array = file.split('/');
-    var index = array.length - 1;
-    if (array[index] != 'jpg' || array[index] != 'png' || array[index] != 'jpeg' || array[index] != 'JPG' || array[index] != 'JPEG' || array[index] != 'PNG') {
-        return true;
-    } else {
-        return false;
-    }
 }), _defineProperty(_React$createClass, "onClose", function onClose() {
     this.setState({
         modal1: false
@@ -56592,10 +56560,6 @@ exports.default = React.createClass({
     },
     onChange: function onChange(files, type, index) {
         var that = this;
-        if (this.judgeImgType(files[0].file.type)) {
-            _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
-            return;
-        }
         var data = new FormData();
 
         //此处图片进行压缩,写入image异步onload中
@@ -56644,15 +56608,6 @@ exports.default = React.createClass({
                 that.setState({ modal1: false });
             });
         });
-    },
-    judgeImgType: function judgeImgType(file) {
-        var array = file.split('/');
-        var index = array.length - 1;
-        if (array[index] != 'jpg' || array[index] != 'png' || array[index] != 'jpeg' || array[index] != 'JPG' || array[index] != 'JPEG' || array[index] != 'PNG') {
-            return true;
-        } else {
-            return false;
-        }
     },
     onClose: function onClose() {
         this.setState({
@@ -62161,7 +62116,7 @@ exports.default = React.createClass({
             img2: "images/images/icon_10.jpg",
             img3: "images/images/icon_10.jpg",
             upimg3: ""
-        }, _defineProperty(_ref, "upimg3", ""), _defineProperty(_ref, "upimg3", ""), _defineProperty(_ref, "policyAmount", ""), _defineProperty(_ref, "insuranceCompany", ""), _defineProperty(_ref, "img", ""), _defineProperty(_ref, "fee", 0), _defineProperty(_ref, "list", []), _defineProperty(_ref, "showdiscount", true), _defineProperty(_ref, "check2", true), _defineProperty(_ref, "couponNo", ""), _defineProperty(_ref, "listCoupon", []), _defineProperty(_ref, "value", []), _defineProperty(_ref, "totalMoney", 0), _defineProperty(_ref, "expectRepayTime", ""), _defineProperty(_ref, "showsearch", false), _defineProperty(_ref, "searchcon", ""), _defineProperty(_ref, "pick", false), _defineProperty(_ref, "hasPicker", false), _ref;
+        }, _defineProperty(_ref, "upimg3", ""), _defineProperty(_ref, "upimg3", ""), _defineProperty(_ref, "policyAmount", ""), _defineProperty(_ref, "insuranceCompany", ""), _defineProperty(_ref, "img", ""), _defineProperty(_ref, "fee", 0), _defineProperty(_ref, "list", []), _defineProperty(_ref, "showdiscount", true), _defineProperty(_ref, "check2", true), _defineProperty(_ref, "couponNo", ""), _defineProperty(_ref, "listCoupon", []), _defineProperty(_ref, "value", []), _defineProperty(_ref, "totalMoney", 0), _defineProperty(_ref, "expectRepayTime", ""), _defineProperty(_ref, "showsearch", false), _defineProperty(_ref, "searchcon", ""), _defineProperty(_ref, "pick", false), _ref;
     },
     componentWillUnmount: function componentWillUnmount() {
         // localStorage.withdraw=JSON.stringify(this.state);
@@ -62186,19 +62141,11 @@ exports.default = React.createClass({
             var newlist = data.data.map(function (con) {
                 return { label: con.companyName, value: con.companyName };
             });
-            // console.log(newlist);
             that.setState({
                 companyName: newlist
-                // hasPicker:true            
             });
             if (data.data.length == 0) {
-                that.setState({
-                    // hasPicker:false,
-                    pick: false,
-                    companyName: [{ label: '未找到匹配项', value: '未找到匹配项' }]
-                }, function () {
-                    _toast2.default.info("未找到匹配项", 2);
-                });
+                _toast2.default.info("未找到匹配项", 2);
             }
         });
     },
@@ -62428,6 +62375,10 @@ exports.default = React.createClass({
         //上传图片统一方法
         var that = this;
         console.log(files);
+        if (this.judgeImgType(files)) {
+            _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
+            return;
+        }
         return new Promise(function (suc, err) {
 
             var data = new FormData();
@@ -62505,10 +62456,6 @@ exports.default = React.createClass({
     onChange1: function onChange1(files, type, index) {
         //上传第一张照片
         var that = this;
-        if (this.judgeImgType(files)) {
-            _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
-            return;
-        }
         this.upimg(files).then(function (data) {
             console.log(data);
             that.setState({
@@ -62520,10 +62467,6 @@ exports.default = React.createClass({
     onChange2: function onChange2(files, type, index) {
         //上传第二张照片
         var that = this;
-        if (this.judgeImgType(files)) {
-            _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
-            return;
-        }
         this.upimg(files).then(function (data) {
             console.log(data);
             that.setState({
@@ -62535,10 +62478,6 @@ exports.default = React.createClass({
     onChange3: function onChange3(files, type, index) {
         //上传第二张照片
         var that = this;
-        if (this.judgeImgType(files)) {
-            _toast2.default.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
-            return;
-        }
         this.upimg(files).then(function (data) {
             console.log(data);
             that.setState({
@@ -62551,9 +62490,9 @@ exports.default = React.createClass({
         var array = file.split('.');
         var index = array.length - 1;
         if (array[index] != 'jpg' || array[index] != 'png' || array[index] != 'jpeg' || array[index] != 'JPG' || array[index] != 'JPEG' || array[index] != 'PNG') {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     },
     onClose: function onClose() {
@@ -62561,32 +62500,8 @@ exports.default = React.createClass({
             modal1: false
         });
     },
-    onOk: function onOk(e) {
-        if (e != '未找到匹配项') {
-            this.setState({ value: e, showsearch: false });
-        } else {
-            this.setState({ value: '', showsearch: false });
-        }
-    },
     render: function render() {
         var _this = this;
-
-        /* var picker;
-        if(this.state.hasPicker){
-            picker= <Picker extra="搜索"
-                        data={this.state.companyName}
-                        disabled={this.state.pick}
-                        cols="1" 
-                        onOk={e => {this.setState({value:e,showsearch:false})}}
-                                    onDismiss={e => console.log('dismiss', e)}
-                                    >
-                                    <List.Item
-                                        style={{width:"4rem"}}
-                                    ></List.Item>
-                    </Picker> 
-        }else{
-            picker='';
-        } */
 
         var files = this.state.files;
 
@@ -62678,7 +62593,7 @@ exports.default = React.createClass({
                                         disabled: this.state.pick,
                                         cols: "1",
                                         onOk: function onOk(e) {
-                                            return _this.onOk(e);
+                                            _this.setState({ value: e, showsearch: false });
                                         },
                                         onDismiss: function onDismiss(e) {
                                             return console.log('dismiss', e);
@@ -68524,4 +68439,4 @@ exports.push([module.i, "html,\nbody,\ndiv,\nspan,\napplet,\nobject,\niframe,\nh
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=app.js.map
+//# sourceMappingURL=app.2710c1cc.js.map

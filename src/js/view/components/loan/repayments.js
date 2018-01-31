@@ -26,29 +26,38 @@ export default React.createClass({
           changelist:true,
           orders:["","","","",""],//订单id
           moneylist:["","","","",""],
-          ordernum:["","","","",""],//订单号  
+          ordernum:["","","","",""],//订单号 
+          shownone:false,//显示状态栏和没订单 
         //   li1:true
         }
     },
     componentWillMount(){
-        if(store.getState().LIST_2.total){
-            this.setState(store.getState().LIST_2);
-            this.change(store.getState().LIST_2.page)
-
+        if(sessionStorage.loanlist2){
+            console.log(JSON.parse(sessionStorage.loanlist2))
+            this.setState(JSON.parse(sessionStorage.loanlist2))
+            this.change(JSON.parse(sessionStorage.loanlist2).page)
         }else{
             this.change(this.state.page)
         }
+        // if(store.getState().LIST_2.total){
+        //     this.setState(store.getState().LIST_2);
+        //     this.change(store.getState().LIST_2.page)
+
+        // }else{
+        //     this.change(this.state.page)
+        // }
         
     },
     componentWillUnmount(){
-        var that=this;
-        store.dispatch({
-            type:"LIST_2",
-            data:{
-                total:that.state.total,
-                page:that.state.page
-            }
-        })
+        sessionStorage.loanlist2=JSON.stringify(this.state)
+        // var that=this;
+        // store.dispatch({
+        //     type:"LIST_2",
+        //     data:{
+        //         total:that.state.total,
+        //         page:that.state.page
+        //     }
+        // })
     },
     changeall(e){
         this.setState({
@@ -128,8 +137,15 @@ export default React.createClass({
                 console.log(data)
                 if(data.data.list.length>0){
                     that.setState({
-                        showpage:true
+                        showpage:true,
+                        shownone:false
                     })
+                }else{
+                    that.setState({
+                        // showpage:true,
+                        shownone:true
+                    })
+                    console.log("mei")
                 }
 
                 var info=[];
@@ -235,43 +251,6 @@ export default React.createClass({
             Toast.info("您还没有选择要还款的订单", 2);
         }else{
             hashHistory.push({pathname:"batchrepayment",query:{order:orders,orderid:numli,all:this.state.allmoney}})
-            // var data=new FormData();//还款
-            // data.append("orderId",orders);
-            // data.append("userId",localStorage.userId);
-            // fetch(url.url+"/api/act/pay/repayment/repay.htm",{
-            //     headers:{
-            //         token:localStorage.Token
-            //     },
-            //     method:"POST",body:data})
-            //     .then(r=>r.json())
-            //     .then((data)=>{
-            //         console.log(data)
-            //       switch(data.code){
-            //         case 408:    Toast.info('系统响应超时', 1);
-            //                         break;
-            //         case 410:    Toast.info('用户信息过期，请重新登录', 1);
-            //                         hashHistory.push("login");
-            //                         break;
-            //         case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
-            //                         hashHistory.push("login");
-            //                         break;
-            //         case 500:    Toast.info('服务器错误', 1);
-            //                         break;
-            //         case 150004:    Toast.info('您已还款成功', 1);
-            //                         window.location.reload();
-            //                         store.dispatch({
-            //                             type:"INFO",
-            //                             data:3
-            //                         })
-            //                         // hashHistory.push("loan")
-            //                         break;
-            //         case 150005:    Toast.info('还款失败，请稍后再次尝试', 1);
-            //                         break;
-            //         case 150006:    Toast.info('还款服务超时，请稍后再次尝试', 1);
-            //                         break;
-            //         default:        break;
-            //         }                     
-            //     })
         }
     },
     render(){
@@ -297,7 +276,12 @@ export default React.createClass({
                         <p>应还</p>
                         <p>{ind.repayAmount}元</p>
                     </div>
-                    <Link to={{pathname:"repayment",query:{orderNo:ind.orderNo}}}>
+                    <Link 
+                    // to={{pathname:"repayment",query:{orderNo:ind.orderNo}}}
+                    onClick={()=>{
+                        hashHistory.push({pathname:"repayment",query:{orderNo:ind.orderNo}})
+                    }}
+                    >
                         <span>去还款</span>
                         <i
                             style={{background:"url(images/images/right.png)",backgroundSize:"100%"}}
@@ -312,7 +296,16 @@ export default React.createClass({
             <div className="repayments"
                 style={{display:show}}
             >
-                <div className="checkall" onClick={this.btn}>
+                <div
+                    className="shownone"
+                    style={{display:this.state.shownone?"":"none"}}
+                >
+                    <img src="images/images/480580826510928901.png" />
+                    <p>您还没有待还款订单</p>
+                </div>
+                <div className="checkall" onClick={this.btn}
+                    style={{display:this.state.shownone?"none":""}}
+                >
                     <label>
                         <Checkbox
                         ref="all"
@@ -321,11 +314,10 @@ export default React.createClass({
                         style={{marginRight:"0.2rem"}}
                     />
                     全选</label>
-                    {/* <div
-                        style={{marginLeft:}}
-                    >批量还款</div> */}
                     <span className="allmoney">总计：<span>{this.state.allmoney}元</span></span>
-                    <div className="click" onClick={this.allpay}>
+                    <div className="click" onClick={this.allpay}
+                        
+                    >
                         批量还款
                     </div>
                 </div>

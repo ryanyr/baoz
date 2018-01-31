@@ -35,7 +35,7 @@ export default React.createClass({
               <div className="box2">
                 <img src="images/images/yhq_03.gif" />
               </div>
-            <p className="boxw1">优惠券额度 {this.state.amount}元</p>
+            <p className="boxw1">优惠券额度：{this.state.amount}元</p>
             <p className="boxw2">获取时间：{this.state.validStartTime.split(" ")[0]}</p>
             <p className="boxw2">过期时间：{this.state.validEndTime.split(" ")[0]}</p>
               <div className="boxbt"

@@ -3,6 +3,7 @@ const Item=List.Item;
 const Brief = Item.Brief;
 import $ from "jquery";
 import url from "../../config/config";
+import {hashHistory} from "react-router";
 export default React.createClass({
     getInitialState(){
         return {
@@ -18,14 +19,17 @@ export default React.createClass({
             dataType: "json",
             headers:{"Content-Type":"text/plain;charset=UTF-8",token:localStorage.Token},
             success: function (data) {
-                console.log(data)
                 switch(data.code){
                     case 408:    Toast.info('系统响应超时', 1);
                                     break;
-                    case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                    case 411:    Toast.info('用户信息过期，请重新登录', 1);
+                                    localStorage.clear();
+                                    sessionStorage.clear();
                                     hashHistory.push("login");
                                     break;
-                    case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                    case 410:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                    localStorage.clear();
+                                    sessionStorage.clear();
                                     hashHistory.push("login");
                                     break;
                     case 500:    Toast.info('服务器错误', 1);
@@ -63,6 +67,41 @@ export default React.createClass({
                         <div className="border_item">
                             <span>邮箱</span>
                             <span>{this.state.email}</span>
+                        </div>
+                </div>
+                <div className="tip">
+                    <i
+                        style={{background:"url(images/images/icon_05.png)",backgroundSize:"100%"}}
+                    ></i>
+                    身份证信息
+                </div>
+                <div className="list_item_2">
+                        <div>
+                            <span>身份证号码</span>
+                            <span>{this.state.idNo}</span>
+                        </div>
+                        <div className="border_item">
+                            <span>上传身份证照片</span>
+                        </div>
+                        <div className="img_item">
+                            <div className="left">
+                                <div>
+                                    <img src={this.state.userFrontImg}/>
+                                </div>
+                                <p>身份证正面</p>
+                            </div>
+                            <div className="center">
+                                <div>
+                                    <img src={this.state.userBackImg}/>
+                                </div>
+                                <p>身份证背面</p>
+                            </div>
+                            <div className="right">
+                                <div>
+                                    <img src={this.state.userLivingImg}/>
+                                </div>
+                                <p>手持身份证</p>
+                            </div>
                         </div>
                 </div>
                 <div className="tip">
@@ -131,41 +170,7 @@ export default React.createClass({
                             </div>
                         </div>
                 </div>
-                <div className="tip">
-                    <i
-                        style={{background:"url(images/images/icon_05.png)",backgroundSize:"100%"}}
-                    ></i>
-                    上传身份证照片
-                </div>
-                <div className="list_item_2">
-                        <div>
-                            <span>身份证号码</span>
-                            <span>{this.state.idNo}</span>
-                        </div>
-                        <div className="border_item">
-                            <span>上传身份证照片</span>
-                        </div>
-                        <div className="img_item">
-                            <div className="left">
-                                <div>
-                                    <img src={this.state.userFrontImg}/>
-                                </div>
-                                <p>身份证正面</p>
-                            </div>
-                            <div className="center">
-                                <div>
-                                    <img src={this.state.userBackImg}/>
-                                </div>
-                                <p>身份证背面</p>
-                            </div>
-                            <div className="right">
-                                <div>
-                                    <img src={this.state.userLivingImg}/>
-                                </div>
-                                <p>手持身份证</p>
-                            </div>
-                        </div>
-                </div>
+                
                 <div className="job_info">
                     <i
                         style={{background:"url(images/images/icon_05.png)",backgroundSize:"100%"}}
@@ -208,6 +213,9 @@ export default React.createClass({
                             
                         </div>
                 </div>
+                <div
+                    style={{height:"0.8rem",lineHeight:"0.8rem",color:"#f89c47",borderRadius:"0.15rem",background:"#fff",paddingLeft:"0.23rem",marginTop:"0.5rem",fontSize:"0.28rem",display:this.props.info?"none":""}}
+                >如需修改信息请联系客服:400-6986967</div>
             </div>
         )
     }

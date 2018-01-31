@@ -12,6 +12,7 @@ export default React.createClass({
             serviceFee:0,
             couponNo:"",
             check2:true,
+            discount:true,//显示优惠
             listCoupon:[],
             expectRepayTime:""//预估时间
         }
@@ -35,12 +36,17 @@ export default React.createClass({
           method:"POST",body:data})
           .then(r=>r.json())
           .then((data)=>{
+              console.log(data)
             if(data.code=="410"){
-                Toast.info("您的账号已在其他设备登录", 2);
+                Toast.info("您的账号已在其他设备登录,请重新登录", 2);
+                localStorage.clear();
+                sessionStorage.clear();
                 setTimeout(function(){
                     hashHistory.push("login")
                 },2000)
               }else if(data.code=="411"){
+                localStorage.clear();
+                sessionStorage.clear();
                 Toast.info("登录已失效,请重新登录", 2);
                 setTimeout(function(){
                     hashHistory.push("login")
@@ -94,7 +100,9 @@ export default React.createClass({
         }
 
         else{
+            
             if(this.state.check){
+                
             var data=new FormData();
         data.append("amount",this.state.money);
         data.append("timeLimit",7);
@@ -106,25 +114,34 @@ export default React.createClass({
             method:"POST",body:data})
             .then(r=>r.json())
             .then((data)=>{
+                console.log("进来了")
                 console.log(data)
                 if(data.code=="230008"){
+                    // that.setState({show:true})
                     that.setState({
+                        show:true,
                         check2:true,
-                        listCoupon:data.data.listCoupon
+                        listCoupon:data.data.listCoupon,
+                        // couponMoney:data.data.listCoupon[0].amount
                     })
                     that.setState(data.data);
                     if(data.data.listCoupon.length==0){//如果没有优惠券,把选择默认按钮去掉
                         that.setState({
-                            check2:false
+                            check2:false,
+                            discount:false
+                        })
+                    }else{
+                        that.setState({
+                            couponMoney:data.data.listCoupon[0].amount
                         })
                     }
-                    that.setState({show:true})
+                    
                     
                 }
                 
             }).catch(function(e) {
                 console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
+                // Toast.info("服务器响应超时", 2);
             });
         }else{
             Toast.info('请同意代还协议', 2);
@@ -133,7 +150,7 @@ export default React.createClass({
         
     },
     confirm(){
-        console.log(this.state.check2)
+        console.log(this.state)
         var that=this;
         var data=new FormData();
         var listid="";
@@ -181,7 +198,7 @@ export default React.createClass({
                 list=this.state.totalMoney-20;
 
             }else{
-                list=this.state.totalMoney-40
+                list=this.state.totalMoney-this.state.couponMoney
             }
             // console.log(this.state.list)
             // this.state.listCoupon
@@ -193,7 +210,7 @@ export default React.createClass({
             if(this.state.money<=1000){
                 list1=this.state.totalMoney*1+20
             }else{
-                list1=this.state.totalMoney*1+40
+                list1=this.state.totalMoney*1+this.state.couponMoney
             }
             console.log(list1)
             this.setState({
@@ -213,19 +230,17 @@ export default React.createClass({
                                 您的保单提现申请信息
                             </div>
                             <div className="top-2">
-                                <div className="ti1"
-                                    style={{background:"url(images/images/ti1.png) center center no-repeat/100%"}}
-                                ></div>
+                            <img className="ti1" src="images/images/ti1.png" />
                                 <div className="ti2">
                                     预计还款时间{this.state.expectRepayTime.split(" ")[0]}
                                 </div>
-                                <div className="ti1"
-                                    style={{background:"url(images/images/ti1.png) center center no-repeat/100%"}}
-                                ></div>
+                                <img className="ti1" src="images/images/ti1.png" />
                             </div>
                             <div className="top-3">
                                 <div className="ti1">{this.state.listCoupon.length==0?this.state.totalMoney:(this.state.money<=1000?this.state.totalMoney-20:this.state.totalMoney-40)}</div>
-                                <div className="ti2">已优惠{this.state.check2?(this.state.money<=1000?20:40):0}元!</div>
+                                <div className="ti2"
+                                    style={{display:this.state.discount?"":"none"}}
+                                >已优惠{this.state.check2?(this.state.money<=1000?20:this.state.couponMoney):0}元!</div>
                             </div>
                             <div className="top_4">
                                 <div className="ti1">
@@ -284,9 +299,10 @@ export default React.createClass({
                     </div>  
                 </div>
                 <div className="tip">
-                    <i
+                    {/* <i
                         style={{background:"url(images/images/icon_05.png) 0% 0% /100%"}}
-                    ></i>
+                    ></i> */}
+                    <img src="images/images/icon_05.png" />
                     <span>剩余可用额度</span>
                 </div>
                 <div className="title">
@@ -297,9 +313,7 @@ export default React.createClass({
                     <span>{this.state.unuse}元</span>
                 </div>
                 <div className="tip">
-                    <i
-                        style={{background:"url(images/images/icon_05.png) 0% 0% /100%"}}
-                    ></i>
+                <img src="images/images/icon_05.png" />
                     <span>请输入代还额度(100元-5000元)</span>
                 </div>
                 <div className="title">
@@ -318,9 +332,7 @@ export default React.createClass({
                     <span>手续费：{this.state.serviceFee}元</span>
                 </div>
                 <div className="tip">
-                    <i
-                        style={{background:"url(images/images/icon_05.png) 0% 0% /100%"}}
-                    ></i>
+                <img src="images/images/icon_05.png" />
                     <span>借款天数</span>
                 </div>
                 <div className="title">
@@ -330,11 +342,13 @@ export default React.createClass({
                     <span>借款天数</span>
                     <span>7天</span>
                 </div>
-                <div className="submit">
-                    <button onClick={this.submit}>提交申请</button>
-                    <div>
+                <div className="withcon">
                         <label><input type="checkbox" defaultChecked={this.state.check} onChange={()=>{this.setState({check:!this.state.check})}} />同意</label><a>《代还协议》</a>
                     </div>
+                <div className="submit">
+                    
+                    <button onClick={this.submit}>提交申请</button>
+                    
                 </div>
             </div>
         )

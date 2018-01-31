@@ -1,29 +1,28 @@
 
-
+import url from "../../config/config";
 import Audit from "./audit";
 import Repayments from "./repayments";
 import Settle from "./settle";
-import {browserHistory} from "react-router";
-import store from "../../../store/store";
+// import {browserHistory} from "react-router";
+// import store from "../../../store/store";
 export default React.createClass({
     getInitialState(){
         return {
-            page:1
+            page:1,
+            list:2
         }
     },
 
     componentWillMount(){
-        if(store.getState().infopage){
+        console.log(Boolean(sessionStorage.pagenum))
+        if(sessionStorage.pagenum){
             this.setState({
-                page:store.getState().infopage
+                page:sessionStorage.pagenum
             })
         }
     },
     componentWillUnmount(){
-        store.dispatch({
-            type:"INFO",
-            data:this.state.page
-        })
+        sessionStorage.pagenum=this.state.page;//进入的时候显示哪一栏
     },
     render(){
         var imgurlleft=this.state.page==1?"url(images/images/audit_2.png) 0% 0% /100%":"url(images/images/audit_1.png) 0% 0% /100%";
@@ -49,9 +48,9 @@ export default React.createClass({
                     </div>
                 </div>
                 <div className="content">
-                    <Audit page={this.state.page} />
-                    <Repayments page={this.state.page}  />
-                    <Settle page={this.state.page} />
+                    <Audit page={this.state.page} listlen={this.state.list}/>
+                    <Repayments page={this.state.page} listlen={this.state.list} />
+                    <Settle page={this.state.page} listlen={this.state.list} />
                 </div>
             </div>
         )

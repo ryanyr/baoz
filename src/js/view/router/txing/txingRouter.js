@@ -4,13 +4,22 @@ import Add from "../../components/txing/txingcontent"
 import Footer from "../../components/public/footer_3";
 export default React.createClass({
     
-    // componentWillMount(){
-    //     console.log(this.props.location.query)
-    // },
+    getInitialState(){
+        return {
+            title:"审核中"
+        }
+    },
+    componentWillMount(){
+        if(this.props.location.query.state=="21"||this.props.location.query.state=="32"||this.props.location.query.state=="41"){
+            this.setState({
+                title:"已结束"
+            })
+        }
+    },
     render:function(){
         return (
             <div className="txing">
-             <Top back="true" title="审核中"/>
+             <Top back="true" title={this.state.title}/>
              <Add qu={this.props.location.query} />
              <Footer />
             </div>

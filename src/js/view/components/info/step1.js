@@ -40,6 +40,7 @@ export default React.createClass({
         else if(!this.state.upimg1||!this.state.upimg2||!this.state.upimg3){
             Toast.info("请上传身份证照片", 2);
         }else{
+            console.log("进入存储")
         var that=this;
         var data=new FormData();
         data.append("backImg",this.state.upimg2);
@@ -57,6 +58,7 @@ export default React.createClass({
         method:"POST",body:data})
         .then(r=>r.json())
         .then((data)=>{
+            console.log(1)
             console.log(data)
             if(data.code=="200"){
                 that.props.step(2)
@@ -78,7 +80,7 @@ export default React.createClass({
             
             this.setState(JSON.parse(sessionStorage.step))
         }
-        
+        this.setState({modal1:false});//每次进来确保加载框不出来
     },
     componentWillUnmount(){
         sessionStorage.step=JSON.stringify(this.state);
@@ -87,54 +89,6 @@ export default React.createClass({
         var that=this;
         return new Promise(function(suc,err){ 
         var data=new FormData();
-
-        /* //此处图片进行压缩,写入image异步onload中
-        var img = new Image();
-        img.onload = ()=>{
-            var compressImg = compress(img);
-            data.append("img",compressImg);     
-                   
-            fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
-                headers:{
-                    token:localStorage.Token
-                },
-                method:"POST",body:data})
-                .then(r=>r.json())
-                .then((data)=>{
-                    console.log(data);
-                    if(!data.data){
-                        Toast.info("图片上传错误", 2);
-                    }                    
-                    suc(data)
-                
-            }).catch(function(e) {
-                console.log("Oops, error");
-                Toast.info("服务器响应超时", 2);
-            });
-            
-        } 
-        img.src = files[0].url;
-        // console.log(img)     
-        //图片压缩结束  */  
-
-        /* data.append("img",files[0].url);  
-        fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
-            headers:{
-                token:localStorage.Token
-            },
-            method:"POST",body:data})
-            .then(r=>r.json())
-            .then((data)=>{
-                console.log(data);
-                if(!data.data){
-                    Toast.info("图片上传错误", 2);
-                }                    
-                suc(data)
-            
-        }).catch(function(e) {
-            console.log("Oops, error");
-            Toast.info("服务器响应超时", 2);
-        }); */
         that.setState({modal1:true},()=>{
             data.append("img",files[0].url);  
             fetch(url.url+"/api/act/mine/userInfo/saveImg.htm",{
@@ -147,9 +101,16 @@ export default React.createClass({
                     that.setState({modal1:false});
                     console.log(data);
                     if(!data.data){
-                        Toast.info("图片上传错误", 2);
+                        
+                        if(data.code==400){
+                            // Toast.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
+                        }else{
+                            Toast.info("图片上传错误", 2);
+                        }
+                    }else{
+                        suc(data)
                     }                    
-                    suc(data)
+                    
                 
             }).catch(function(e) {
                 console.log("Oops, error");
@@ -164,6 +125,10 @@ export default React.createClass({
     },
     onChange(files, type, index){
         var that=this;
+        if(!this.judgeImgType(files[0].file.type)){
+             Toast.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
+             return
+        }
         this.upimg(files).then((data)=>{
             // var img = new Image();
             // var imgurl = "imgurl";
@@ -179,6 +144,10 @@ export default React.createClass({
       },
     onChange2(files, type, index){
         var that=this;
+        if(!this.judgeImgType(files[0].file.type)){
+             Toast.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
+             return
+        }
         this.upimg(files).then((data)=>{
             that.setState({
                 // imgurl2:files[0].url,
@@ -188,6 +157,10 @@ export default React.createClass({
         })
       },
     onChange3(files, type, index){
+        if(!this.judgeImgType(files[0].file.type)){
+             Toast.info("上传图片格式仅支持jpg，jpeg，png格式", 2);
+             return
+        }
         var that=this;
         this.upimg(files).then((data)=>{
             that.setState({
@@ -197,6 +170,16 @@ export default React.createClass({
             })
         })
       },   
+    judgeImgType(file){
+        var array = file.split('/');
+        var index = array.length-1;
+        console.log(array[index])
+        if(array[index]=='jpg'||array[index]=='png'||array[index]=='jpeg'||array[index]=='JPG'||array[index]=='JPEG'||array[index]=='PNG'){
+            return true;
+        }else{
+            return false;
+        }
+    },
     handelImg(image,imgurl){
         var that = this;
         //此处进行图片旋转的判断处理
@@ -311,9 +294,10 @@ export default React.createClass({
                 </div>
                     <div className="con">
                     <div className="tip">
-                        <i
+                        {/* <i
                             style={{background:"url(images/images/icon_05.png)",backgroundSize:"100%"}}
-                        ></i>
+                        ></i> */}
+                        <img src="images/images/icon_05.png" />
                         基本信息
                     </div>    
                     <div className="price">
@@ -348,9 +332,7 @@ export default React.createClass({
                         </div>
                     </div>
                     <div className="tip_2">
-                        <i
-                            style={{background:"url(images/images/icon_05.png)",backgroundSize:"100%"}}
-                        ></i>
+                    <img src="images/images/icon_05.png" />
                         上传身份证照片
                     </div>
                     {/* <div>{this.state.upimg1}</div> */}

@@ -11,7 +11,6 @@ export default React.createClass({
         }
     },
     componentWillMount(){
-        console.log(this.props.location.query);
         this.setState(this.props.location.query)
     },
     render:function(){

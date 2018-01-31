@@ -1,4 +1,4 @@
-import {Link} from "react-router";
+import {Link,hashHistory} from "react-router";
 import url from "../../config/config";
 import {Pagination,Icon,Toast} from 'antd-mobile';
 import store from "../../../store/store";
@@ -9,32 +9,42 @@ export default React.createClass({
             list1:[],
             total:"",
             page:1,
-            showpage:false
+            showpage:false,
+            shownone:false,//显示没订单
         }
     },
     componentWillMount(){
-
-
-        if(store.getState().LIST_1.total){
-            this.setState(store.getState().LIST_1);
-            this.change(store.getState().LIST_1.page)
-
+        // console.log(Boolean(sessionStorage.loanlist1))
+        // console.log(JSON.parse(sessionStorage.loanlist1))
+        if(sessionStorage.loanlist1){
+            console.log(JSON.parse(sessionStorage.loanlist1))
+            this.setState(JSON.parse(sessionStorage.loanlist1))
+            this.change(JSON.parse(sessionStorage.loanlist1).page)
         }else{
             this.change(this.state.page)
         }
+        // if(store.getState().LIST_1.total){
+        //     this.setState(store.getState().LIST_1);
+        //     this.change(store.getState().LIST_1.page)
+
+        // }else{
+        //     this.change(this.state.page)
+        // }
         
         
         
     },
     componentWillUnmount(){
-        var that=this;
-        store.dispatch({
-            type:"LIST_1",
-            data:{
-                total:that.state.total,
-                page:that.state.page
-            }
-        })
+        sessionStorage.loanlist1=JSON.stringify(this.state)
+        // console.log(this.state)
+        // var that=this;
+        // store.dispatch({
+        //     type:"LIST_1",
+        //     data:{
+        //         total:that.state.total,
+        //         page:that.state.page
+        //     }
+        // })
     },
     change(e){
         this.setState({
@@ -43,7 +53,7 @@ export default React.createClass({
         var that=this;
         var data=new FormData();
         data.append("userId",localStorage.userId);
-        data.append("stateList",[10,20,30,31]);
+        data.append("stateList",[10,20,30,31,41]);
         data.append("page",e);
         data.append("pageSize",5);
         fetch(url.url+"/api/act/mine/borrow/list.htm",{
@@ -53,13 +63,18 @@ export default React.createClass({
             method:"POST",body:data})
             .then(r=>r.json())
             .then((data)=>{
+                console.log(data)
                 switch(data.code){
                 case 408:    Toast.info('系统响应超时', 1);
                                 break;
-                case 410:    Toast.info('用户信息过期，请重新登录', 1);
+                case 411:    Toast.info('用户信息过期，请重新登录', 1);
+                                localStorage.clear();
+                                sessionStorage.clear();
                                 hashHistory.push("login");
                                 break;
-                case 411:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                case 410:    Toast.info('用户已在其他设备登录，请重新登录', 1);
+                                localStorage.clear();
+                                sessionStorage.clear();
                                 hashHistory.push("login");
                                 break;
                 case 500:    Toast.info('系统错误', 1);
@@ -72,36 +87,23 @@ export default React.createClass({
                 }
                 if(data.data.list.length>0){
                     that.setState({
-                        showpage:true
+                        showpage:true,
+                        shownone:false
+                    })
+                }else{
+                    that.setState({
+                        shownone:true
                     })
                 }
                 var info=[];
                 for(var i=0;i<data.data.list.length;i++){
-                    if(data.data.list[i].state=="10"||data.data.list[i].state=="20"||data.data.list[i].state=="21"||data.data.list[i].state=="30"||data.data.list[i].state=="31"||data.data.list[i].state=="32"){
-                        
-                        if(data.data.list[i].state=="10"){
+                    if(data.data.list[i].state=="10"||data.data.list[i].state=="20"||data.data.list[i].state=="21"||data.data.list[i].state=="30"||data.data.list[i].state=="31"||data.data.list[i].state=="41"){
+                        // data.data.list[i]["info"]="审核中"
+                        if(data.data.list[i].state=="10"||data.data.list[i].state=="20"||data.data.list[i].state=="30"){
                             data.data.list[i]["info"]="审核中"
-                        }else if(data.data.list[i].state=="20"){
-                            data.data.list[i]["info"]="人工审核通过"
+                        }else if(data.data.list[i].state=="31"||data.data.list[i].state=="41"){
+                            data.data.list[i]["info"]="放款中"
                         }
-                        // else if(data.data.list[i].state=="21"){
-                        //     data.data.list[i]["info"]="人工审核未通过"
-                        // }
-                        else if(data.data.list[i].state=="30"){
-                            data.data.list[i]["info"]="待放款审核"
-                        }
-                        else if(data.data.list[i].state=="31"){
-                            data.data.list[i]["info"]="放款审核通过"
-                        }
-                        // else if(data.data.list[i].state=="32"){
-                        //     data.data.list[i]["info"]="放款审核未通过"
-                        // }
-                        // else if(data.data.list[i].state=="41"){
-                        //     data.data.list[i]["info"]="放款失败"
-                        // }
-                        // else if(data.data.list[i].state=="40"){
-                        //     data.data.list[i]["info"]="待还款"
-                        // }
                         info.push(data.data.list[i]);
                     }
                 }
@@ -117,7 +119,13 @@ export default React.createClass({
         if(this.state.list.length>0){
             list=this.state.list.map((ind,index)=>{
                 return (
-                    <Link to={{pathname:"txing",query:{orderId:ind.orderNo,state:ind.state}}} className="audit_list" key={index}>
+                    <Link 
+                    // to={{pathname:"txing",query:{orderId:ind.orderNo,state:ind.state}}} 
+                    className="audit_list" key={index}
+                        onClick={()=>{
+                            hashHistory.push({pathname:"txing",query:{orderId:ind.orderNo,state:ind.state}})
+                        }}
+                    >
                                 <div className="price">
                                 <p>{ind.realAmount}</p>
                                 <p>{ind.createTime.split(" ")[0]}</p>
@@ -137,6 +145,16 @@ export default React.createClass({
             >   <div
                 style={{height:"7rem"}}
             >
+                <div
+                    onClick={()=>{
+                        console.log(this.state)
+                    }}
+                    className="shownone"
+                    style={{display:this.state.shownone?"":"none"}}
+                >
+                    <img src="images/images/480580826510928901.png" />
+                    <p>您还没有借款记录</p>
+                </div>
                 {list}
                 </div>             
                 
